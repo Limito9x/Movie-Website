@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const {sequelize} = require('./config')
+const {Movie,Actor,Genre} = require('./models/relationships.database')
 
 const app = express();
 

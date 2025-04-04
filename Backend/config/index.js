@@ -1,38 +1,49 @@
 require("dotenv").config();
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require("sequelize");
+
+const admin = require('firebase-admin');
+const firebaseurl=process.env.FIREBASE_URL;
+
+const serviceAccount = require('../Private/privateKeyFirebase.json')
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: firebaseurl,
+});
 
 const appConfig = {
-    port: process.env.PORT || 3000,
-}
+  port: process.env.PORT || 3000,
+};
 
 const dbConfig = {
-    host: process.env.DB_HOST || 'localhost',
-    username: process.env.DB_USER || 'root',
-    password: process.env.DB_PASS || '',
-    database: process.env.DB_NAME || 'moviedb',
-    port: process.env.DB_PORT || 3306,
-}
+  host: process.env.DB_HOST || "localhost",
+  username: process.env.DB_USER || "root",
+  password: process.env.DB_PASS || "",
+  database: process.env.DB_NAME || "moviedb",
+  port: process.env.DB_PORT || 3306,
+};
 
 const sequelize = new Sequelize(
-    dbConfig.database,
-    dbConfig.username,
-    dbConfig.password,
-    {
-        host: dbConfig.host,
-        dialect: 'mysql',
-        port: dbConfig.port,
-    }
+  dbConfig.database,
+  dbConfig.username,
+  dbConfig.password,
+  {
+    host: dbConfig.host,
+    dialect: "mysql",
+    port: dbConfig.port,
+  }
 );
 
-sequelize.authenticate()
-    .then(() => {
-        console.log("Connecting to database successfully!");
-    })
-    .catch((err) => {
-        console.error("An error occured while connecting to database: ",err);
-    })
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log("Connecting to database successfully!");
+  })
+  .catch((err) => {
+    console.error("An error occured while connecting to database: ", err);
+  });
 
 module.exports = {
-    appConfig,
-    sequelize,
+  appConfig,
+  sequelize,
 };
