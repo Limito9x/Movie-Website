@@ -1,15 +1,22 @@
 require("dotenv").config();
 const { Sequelize } = require("sequelize");
-
-const admin = require('firebase-admin');
-const firebaseurl=process.env.FIREBASE_URL;
+const { initializeApp, cert } = require("firebase-admin/app");
+const { getStorage } = require("firebase-admin/storage");
 
 const serviceAccount = require('../Private/privateKeyFirebase.json')
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: firebaseurl,
-});
+let bucket;
+try {
+  initializeApp({
+    credential: cert(serviceAccount),
+    storageBucket: process.env.STORAGE_BUCKET,
+  });
+  bucket = getStorage().bucket("moviedb-admin"); // Tham chiếu đến bucket
+  console.log("Firebase Admin SDK initialized successfully!");
+} catch (error) {
+  console.error("ERROR: Failed to initialize Firebase Admin SDK:", error);
+  process.exit(1); // Thoát ứng dụng nếu không khởi tạo được Firebase
+}
 
 const appConfig = {
   port: process.env.PORT || 3000,
@@ -46,4 +53,5 @@ sequelize
 module.exports = {
   appConfig,
   sequelize,
+  bucket,
 };

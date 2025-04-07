@@ -15,15 +15,17 @@ const Movie = sequelize.define("Movie", {
   },
   url: {
     type: DataTypes.STRING,
-    allowNull: false,
+    // allowNull: false,
   },
-  isForGuest: {
+  isPublic: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
+    defaultValue: true,
   },
   isPremium: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
+    defaultValue: false,
   },
 });
 
