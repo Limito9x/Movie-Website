@@ -13,6 +13,19 @@ exports.getMovies = async (req,res) => {
     }
 }
 
+// Lấy 1 phim bằng id
+exports.getMovie = async (req, res) => {
+  try {
+    const movie = await Movie.findByPk(req.params.id);
+    res.json(movie);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "An error occurs while getting movies", error });
+  }
+};
+
+// Thêm phim
 exports.addMovie = async (req,res) => {
     try {
       // Lấy thông tin cơ bản của phim
