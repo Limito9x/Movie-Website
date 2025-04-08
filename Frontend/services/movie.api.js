@@ -1,42 +1,28 @@
 import createApiClient from "./axios";
 
+const movieApi = createApiClient("/movies"); // Truyền /movies làm endpoint
+
 class MovieApi {
-  constructor(baseUrl = "http://localhost:3000/movies") {
-    this.api = createApiClient(baseUrl);
-  }
-
   async getAll() {
-    return (await this.api.get("/")).data;
+    return await movieApi.get("/"); // Không cần thêm endpoint nữa
   }
 
-  async create(data) {
-
-    return (
-      await this.api.post("/", data, {
-        headers: { "Content-Type": "multipart/form-data" },
-      })
-    ).data;
+  async getById(id) {
+    return await movieApi.get(`/${id}`);
   }
 
-  async get(id) {
-    return (await this.api.get(`/${id}`)).data;
-  }
-
-  async update(id, data, file) {
-    const formData = new FormData();
-    // Thêm tất cả dữ liệu phim vào formData
-    Object.keys(data).forEach((key) => {
-      formData.append(key, data[key]);
+  async create(formData) {
+    return await movieApi.post("/", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
     });
-    return (
-      await this.api.patch(`/${id}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      })
-    ).data;
+  }
+
+  async update(id, data) {
+    return await movieApi.put(`/${id}`, data);
   }
 
   async delete(id) {
-    return (await this.api.delete(`/${id}`)).data;
+    return await movieApi.delete(`/${id}`);
   }
 }
 

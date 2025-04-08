@@ -5,6 +5,7 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useCallback, useState } from "react";
 import MovieApi from "@/services/movie.api";
+import createFormData from "@/utils/createFormData";
 
 export default function Uploads() {
   const [movieData, setMovieData] = useState({
@@ -23,19 +24,12 @@ export default function Uploads() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const formData = new FormData();
-
-    formData.append("title", movieData.title);
-    formData.append("description", movieData.description);
-    formData.append("releaseDate", movieData.releaseDate);
-    formData.append("video",videoFile);
-    imageFiles.forEach((file)=>{
-      formData.append("images",file)
-    })
+    const formData = createFormData(movieData,videoFile,imageFiles);
 
     try {
       const response = await MovieApi.create(formData);
       console.log("Movie created:", response);
+      alert(response.message);
     } catch (error) {
       console.error("Error creating movie:", error);
     }

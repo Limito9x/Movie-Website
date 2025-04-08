@@ -16,11 +16,12 @@ exports.getMovies = async (req,res) => {
 exports.addMovie = async (req,res) => {
     try {
       // Lấy thông tin cơ bản của phim
+      console.log(req.body)
       const { title, description, releaseDate } = req.body;
       const videoFile = req.files["video"][0];
       const imageFiles = req.files["images"];
       // Tạo đối tượng phim mới với những thông tin cơ bản trên
-      const newMovie = await  Movie.create({ title, description, releaseDate, url: '' });
+      const newMovie =  new Movie({ title, description, releaseDate, url: '' });
       // Gọi hàm upload video lên firebase storage
       const videoUrl = (await firebaseUpload(videoFile)).url;
       // Lưu url video
