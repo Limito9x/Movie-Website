@@ -1,6 +1,6 @@
 const Movie = require('../models/movie');
 const MovieImage = require('../models/movieImages');
-const { firebaseUpload } = require('../utils/upload');
+const { firebaseUpload } = require('../utils/file');
 
 // Lấy danh sách phim
 exports.getMovies = async (req,res) => {
@@ -29,16 +29,17 @@ exports.getMovie = async (req, res) => {
 exports.addMovie = async (req,res) => {
     try {
       // Lấy thông tin cơ bản của phim
-      console.log(req.body)
       const { title, description, releaseDate } = req.body;
       const videoFile = req.files["video"][0];
       const imageFiles = req.files["images"];
       // Tạo đối tượng phim mới với những thông tin cơ bản trên
-      const newMovie =  new Movie({ title, description, releaseDate, url: '' });
+      const newMovie =  new Movie({ title, description, releaseDate, url: '',storagePath:'' });
       // Gọi hàm upload video lên firebase storage
-      const videoUrl = (await firebaseUpload(videoFile)).url;
+      const videoResult = (await firebaseUpload(videoFile));
       // Lưu url video
-      newMovie.url=videoUrl;
+      newMovie.url=videoResult.url;
+      // Lưu đường dẫn storage trên firebase (có thể dùng để tạo signed url và xóa file)
+      newMovie.storagePath=videoResult.storagePath;
       await newMovie.save();
       // Với các file ảnh sẽ cho chạy vòng lặp imageFiles và tạo đối tượng movieImage với url tương ứng
       const movieImagePromises = imageFiles.map(async (imageFile) => {
@@ -49,6 +50,7 @@ exports.addMovie = async (req,res) => {
                     return await MovieImage.create({
                         movieId: newMovie.id, // Sử dụng id của newMovie
                         image_url: imageResult.url,
+                        storagePath: imageResult.storagePath,
                     });
                 } else {
                     console.warn(`Failed to upload image: ${imageFile.originalname}`);
@@ -75,4 +77,15 @@ exports.addMovie = async (req,res) => {
           .status(500)
           .json({ message: "An error occurs while adding movies",error });
     }
+}
+
+// Xóa phim
+exports.deleleMovie = async (req,res) => {
+  try {
+    const movie = await Movie.findByPk(req.params.id);
+    if(!movie) return res.status(404).json({message:"Can not find movie!"})
+    if(movie.destroy()) return res.json({message: "Deleting movie successfully!"});
+    } catch (error){
+    res.status(500).json({ message: "An error occurs while deleting movies",error });
+  }
 }

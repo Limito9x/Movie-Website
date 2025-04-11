@@ -73,4 +73,14 @@ async function firebaseUpload(file) {
   }
 }
 
-module.exports = {bufferUpload,firebaseUpload};
+async function deleteFile(storagePath) {
+  try {
+    console.log(storagePath);
+    const file = bucket.file(storagePath);
+    file.delete();
+  }catch(error){
+    throw error;
+  }
+}
+
+module.exports = {bufferUpload,firebaseUpload,deleteFile};

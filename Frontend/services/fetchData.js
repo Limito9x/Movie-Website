@@ -41,3 +41,14 @@ export async function fetchOneAPI(apiService,id) {
     // Không cần set loading về false ở đây vì đã được set trong try/catch
   }
 }
+
+export async function deleteOneAPI(apiService,id) {
+  try {
+    const response = await apiService.delete(id);
+    alert("Xóa phim thành công!");
+    return { data: response, error: null, loading: false };
+  } catch(error){
+    console.error("Lỗi khi gọi API:", error);
+    return { data: null, error: "Lỗi khi gọi API.", loading: false };
+  }
+}

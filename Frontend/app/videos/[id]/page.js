@@ -5,7 +5,8 @@ import dayjs from "dayjs";
 import "dayjs/locale/vi";
 import { useParams } from "next/navigation";
 dayjs.locale("vi");
-import { fetchOneAPI } from "@/services/fetchData";
+import { fetchOneAPI,deleteOneAPI } from "@/services/fetchData";
+import { Button } from "@mui/material";
 export default function Video() {
     const id = useParams().id;
   const [movie, setMovie] = useState({
@@ -44,7 +45,11 @@ export default function Video() {
       )}
       {movie.data.url && (
         <div className="video-container">
-          <video src={movie.data.url} controls className="video-element"></video>
+          <video
+            src={movie.data.url}
+            controls
+            className="video-element"
+          ></video>
         </div>
       )}
       {!movie.data.url && (
@@ -52,6 +57,9 @@ export default function Video() {
           Không có video
         </div>
       )}
+      <Button onClick={()=>{
+        if(confirm("Bạn có muốn xóa video?")) deleteOneAPI(movieApi,movie.data.id);
+      }} variant="error">Xóa</Button>
     </div>
   );
 }
