@@ -10,7 +10,7 @@ const commonConfig = {
 };
 const apiURL = process.env.REACT_APP_API_BASE_URL || "http://localhost:3000";
 // Hàm tạo API client theo baseURL
-export default (endpoint) => {
+const ApiCreate = (endpoint) => {
   const instance = axios.create({
     baseURL: apiURL + endpoint,
     ...commonConfig,
@@ -27,3 +27,33 @@ export default (endpoint) => {
 
   return instance;
 };
+
+class ApiClient {
+  constructor(endpoint){
+    this.api = ApiCreate(endpoint);
+  }
+
+  async getAll() {
+    return (await this.api.get("/")).data;
+  }
+
+  async getById(id) {
+    return (await this.api.get(`/${id}`)).data;
+  }
+
+  async create(formData) {
+    return await this.api.post("/", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  }
+
+  async update(id, data) {
+    return await this.api.patch(`/${id}`, data);
+  }
+
+  async delete(id) {
+    return await this.api.delete(`/${id}`);
+  }
+}
+
+export default ApiClient;
