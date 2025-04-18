@@ -6,7 +6,7 @@ const storage = multer.memoryStorage();
 
 const bufferUpload = multer({
     storage, // Lưu vào req.file.buffer (bộ nhớ tạm thời)
-    limits: { fileSize: 10*1024*1024}, // Giới hạn file là 10MB
+    limits: { fileSize: 30*1024*1024}, // Giới hạn file là 10MB
     fileFilter: (req,file,cb) => {
         const filetypes = /jpeg|jpg|png|webm|mp4|mov/;
         const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
@@ -56,9 +56,10 @@ async function firebaseUpload(file) {
     // Cấu hình metadata (tìm hiều trong readme) tùy chọn (ví dụ: Content-Type)
     const metadata = {
       contentType: fileType,
+      cacheControl: 'public, max-age=86400',// Lưu cache khi có yêu để sử dụng lại từ cache khi reload trang
     };
     // Tải lên file lên Firebase Storage từ buffer
-    await bucket.file(destinationPath).save(fileBuffer);
+    await bucket.file(destinationPath).save(fileBuffer,{metadata});
     // Lấy URL công khai của file vừa tải lên
     const publicUrl = getPublicImageUrl(destinationPath);
 
