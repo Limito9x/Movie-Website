@@ -42,9 +42,9 @@ class ApiClient {
   }
 
   async create(formData) {
-    return await this.api.post("/", formData, {
+    return (await this.api.post("/", formData, {
       headers: { "Content-Type": "multipart/form-data" },
-    });
+    })).data;
   }
 
   async update(id, data) {

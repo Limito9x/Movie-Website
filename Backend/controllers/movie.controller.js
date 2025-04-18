@@ -5,7 +5,12 @@ const { firebaseUpload } = require('../utils/file');
 // Lấy danh sách phim
 exports.getMovies = async (req,res) => {
     try{
-        const movies = await Movie.findAll();
+        const movies = await Movie.findAll({
+          include: [{
+            model: MovieImage,
+            as: 'images',
+          }]
+        });
         res.json(movies)
     }
     catch (error) {
@@ -16,7 +21,12 @@ exports.getMovies = async (req,res) => {
 // Lấy 1 phim bằng id
 exports.getMovie = async (req, res) => {
   try {
-    const movie = await Movie.findByPk(req.params.id);
+    const movie = await Movie.findByPk(req.params.id,{
+      include: [{
+        model: MovieImage,
+        as: 'images',
+      }]
+    });
     res.json(movie);
   } catch (error) {
     res
@@ -89,3 +99,18 @@ exports.deleleMovie = async (req,res) => {
     res.status(500).json({ message: "An error occurs while deleting movies",error });
   }
 }
+
+// Cập nhật phim
+exports.updateMovie = async (req, res) => {
+  try {
+    const [updatedRows] = await Movie.update(req.body,{
+      where: {id: req.params.id},
+    });
+    if(updatedRows>0) return res.status(200).json({message:"Movie updated successfully!"})
+    else return res.status(404).json({message:"Movie not found!"})
+    } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Fail to update movies", error });
+  }
+};

@@ -1,33 +1,13 @@
 "use client";
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import MovieApi from "@/services/movie.api";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
 dayjs.locale("vi");
-import useApi from "@/services/useApi";
+import { useApi } from "@/services/useApi";
 
 export default function Home() {
-  const [movieApi] = useState(() => new useApi(MovieApi));
-  const [movies, setMovies] = useState([]); // Khởi tạo movies là một mảng rỗng
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const loadMovies = async () => {
-    setLoading(true);
-    setError(null);
-    await movieApi.fetchAllData();
-    setMovies(movieApi.data);
-    setLoading(false);
-    if (movieApi.error) {
-      setError(movieApi.error);
-    }
-    
-  };
-
-  useEffect(() => {
-    loadMovies();
-  }, []); // Dependency array rỗng để loadMovies chỉ chạy một lần sau khi component mount
+  const { data: movies, loading, error } = useApi(MovieApi, null);
 
   if (loading) {
     return <div>Đang tải dữ liệu phim...</div>;
@@ -60,6 +40,7 @@ export default function Home() {
               </p>
             )}
             {/* Bạn có thể hiển thị thumbnail ở đây nếu có */}
+            <img className="movieImg" src={movie.images[0].image_url}/>
           </Link>
         ))}
       </div>

@@ -35,3 +35,18 @@ input{
   height: 100%;
   object-fit: contain; /* Thu nhỏ video để vừa với container, giữ nguyên tỷ lệ */
 }
+
+.movieImg{
+  height: 200px;
+  padding: 10px;
+  margin: auto;
+}
+.SliderContainer{
+  width: 400px;
+}
+
+.slide{
+  height: 200px;
+  margin: 10px auto;
+  border-radius: 5px;
+}
