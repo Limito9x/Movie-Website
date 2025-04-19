@@ -1,19 +1,35 @@
 import { Button,TextField,Dialog,DialogActions,
-    DialogContent,DialogContentText,DialogTitle
+    DialogContent,DialogTitle
  } 
 from '@mui/material'
 import { useState } from 'react'
-export default function FormDialog({inputConfig}) {
+export default function FormDialog({inputConfig,dataValue,instance,refetch}) {
     const [open,setOpen] = useState(false);
     const [input,setinput] = useState(inputConfig||[]);
-
+    const [data,setData] = useState(dataValue||{});
     const handleClick = () => {
         setOpen(!open);
     }
 
     const handleInputChange = (event) => {
       const { name, value } = event.target;
+      setData({...data,[name]:value})
     };
+
+    const handleUpdate = async (event) => {
+      event.preventDefault();
+      try{
+        const result = await instance.update(data.id, data);
+        console.log(result)
+        if(result) {
+          alert(result.message);
+          handleClick();
+          if(refetch) refetch();
+        }
+      }catch(error){
+        console.log(error);
+      }
+    }
 
     return (
       <div>
@@ -30,7 +46,7 @@ export default function FormDialog({inputConfig}) {
                 name={config.key}
                 variant="outlined"
                 margin="dense"
-
+                value={data[config.key]}
                 fullWidth
                 type={config.type || "text"}
                 onChange={handleInputChange}
@@ -38,7 +54,7 @@ export default function FormDialog({inputConfig}) {
             ))}
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClick}>Lưu thay đổi</Button>
+            <Button onClick={handleUpdate}>Lưu thay đổi</Button>
           </DialogActions>
         </Dialog>
       </div>

@@ -48,11 +48,11 @@ class ApiClient {
   }
 
   async update(id, data) {
-    return await this.api.patch(`/${id}`, data);
+    return (await this.api.patch(`/${id}`, data)).data;
   }
 
   async delete(id) {
-    return await this.api.delete(`/${id}`);
+    return (await this.api.delete(`/${id}`)).data;
   }
 }
 

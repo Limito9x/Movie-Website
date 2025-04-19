@@ -8,15 +8,15 @@ import {useApi,deleteOne} from "@/services/useApi";
 import { Button } from "@mui/material";
 import Carousel from "@/components/Carousel";
 import FormDialog from "@/components/FormDialog";
+import movieApi from "@/services/movie.api";
 
 export default function Video() {
   const id = useParams().id;
-  const {data: movie,loading,error} = useApi(MovieApi,id);
-  console.log(movie);
+  const {data: movie,loading,error,refetch} = useApi(MovieApi,id);
 
   const inputs = [
     {key: 'title',label: 'Tên phim'},
-    {key: 'descriptioon',label: 'Mô tả'},
+    {key: 'description',label: 'Mô tả'},
   ]
 
   if (loading) {
@@ -59,7 +59,7 @@ export default function Video() {
       >
         Xóa
       </Button>
-      <FormDialog inputConfig={inputs}/>
+      <FormDialog inputConfig={inputs} dataValue={movie} instance={movieApi} refetch={refetch}/>
     </div>
   );
 }
