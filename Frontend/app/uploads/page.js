@@ -6,6 +6,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useState } from "react";
 import MovieApi from "@/services/movie.api";
 import createFormData from "@/utils/createFormData";
+import CustomDatePicker from "@/components/CustomDatePicker";
+import dayjs from "dayjs"; 
 
 export default function Uploads() {
   const [movieData, setMovieData] = useState({
@@ -59,20 +61,13 @@ export default function Uploads() {
             multiline
             rows={4}
           />
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={["DatePicker"]}>
-              <DatePicker
-                label="Ngày phát hành"
-                onChange={(newValue) => {
-                  const isoDate = newValue?.toISOString();
-                  setMovieData((prev) => ({
-                    ...prev,
-                    releaseDate: isoDate || "",
-                  }));
-                }}
-              />
-            </DemoContainer>
-          </LocalizationProvider>
+          <CustomDatePicker
+            date={movieData.releaseDate}
+            setDate={(newDate) =>
+              setMovieData((prev) => ({ ...prev, releaseDate: newDate }))
+            }
+            label={"Ngày phát hành"}
+          ></CustomDatePicker>
           Video
           <input
             type="file"
