@@ -3,6 +3,8 @@ import { Button,TextField,Dialog,DialogActions,
  } 
 from '@mui/material'
 import { useState } from 'react'
+import CustomDatePicker from './CustomDatePicker';
+
 export default function FormDialog({inputConfig,dataValue,instance,refetch}) {
     const [open,setOpen] = useState(false);
     const [input,setinput] = useState(inputConfig||[]);
@@ -33,30 +35,42 @@ export default function FormDialog({inputConfig,dataValue,instance,refetch}) {
 
     return (
       <div>
-        <Button variant="outlined" onClick={handleClick}>
-          Cập nhật
-        </Button>
-        <Dialog open={open} onClose={handleClick}>
-          <DialogTitle>Cập nhật</DialogTitle>
-          <DialogContent>
-            {input.map((config) => (
-              <TextField
-                key={config.key}
-                label={config.label}
-                name={config.key}
-                variant="outlined"
-                margin="dense"
-                value={data[config.key]}
-                fullWidth
-                type={config.type || "text"}
-                onChange={handleInputChange}
-              />
-            ))}
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleUpdate}>Lưu thay đổi</Button>
-          </DialogActions>
-        </Dialog>
+      <Button variant="outlined" onClick={handleClick}>
+        Cập nhật
+      </Button>
+      <Dialog open={open} onClose={handleClick}>
+        <DialogTitle>Cập nhật</DialogTitle>
+        <DialogContent>
+        {input.map((config) => (
+          config.type === "date" ? (
+          <CustomDatePicker
+            key={config.key}
+            label={config.label}
+            name={config.key}
+            value={data[config.key]}
+            fullWidth
+            date={data[config.key]}
+            setDate={(date) => setData({ ...data, [config.key]: date })}
+          />
+          ) : (
+          <TextField
+            key={config.key}
+            label={config.label}
+            name={config.key}
+            variant="outlined"
+            margin="dense"
+            value={data[config.key]}
+            fullWidth
+            type={config.type || "text"}
+            onChange={handleInputChange}
+          />
+          )
+        ))}
+        </DialogContent>
+        <DialogActions>
+        <Button onClick={handleUpdate}>Lưu thay đổi</Button>
+        </DialogActions>
+      </Dialog>
       </div>
     );
 }

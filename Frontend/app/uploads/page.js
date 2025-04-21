@@ -1,13 +1,9 @@
 "use client";
 import { TextField, Box, Button, Typography } from "@mui/material";
-import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useState } from "react";
 import MovieApi from "@/services/movie.api";
 import createFormData from "@/utils/createFormData";
 import CustomDatePicker from "@/components/CustomDatePicker";
-import dayjs from "dayjs"; 
 
 export default function Uploads() {
   const [movieData, setMovieData] = useState({

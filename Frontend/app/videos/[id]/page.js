@@ -17,6 +17,7 @@ export default function Video() {
   const inputs = [
     {key: 'title',label: 'Tên phim'},
     {key: 'description',label: 'Mô tả'},
+    {key: 'releaseDate',label: 'Ngày phát hành',type: 'date'},
   ]
 
   if (loading) {
