@@ -42,6 +42,7 @@ export default function RootLayout({ children }) {
               />
               <nav className="flex w-max mx-auto gap-4">
                 <Link href="/">Trang chủ</Link>
+                <Link href="/actors">Diễn viên</Link>
                 <Link href="/uploads">Uploads</Link>
               </nav>
             </header>

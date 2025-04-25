@@ -1,9 +1,7 @@
 "use client";
 import MovieApi from "@/services/movie.api";
 import dayjs from "dayjs";
-import "dayjs/locale/vi";
 import { useParams } from "next/navigation";
-dayjs.locale("vi");
 import {useApi,deleteOne} from "@/services/useApi";
 import { Button } from "@mui/material";
 import Carousel from "@/components/Carousel";

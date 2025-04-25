@@ -3,6 +3,7 @@ const cors = require("cors");
 const {sequelize} = require('./config')
 const {Movie,Actor,Genre} = require('./models/relationships.database')
 const movieRoutes = require("./routes/movie.route");
+const actorRoutes = require("./routes/actor.route");
 const app = express();
 
 // Middleware
@@ -12,6 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Định tuyến
 app.use('/movies',movieRoutes);
+app.use('/actors',actorRoutes);
 
 sequelize.sync()
     .then(() => console.log("Database synced"))

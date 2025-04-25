@@ -1,6 +1,7 @@
 const createFormData = (data,video,images) => {
     const formData = new FormData();
     Object.keys(data).forEach((key)=>{
+        console.log(key,data[key])
         formData.append(key,data[key])
     })
 
