@@ -1,7 +1,6 @@
 import ApiClient from "./axios";
 import { useState, useEffect,useCallback } from "react";
 /**
- * Thiết lập 1 class chứa:
  * - Các thuộc tính:
  * + data (Dữ liệu) để hiển thị
  * + loading quản lý trạng thái

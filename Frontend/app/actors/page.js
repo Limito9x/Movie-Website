@@ -1,15 +1,11 @@
 "use client";
-import {
-  TextField,
-  Box,
-  Button,
-  Typography,
-  MenuItem,
-} from "@mui/material";
+import { TextField, Box, Button, Typography, MenuItem } from "@mui/material";
 import { useState } from "react";
 import ActorApi from "@/services/actor.api";
 import createFormData from "@/utils/createFormData";
 import CustomDatePicker from "@/components/CustomDatePicker";
+import { useApi } from "@/services/useApi";
+import dayjs from "dayjs";
 
 export default function Actors() {
   const [actorData, setActorData] = useState({
@@ -17,6 +13,7 @@ export default function Actors() {
     sex: "",
     dateOfBirth: "",
   });
+  const { data: actors, loading, error } = useApi(ActorApi, null);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -39,6 +36,18 @@ export default function Actors() {
       console.error("Error creating movie:", error);
     }
   };
+
+  if (loading) {
+    return <div>Đang tải dữ diễn viên...</div>;
+  }
+
+  if (error) {
+    return <div>Lỗi khi tải dữ liệu diễn viên: {error}</div>;
+  }
+
+  if (!actors || actors.length === 0) {
+    return <div>Không có dữ liệu phim.</div>;
+  }
 
   return (
     <main style={{ padding: "20px" }}>
@@ -83,9 +92,32 @@ export default function Actors() {
             }}
           ></input>
           <Button type="submit" variant="contained" color="primary">
-            Thêm Phim
+            Thêm Diễn Viên
           </Button>
         </Box>
+        <div className="mt-3">
+          <Typography variant="h4" component="h1" gutterBottom>
+            Danh sách diễn viên
+          </Typography>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {actors.map((actor) => (
+              <div key={actor.id} className="border p-4 rounded-md shadow-md">
+                <h2 className="text-xl font-bold">{actor.name}</h2>
+                <p className="text-gray-500">
+                  Giới tính: {actor.sex ? "Nữ" : "Nam"}
+                </p>
+                <p className="text-sm text-gray-500">
+                  Ngày sinh: {dayjs(actor.dateOfBirth).format("DD/MM/YYYY")}
+                </p>
+                <img
+                  className="movieImg"
+                  src={actor.avatarUrl}
+                  alt={actor.name}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
       </form>
     </main>
   );

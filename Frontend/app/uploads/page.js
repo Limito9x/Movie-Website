@@ -1,7 +1,15 @@
 "use client";
-import { TextField, Box, Button, Typography } from "@mui/material";
-import { useState } from "react";
+import {
+  TextField,
+  Box,
+  Button,
+  Typography,
+  Autocomplete,
+} from "@mui/material";
+import { useState,useEffect, use } from "react";
 import MovieApi from "@/services/movie.api";
+import ActorApi from "@/services/actor.api";
+import { useApi } from "@/services/useApi";
 import createFormData from "@/utils/createFormData";
 import CustomDatePicker from "@/components/CustomDatePicker";
 
@@ -10,19 +18,33 @@ export default function Uploads() {
     title: "",
     description: "",
     releaseDate: "", // ISO string
+    selectedActors: [],
   });
+  const { data: actors, loading, error } = useApi(ActorApi, null);
 
-  const handleInputChange = (event) => {
+  const handleInputChange = (event, values) => {
+    if (values) {
+      console.log("Diễn viên đã chọn:", values);
+      setMovieData((prev) => ({ ...prev, selectedActors: values }));
+      
+      return;
+    }
     const { name, value } = event.target;
     setMovieData((prev) => ({ ...prev, [name]: value }));
   };
+
+  useEffect(() => {
+    if (movieData.selectedActors)
+        console.log("Diễn viên đã thêm:", movieData.selectedActors);
+      console.log("Thông tin phim:", movieData);
+},[movieData.selectedActors])
 
   const [videoFile, setVideoFile] = useState(null);
   const [imageFiles, setImageFiles] = useState([]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const formData = createFormData(movieData,videoFile,imageFiles);
+    const formData = createFormData(movieData, videoFile, imageFiles);
 
     try {
       const response = await MovieApi.create(formData);
@@ -56,6 +78,17 @@ export default function Uploads() {
             onChange={handleInputChange}
             multiline
             rows={4}
+          />
+          <Autocomplete
+            multiple
+            options={actors}
+            getOptionLabel={(option) => option.name}
+            value={movieData.selectedActors}
+            onChange={handleInputChange}
+            renderInput={(params) => (
+              <TextField {...params} label="Diễn viên" variant="outlined" />
+            )}
+            sx={{ width: "400px" }}
           />
           <CustomDatePicker
             date={movieData.releaseDate}

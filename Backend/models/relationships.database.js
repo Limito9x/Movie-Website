@@ -4,8 +4,8 @@ const Genre = require("./genre");
 const MovieImage = require("./movieImages")
 
 // Thiết lập mối quan hệ nhiều-nhiều giữa phim và diễn viên
-Movie.belongsToMany(Actor, { through: "MovieActor" });
-Actor.belongsToMany(Movie, { through: "MovieActor" });
+Movie.belongsToMany(Actor, { through: "MovieActor",as: "actors" });
+Actor.belongsToMany(Movie, { through: "MovieActor",as: "movies" });
 
 // Thiết lập mối quan hệ nhiều-nhiều giữa phim và thể loại
 Movie.belongsToMany(Genre, { through: "MovieGenre" });
