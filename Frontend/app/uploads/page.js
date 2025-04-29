@@ -25,7 +25,7 @@ export default function Uploads() {
   const handleInputChange = (event, values) => {
     if (values) {
       console.log("Diễn viên đã chọn:", values);
-      setMovieData((prev) => ({ ...prev, selectedActors: values }));
+      setMovieData((prev) => ({ ...prev, selectedActors: values.map(actor => actor.id) }));
       
       return;
     }
@@ -45,7 +45,6 @@ export default function Uploads() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = createFormData(movieData, videoFile, imageFiles);
-
     try {
       const response = await MovieApi.create(formData);
       console.log("Movie created:", response);
@@ -83,7 +82,6 @@ export default function Uploads() {
             multiple
             options={actors}
             getOptionLabel={(option) => option.name}
-            value={movieData.selectedActors}
             onChange={handleInputChange}
             renderInput={(params) => (
               <TextField {...params} label="Diễn viên" variant="outlined" />

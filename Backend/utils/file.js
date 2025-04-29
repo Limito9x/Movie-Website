@@ -76,7 +76,6 @@ async function firebaseUpload(file) {
 
 async function deleteFile(storagePath) {
   try {
-    console.log(storagePath);
     const file = bucket.file(storagePath);
     file.delete();
   }catch(error){

@@ -33,6 +33,11 @@ export default function Video() {
     <div className="border p-4 rounded-md shadow-md">
       <h2 className="text-xl font-bold mb-2">{movie.title}</h2>
       <p className="text-gray-500 mb-2">{movie.description}</p>
+      {movie.actors && (
+        <p className="text-md text-gray-500 mb-2">
+          Diễn viên: {movie.actors.map((actor) => actor.name).join(", ")}
+        </p>
+      )}
       {movie.releaseDate && (
         <p className="text-sm text-gray-500 mb-2">
           Ngày phát hành: {dayjs(movie.releaseDate).format("DD/MM/YYYY")}
@@ -51,14 +56,20 @@ export default function Video() {
           Không có video
         </div>
       )}
-      <Button variant="outlined"
+      <Button
+        variant="outlined"
         onClick={() => {
           if (confirm("Bạn có muốn xóa video?")) deleteOne(MovieApi, id);
         }}
       >
         Xóa
       </Button>
-      <FormDialog inputConfig={inputs} dataValue={movie} instance={movieApi} refetch={refetch}/>
+      <FormDialog
+        inputConfig={inputs}
+        dataValue={movie}
+        instance={movieApi}
+        refetch={refetch}
+      />
     </div>
   );
 }

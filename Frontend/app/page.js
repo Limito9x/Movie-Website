@@ -8,7 +8,7 @@ import { useApi } from "@/services/useApi";
 
 export default function Home() {
   const { data: movies, loading, error } = useApi(MovieApi, null);
-
+  console.log(movies);
   if (loading) {
     return <div>Đang tải dữ liệu phim...</div>;
   }
@@ -34,6 +34,11 @@ export default function Home() {
 
             <h2 className="text-xl font-bold mb-2">{movie.title}</h2>
             <p className="text-gray-500 mb-2">{movie.description}</p>
+            {movie.actors && (
+              <p className="text-sm text-gray-500 mb-2">
+                Diễn viên: {movie.actors.map((actor) => actor.name).join(", ")}
+              </p>
+            )}
             {movie.releaseDate && (
               <p className="text-sm text-gray-500 mb-2">
                 Ngày phát hành: {dayjs(movie.releaseDate).format("DD/MM/YYYY")}
