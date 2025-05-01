@@ -12,6 +12,7 @@ import ActorApi from "@/services/actor.api";
 import { useApi } from "@/services/useApi";
 import createFormData from "@/utils/createFormData";
 import CustomDatePicker from "@/components/CustomDatePicker";
+import CustomAutoComplete from "@/components/CustomAutoComplete";
 
 export default function Uploads() {
   const [movieData, setMovieData] = useState({
@@ -88,6 +89,7 @@ export default function Uploads() {
             )}
             sx={{ width: "400px" }}
           />
+          <CustomAutoComplete label="Thể loại"></CustomAutoComplete>
           <CustomDatePicker
             date={movieData.releaseDate}
             setDate={(newDate) =>
