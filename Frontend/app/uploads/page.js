@@ -90,6 +90,7 @@ export default function Uploads() {
             sx={{ width: "400px" }}
           />
           <CustomAutoComplete label="Thể loại"></CustomAutoComplete>
+          <CustomAutoComplete label="Tag"></CustomAutoComplete>
           <CustomDatePicker
             date={movieData.releaseDate}
             setDate={(newDate) =>

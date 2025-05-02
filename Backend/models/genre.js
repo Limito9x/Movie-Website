@@ -6,6 +6,10 @@ const Genre = sequelize.define("Genre", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  description: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
 });
 
 module.exports = Genre;
