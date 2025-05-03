@@ -3,6 +3,7 @@ const {
   getActors,
   getActor,
   addActor,
+  deleteActor,
 } = require("../controllers/actor.controller");
 const bufferUpload = require("../utils/file").bufferUpload;
 
@@ -17,5 +18,6 @@ router.post(
   ]),
   addActor
 );
+router.delete("/:id", deleteActor);
 
 module.exports = router;

@@ -6,13 +6,15 @@ import {
   Typography,
   Autocomplete,
 } from "@mui/material";
-import { useState,useEffect, use } from "react";
+import { useState, useEffect, use } from "react";
 import MovieApi from "@/services/movie.api";
 import ActorApi from "@/services/actor.api";
+import GenreApi from "@/services/genre.api";
 import { useApi } from "@/services/useApi";
 import createFormData from "@/utils/createFormData";
 import CustomDatePicker from "@/components/CustomDatePicker";
 import CustomAutoComplete from "@/components/CustomAutoComplete";
+import { genreInput, tagInput } from "@/utils/inputConfig";
 
 export default function Uploads() {
   const [movieData, setMovieData] = useState({
@@ -20,25 +22,31 @@ export default function Uploads() {
     description: "",
     releaseDate: "", // ISO string
     selectedActors: [],
+    selectedGenres: [],
   });
-  const { data: actors, loading, error } = useApi(ActorApi, null);
 
-  const handleInputChange = (event, values) => {
+  const handleInputChange = (event, values, propName) => {
     if (values) {
-      console.log("Diễn viên đã chọn:", values);
-      setMovieData((prev) => ({ ...prev, selectedActors: values.map(actor => actor.id) }));
-      
+      console.log("Thuộc tính đã chọn:", propName);
+      console.log(`${propName} đã chọn:`, values);
+      setMovieData((prev) => ({
+        ...prev,
+        [propName]: values.map((value) => value.id),
+      }));
+
       return;
     }
-    const { name, value } = event.target;
+    const  {name,value}  = event.target;
     setMovieData((prev) => ({ ...prev, [name]: value }));
   };
 
   useEffect(() => {
     if (movieData.selectedActors)
-        console.log("Diễn viên đã thêm:", movieData.selectedActors);
-      console.log("Thông tin phim:", movieData);
-},[movieData.selectedActors])
+      console.log("Diễn viên đã thêm:", movieData.selectedActors);
+    if(movieData.selectedGenres)
+      console.log("Thể loại đã thêm:", movieData.selectedGenres);
+    console.log("Thông tin phim:", movieData);
+  }, [movieData.selectedActors, movieData.selectedGenres]);
 
   const [videoFile, setVideoFile] = useState(null);
   const [imageFiles, setImageFiles] = useState([]);
@@ -79,25 +87,29 @@ export default function Uploads() {
             multiline
             rows={4}
           />
-          <Autocomplete
-            multiple
-            options={actors}
-            getOptionLabel={(option) => option.name}
-            onChange={handleInputChange}
-            renderInput={(params) => (
-              <TextField {...params} label="Diễn viên" variant="outlined" />
-            )}
-            sx={{ width: "400px" }}
+          <CustomAutoComplete
+            serviceType={ActorApi}
+            name="selectedActors"
+            handleChange={handleInputChange}
+            label="Diễn viên"
           />
-          <CustomAutoComplete label="Thể loại"></CustomAutoComplete>
-          <CustomAutoComplete label="Tag"></CustomAutoComplete>
+          <CustomAutoComplete
+            serviceType={GenreApi}
+            name="selectedGenres"
+            inputs={genreInput}
+            label="Thể loại"
+          />
+          <CustomAutoComplete
+            inputs={tagInput}
+            label="Tag"
+          />
           <CustomDatePicker
             date={movieData.releaseDate}
             setDate={(newDate) =>
               setMovieData((prev) => ({ ...prev, releaseDate: newDate }))
             }
             label={"Ngày phát hành"}
-          ></CustomDatePicker>
+          />
           Video
           <input
             type="file"

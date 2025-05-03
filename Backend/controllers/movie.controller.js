@@ -129,7 +129,7 @@ exports.deleleMovie = async (req, res) => {
   try {
     const movie = await Movie.findByPk(req.params.id);
     if (!movie) return res.status(404).json({ message: "Can not find movie!" });
-    if (movie.destroy())
+    if (await movie.destroy())
       return res.json({ message: "Deleting movie successfully!" });
   } catch (error) {
     res

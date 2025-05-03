@@ -10,6 +10,7 @@ export default function AddItemDialog({label,inputConfig,instance,refetch}) {
     const title = `Thêm ${label.toLowerCase()}`;
     const [open,setOpen] = useState(false);
     const [input,setinput] = useState(inputConfig||[]);
+    const [data,setData] = useState({});
     const handleClick = () => {
         setOpen(!open);
     }
@@ -17,18 +18,20 @@ export default function AddItemDialog({label,inputConfig,instance,refetch}) {
     const handleInputChange = (event) => {
       const { name, value } = event.target;
       setData({...data,[name]:value})
+      console.log(data);
     };
 
     const handleAdd = async (event) => {
       event.preventDefault();
       try{
-        // const result = await instance.add(data);
-        // console.log(result)
-        // if(result) {
-        //   alert(result.message);
-        //   handleClick();
-        //   if(refetch) refetch();
-        // }
+        if(!instance) return alert("Instance chưa được khởi tạo");
+        const result = await instance.add(data);
+        console.log(result)
+        if(result) {
+          alert(result.message);
+          handleClick();
+          if(refetch) refetch();
+        }
         alert(`${title} thành công`);
       }catch(error){
         console.log(error);

@@ -8,3 +8,8 @@ export const genreInput = [
   { key: "name", label: "Tên thể loại" },
   { key: "description", label: "Mô tả" },
 ];
+
+export const tagInput = [
+  { key: "name", label: "Tên tag" },
+  { key: "description", label: "Mô tả" },
+];

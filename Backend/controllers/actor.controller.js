@@ -41,3 +41,18 @@ exports.addActor = async (req, res) => {
       .json({ message: "An error occurs while adding actor", error });
   }
 };
+
+exports.deleteActor = async (req, res) => {
+  try {
+    const actor = await Actor.findByPk(req.params.id);
+    if (!actor) {
+      return res.status(404).json({ message: "Actor not found" });
+    }
+    await actor.destroy();
+    res.json({ message: "Actor deleted successfully!" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "An error occurs while deleting actor", error });
+  }
+}

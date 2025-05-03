@@ -3,9 +3,9 @@ import {
   TextField,
   Autocomplete,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
 import ApiClient from "@/services/axios";
 import AddItemDialog from "./AddItemDialog";
+import { useApi } from "@/services/useApi";
 
 /**
  * @param {ApiClient} serviceType
@@ -13,25 +13,32 @@ import AddItemDialog from "./AddItemDialog";
 
 export default function CustomAutoComplete({
   serviceType,
+  name,
   label,
-  options,
   handleChange,
+  inputs,
 }) {
-  const [optionVal, setOptionVal] = useState(options||[]);
+  const { data } = useApi(serviceType, null);
+  const [value,setValue] = useState([])
+  const handleAutoCompleteChange = (event, newValue) => {
+    setValue(newValue);
+    handleChange(event, newValue, name);
+  };
   return (
     <div className="autoComplete">
       <Autocomplete
         multiple
-        options={optionVal}
+        options={data || []}
+        value={value}
         getOptionLabel={(option) => option.name}
-        onChange={handleChange}
+        onChange={handleAutoCompleteChange}
         noOptionsText={`Không có ${label.toLowerCase()}`}
         renderInput={(params) => (
           <TextField {...params} label={label} variant="outlined" />
         )}
         sx={{ width: "350px" }}
       />
-      <AddItemDialog label={label}/>
+      <AddItemDialog instance={serviceType} inputConfig={inputs} label={label}/>
     </div>
   );
 }

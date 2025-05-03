@@ -4,7 +4,7 @@ import { useState } from "react";
 import ActorApi from "@/services/actor.api";
 import createFormData from "@/utils/createFormData";
 import CustomDatePicker from "@/components/CustomDatePicker";
-import { useApi } from "@/services/useApi";
+import { useApi, deleteOne } from "@/services/useApi";
 import dayjs from "dayjs";
 
 export default function Actors() {
@@ -38,15 +38,11 @@ export default function Actors() {
   };
 
   if (loading) {
-    return <div>Đang tải dữ diễn viên...</div>;
+    return <div>Đang tải dữ liệu diễn viên...</div>;
   }
 
   if (error) {
     return <div>Lỗi khi tải dữ liệu diễn viên: {error}</div>;
-  }
-
-  if (!actors || actors.length === 0) {
-    return <div>Không có dữ liệu phim.</div>;
   }
 
   return (
@@ -95,10 +91,12 @@ export default function Actors() {
             Thêm Diễn Viên
           </Button>
         </Box>
+
         <div className="mt-3">
           <Typography variant="h4" component="h1" gutterBottom>
             Danh sách diễn viên
           </Typography>
+          {actors.length === 0 && <div>Không có dữ liệu diễn viên.</div>}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {actors.map((actor) => (
               <div key={actor.id} className="border p-4 rounded-md shadow-md">
@@ -114,6 +112,9 @@ export default function Actors() {
                   src={actor.avatarUrl}
                   alt={actor.name}
                 />
+                <Button onClick={()=>{if(confirm(`Bạn có muốn xóa diễn viên ${actor.name}`))deleteOne(ActorApi, actor.id)}}>
+                  Xóa diễn viên
+                </Button>
               </div>
             ))}
           </div>
