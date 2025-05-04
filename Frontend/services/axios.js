@@ -41,6 +41,10 @@ class ApiClient {
     return (await this.api.get(`/${id}`)).data;
   }
 
+  async add(data){
+    return (await this.api.post("/", data)).data;
+  }
+
   async create(formData) {
     return (await this.api.post("/", formData, {
       headers: { "Content-Type": "multipart/form-data" },

@@ -25,8 +25,8 @@ const Actor = sequelize.define("Actor", {
   hooks: {
     beforeDestroy: async (actor, options) => {
       // Xóa ảnh trên firebase storage
-      if (actor.avatar) {
-        await deleteFile(actor.avatar);
+      if (actor.avatarStoragePath) {
+        await deleteFile(actor.avatarStoragePath);
       }
     },
   },

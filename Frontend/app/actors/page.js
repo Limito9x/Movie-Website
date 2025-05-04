@@ -2,7 +2,7 @@
 import { TextField, Box, Button, Typography, MenuItem } from "@mui/material";
 import { useState } from "react";
 import ActorApi from "@/services/actor.api";
-import createFormData from "@/utils/createFormData";
+import {createFormData,handleInputChange} from "@/utils/formUtils";
 import CustomDatePicker from "@/components/CustomDatePicker";
 import { useApi, deleteOne } from "@/services/useApi";
 import dayjs from "dayjs";
@@ -15,17 +15,14 @@ export default function Actors() {
   });
   const { data: actors, loading, error } = useApi(ActorApi, null);
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setActorData((prev) => ({ ...prev, [name]: value }));
+  const handleChange = (event) => {
+    handleInputChange(setActorData, event);
   };
 
   const [imageFile, setImageFile] = useState([]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("actorData", actorData);
-    console.log("imageFile", imageFile);
     const formData = createFormData(actorData, null, imageFile);
 
     try {
@@ -57,7 +54,7 @@ export default function Actors() {
             variant="outlined"
             name="name"
             value={actorData.name}
-            onChange={handleInputChange}
+            onChange={handleChange}
             required
           />
           <TextField
@@ -66,7 +63,7 @@ export default function Actors() {
             label="Giới tính"
             variant="outlined"
             value={actorData.sex}
-            onChange={handleInputChange}
+            onChange={handleChange}
           >
             <MenuItem value={false}>Nam</MenuItem>
             <MenuItem value={true}>Nữ</MenuItem>
@@ -112,7 +109,12 @@ export default function Actors() {
                   src={actor.avatarUrl}
                   alt={actor.name}
                 />
-                <Button onClick={()=>{if(confirm(`Bạn có muốn xóa diễn viên ${actor.name}`))deleteOne(ActorApi, actor.id)}}>
+                <Button
+                  onClick={() => {
+                    if (confirm(`Bạn có muốn xóa diễn viên ${actor.name}`))
+                      deleteOne(ActorApi, actor.id);
+                  }}
+                >
                   Xóa diễn viên
                 </Button>
               </div>

@@ -5,6 +5,7 @@ const {Movie,Actor,Genre} = require('./models/relationships.database')
 const movieRoutes = require("./routes/movie.route");
 const actorRoutes = require("./routes/actor.route");
 const genreRoutes = require("./routes/genre.route");
+const tagRoutes = require("./routes/tag.route");
 const app = express();
 
 // Middleware
@@ -16,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/movies',movieRoutes);
 app.use('/actors',actorRoutes);
 app.use('/genres',genreRoutes);
+app.use('/tags',tagRoutes);
 
 sequelize.sync()
     .then(() => console.log("Database synced"))

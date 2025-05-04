@@ -32,7 +32,7 @@ export default function CustomAutoComplete({
         value={value}
         getOptionLabel={(option) => option.name}
         onChange={handleAutoCompleteChange}
-        noOptionsText={`Không có ${label.toLowerCase()}`}
+        noOptionsText={`Không tìm thấy ${label.toLowerCase()}`}
         renderInput={(params) => (
           <TextField {...params} label={label} variant="outlined" />
         )}

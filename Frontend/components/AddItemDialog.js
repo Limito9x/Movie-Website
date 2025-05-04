@@ -4,35 +4,44 @@ import { Button,TextField,Dialog,DialogActions,
 from '@mui/material'
 import { useState } from 'react'
 import CustomDatePicker from './CustomDatePicker';
+import { handleInputChange,createFormData } from '@/utils/formUtils';
 import AddIcon from "@mui/icons-material/Add";
 
 export default function AddItemDialog({label,inputConfig,instance,refetch}) {
     const title = `Thêm ${label.toLowerCase()}`;
     const [open,setOpen] = useState(false);
     const [input,setinput] = useState(inputConfig||[]);
-    const [data,setData] = useState({});
+    const [data,setData] = useState({
+        // Khởi tạo các giá trị mặc định cho các trường dữ liệu
+        ...input.reduce((acc, config) => {
+            acc[config.key] = config.defaultValue || "";
+            return acc;
+        }, {}),
+    }); // Phần data khởi tạo để gửi lên server
     const handleClick = () => {
         setOpen(!open);
+        if(open) {
+          console.log("Dữ liệu đã nhập:", data);
+        }
     }
 
-    const handleInputChange = (event) => {
-      const { name, value } = event.target;
-      setData({...data,[name]:value})
-      console.log(data);
+    const handleChange = (event) => {
+      handleInputChange(setData,event);
     };
 
     const handleAdd = async (event) => {
       event.preventDefault();
       try{
         if(!instance) return alert("Instance chưa được khởi tạo");
-        const result = await instance.add(data);
-        console.log(result)
-        if(result) {
-          alert(result.message);
-          handleClick();
-          if(refetch) refetch();
-        }
-        alert(`${title} thành công`);
+        if(confirm("Xác nhận thêm dữ liệu?")){       
+          const result = await instance.add(data);
+          console.log(result);
+          if (result) {
+            alert(result.message);
+            handleClick();
+            if (refetch) refetch();
+          } 
+        }     
       }catch(error){
         console.log(error);
       }
@@ -66,7 +75,7 @@ export default function AddItemDialog({label,inputConfig,instance,refetch}) {
             margin="dense"
             fullWidth
             type={config.type || "text"}
-            onChange={handleInputChange}
+            onChange={handleChange}
           />
           )
         ))}

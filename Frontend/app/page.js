@@ -8,7 +8,6 @@ import { useApi } from "@/services/useApi";
 
 export default function Home() {
   const { data: movies, loading, error } = useApi(MovieApi, null);
-  console.log(movies);
   if (loading) {
     return <div>Đang tải dữ liệu phim...</div>;
   }
@@ -20,7 +19,6 @@ export default function Home() {
   if (!movies || movies.length === 0) {
     return <div>Không có dữ liệu phim.</div>;
   }
-  console.log(movies);
   return (
     <main className="container flex flex-col items-center">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

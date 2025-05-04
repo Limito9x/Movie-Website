@@ -5,3 +5,5 @@ class GenreApi extends ApiClient {
         super("/genres");
     }   
 }
+
+export default new GenreApi();
