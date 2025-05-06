@@ -38,6 +38,16 @@ export default function Video() {
           Diễn viên: {movie.actors.map((actor) => actor.name).join(", ")}
         </p>
       )}
+      {movie.genres && (
+        <p className="text-md text-gray-500 mb-2">
+          Thể loại: {movie.genres.map((genre) => genre.name).join(", ")}
+        </p>
+      )}
+      {movie.tags && (
+        <p className="text-md text-gray-500 mb-2">
+          Tag: {movie.tags.map((tag) => tag.name).join(", ")}
+        </p>
+      )}
       {movie.releaseDate && (
         <p className="text-sm text-gray-500 mb-2">
           Ngày phát hành: {dayjs(movie.releaseDate).format("DD/MM/YYYY")}

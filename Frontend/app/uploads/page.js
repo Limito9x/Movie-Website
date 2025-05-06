@@ -48,7 +48,7 @@ export default function Uploads() {
       <Typography variant="h4" component="h1" gutterBottom>
         Thêm Phim Mới
       </Typography>
-      <form className="mt-3" onSubmit={handleSubmit}>
+      <form autoComplete="off" className="mt-3" onSubmit={handleSubmit}>
         <Box className="flex flex-col gap-3" maxWidth="500px">
           <TextField
             label="Tên phim"

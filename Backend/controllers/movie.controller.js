@@ -1,6 +1,9 @@
 const Movie = require("../models/movie");
 const MovieImage = require("../models/movieImages");
-const Actor  = require("../models/actor");
+const Actor = require("../models/actor");
+const Genre = require("../models/genre");
+const Tag = require("../models/tag");
+const { Op } = require("sequelize");
 const { firebaseUpload } = require("../utils/file");
 
 // Lấy danh sách phim
@@ -16,6 +19,16 @@ exports.getMovies = async (req, res) => {
           model: Actor,
           as: "actors",
           through: { attributes: [] }, // Không lấy thông tin diễn viên trong lần này
+        },
+        {
+          model: Genre,
+          as: "genres",
+          through: { attributes: [] }, // Không lấy thông tin thể loại trong lần này
+        },
+        {
+          model: Tag,
+          as: "tags",
+          through: { attributes: [] }, // Không lấy thông tin tag trong lần này
         },
       ],
     });
@@ -41,7 +54,17 @@ exports.getMovie = async (req, res) => {
           model: Actor,
           as: "actors",
           through: { attributes: [] },
-        }
+        },
+        {
+          model: Genre,
+          as: "genres",
+          through: { attributes: [] },
+        },
+        {
+          model: Tag,
+          as: "tags",
+          through: { attributes: [] },
+        },
       ],
     });
     res.json(movie);
@@ -56,8 +79,15 @@ exports.getMovie = async (req, res) => {
 exports.addMovie = async (req, res) => {
   try {
     // Lấy thông tin cơ bản của phim
-    const { title, description, releaseDate, selectedActors } = req.body;
-    
+    const {
+      title,
+      description,
+      releaseDate,
+      selectedActors,
+      selectedGenres,
+      selectedTags,
+    } = req.body;
+
     const videoFile = req.files["video"][0];
     const imageFiles = req.files["images"];
     // Tạo đối tượng phim mới với những thông tin cơ bản trên
@@ -107,10 +137,30 @@ exports.addMovie = async (req, res) => {
     if (selectedActors && selectedActors.length > 0) {
       const actors = await Actor.findAll({
         where: {
-          id: selectedActors,
+          id: { [Op.in]: selectedActors },
         },
       });
-      await newMovie.setActors(actors);
+      await newMovie.addActors(actors);
+    }
+
+    // Lưu thể loại vào bảng movie_genre
+    if (selectedGenres && selectedGenres.length > 0) {
+      const genres = await Genre.findAll({
+        where: {
+          id: { [Op.in]: selectedGenres },
+        },
+      });
+      await newMovie.addGenres(genres);
+    }
+
+    // Lưu tag vào bảng movie_tag
+    if (selectedTags && selectedTags.length > 0) {
+      const tags = await Tag.findAll({
+        where: {
+          id: { [Op.in]: selectedTags },
+        },
+      });
+      await newMovie.addTags(tags);
     }
 
     res.status(201).json({

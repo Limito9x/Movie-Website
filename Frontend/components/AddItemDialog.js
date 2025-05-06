@@ -20,11 +20,8 @@ export default function AddItemDialog({label,inputConfig,instance,refetch}) {
     }); // Phần data khởi tạo để gửi lên server
     const handleClick = () => {
         setOpen(!open);
-        if(open) {
-          console.log("Dữ liệu đã nhập:", data);
-        }
     }
-
+    
     const handleChange = (event) => {
       handleInputChange(setData,event);
     };
@@ -68,7 +65,7 @@ export default function AddItemDialog({label,inputConfig,instance,refetch}) {
           />
           ) : (
           <TextField
-            key={config.key}
+            key={`${label}-${config.key}`}
             label={config.label}
             name={config.key}
             variant="outlined"

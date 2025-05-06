@@ -7,7 +7,7 @@
 			"path": "Frontend",
 			"problemMatcher": [],
 			"label": "npm: dev - Frontend",
-			"detail": "next dev -p 3001"
+			"detail": "next dev -p 3001 --turbo"
 		},
 		{
       "label": "Frontend Terminal",
