@@ -8,7 +8,7 @@ import TagApi from "@/services/tag.api";
 import { createFormData, handleInputChange } from "@/utils/formUtils";
 import CustomDatePicker from "@/components/CustomDatePicker";
 import CustomAutoComplete from "@/components/CustomAutoComplete";
-import { genreInput, tagInput } from "@/utils/inputConfig";
+import { actorInput,genreInput, tagInput } from "@/utils/inputConfig";
 
 export default function Uploads() {
   const [movieData, setMovieData] = useState({
@@ -70,6 +70,7 @@ export default function Uploads() {
           <CustomAutoComplete
             serviceType={ActorApi}
             name="selectedActors"
+            inputs={actorInput}
             handleChange={handleChange}
             label="Diễn viên"
           />
@@ -99,6 +100,7 @@ export default function Uploads() {
             type="file"
             name="video"
             accept="video/*"
+            required
             onChange={(event) => {
               setVideoFile(event.target.files[0]);
             }}
@@ -109,6 +111,7 @@ export default function Uploads() {
             name="images"
             multiple
             accept="image/*"
+            required
             onChange={(event) => {
               setImageFiles([...event.target.files]);
             }}

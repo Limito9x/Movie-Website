@@ -37,6 +37,7 @@ export default function CustomAutoComplete({
           <TextField {...params} label={label} variant="outlined" />
         )}
         sx={{ width: "350px" }}
+        disableCloseOnSelect // Keeps the dropdown open when selecting an option
       />
       <AddItemDialog instance={serviceType} inputConfig={inputs} label={label}/>
     </div>
