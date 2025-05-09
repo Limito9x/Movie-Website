@@ -4,6 +4,7 @@ import { Button,TextField,Dialog,DialogActions,
 from '@mui/material'
 import { useState } from 'react'
 import CustomDatePicker from './CustomDatePicker';
+import RenderInput from './RenderInput';
 
 export default function FormDialog({inputConfig,dataValue,instance,refetch}) {
     const [open,setOpen] = useState(false);
@@ -22,7 +23,6 @@ export default function FormDialog({inputConfig,dataValue,instance,refetch}) {
       event.preventDefault();
       try{
         const result = await instance.update(data.id, data);
-        console.log(result)
         if(result) {
           alert(result.message);
           handleClick();
@@ -47,10 +47,8 @@ export default function FormDialog({inputConfig,dataValue,instance,refetch}) {
             key={config.key}
             label={config.label}
             name={config.key}
-            value={data[config.key]}
-            fullWidth
             date={data[config.key]}
-            setDate={(date) => setData({ ...data, [config.key]: date })}
+            setDate={setData}
           />
           ) : (
           <TextField
@@ -66,6 +64,7 @@ export default function FormDialog({inputConfig,dataValue,instance,refetch}) {
           />
           )
         ))}
+        <RenderInput inputConfig={input}/>
         </DialogContent>
         <DialogActions>
         <Button onClick={handleUpdate}>Lưu thay đổi</Button>

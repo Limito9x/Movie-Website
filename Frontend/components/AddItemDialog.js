@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import CustomDatePicker from "./CustomDatePicker";
+import RenderInput from "./RenderInput";
 import { handleInputChange, createFormData } from "@/utils/formUtils";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -76,14 +77,13 @@ export default function AddItemDialog({
       <Dialog open={open} onClose={handleClick}>
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
-          {input.map((config) => {
+          {/* {input.map((config) => {
             return config.type === "date" ? (
               <CustomDatePicker
                 key={config.key}
                 label={config.label}
                 name={config.key}
-                fullWidth
-                setDate={(date) => setData({ ...data, [config.key]: date })}
+                setDate={setData}
               />
             ) : (
               <TextField
@@ -97,7 +97,8 @@ export default function AddItemDialog({
                 onChange={handleChange}
               />
             );
-          })}
+          })} */}
+          <RenderInput inputConfig={input} setData={setData} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleAdd}>Thêm</Button>

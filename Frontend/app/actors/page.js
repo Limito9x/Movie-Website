@@ -1,6 +1,6 @@
 "use client";
 import { TextField, Box, Button, Typography, MenuItem } from "@mui/material";
-import { useState } from "react";
+import { useState,useEffect, use } from "react";
 import ActorApi from "@/services/actor.api";
 import {createFormData,handleInputChange} from "@/utils/formUtils";
 import CustomDatePicker from "@/components/CustomDatePicker";
@@ -15,6 +15,11 @@ export default function Actors() {
     sex: "",
     dateOfBirth: "",
   });
+
+  useEffect(() => {
+    console.log("actorData", actorData);
+  }, [actorData]);
+
   const { data: actors, loading, error } = useApi(ActorApi, null);
 
   const handleChange = (event) => {
@@ -72,9 +77,8 @@ export default function Actors() {
           </TextField>
           <CustomDatePicker
             date={actorData.dateOfBirth}
-            setDate={(newDate) =>
-              setActorData((prev) => ({ ...prev, dateOfBirth: newDate }))
-            }
+            setDate={setActorData}
+            name="dateOfBirth"
             label="Ngày sinh"
           ></CustomDatePicker>
           Ảnh đại diện:
