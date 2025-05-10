@@ -2,7 +2,7 @@ import { TextField, Input } from "@mui/material";
 import CustomDatePicker from "./CustomDatePicker";
 import { handleInputChange, handleFileChange } from "@/utils/formUtils";
 import MenuItem from "@mui/material/MenuItem";
-import React from "react";
+import { useState, forwardRef, useImperativeHandle, use } from "react";
 
 const commonProps = {
   fullWidth: true,
@@ -10,42 +10,48 @@ const commonProps = {
   margin: "dense",
 };
 
-export default function RenderInput({ inputName, inputConfig, data, setData }) {
+const RenderInput = forwardRef(({ inputConfig, data }, ref) => {
+  const [localData, setLocalData] = useState(() => ({ ...data }));
+  useImperativeHandle(ref, () => ({
+    getData: () => {
+      return localData;
+    },
+  }));
+
   const handleFile = (event) => {
     const file = event.target.files[0];
-    setData((prev) => ({
+    setLocalData((prev) => ({
       ...prev,
-      [props.name]: [file],
+      [event.target.name]: [file],
     }));
   };
 
   const handleChange = (event) => {
     if (event.target.name === "images") {
       handleFile(event);
-    }
-    handleInputChange(setData, event);
+    } else handleInputChange(setLocalData, event);
   };
 
   const inputComponents = {
-    date: (props) => (
-      <CustomDatePicker {...props} date={data[props.name]} setDate={setData} />
-    ),
-    file: (props) => {
-      const { value, onChange, ...restProps } = props; // Exclude the value prop
+    date: (props) => {
+      const { value ,onChange, ...restProps } = props; // Exclude the value prop
       return (
-        <Input
-          onChange={(event) => {
-            const file = event.target.files[0];
-            setData((prev) => ({
-              ...prev,
-              [props.name]: [file],
-            }));
-          }}
-          accept="image/*"
-          type="file"
+        <CustomDatePicker
           {...restProps}
-        ></Input>
+          date={localData[props.name]}
+          setDate={setLocalData}
+        />
       );
+    },
+    file: (props) => {
+      const { value, ...restProps } = {...props}; // Exclude the value prop
+      const combineProps = {
+        ...restProps,
+        accept: "image/*",
+        type: "file",
+      };
+      console.log(combineProps);
+      return <Input {...combineProps}></Input>;
     },
     sex: (props) => (
       <TextField {...props} select>
@@ -61,11 +67,11 @@ export default function RenderInput({ inputName, inputConfig, data, setData }) {
       ...commonProps,
       label: config.label,
       name: config.key,
-      value: data[config.key] || "",
+      value: localData[config.key] || "",
       onChange: handleChange,
     };
-    return (
-      <InputComponent key={`${config.key}_${inputName}`} {...inputProps} />
-    );
+    return <InputComponent key={config.key} {...inputProps} />;
   });
-}
+});
+
+export default RenderInput;

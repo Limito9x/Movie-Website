@@ -2,11 +2,12 @@ import { Button,TextField,Dialog,DialogActions,
     DialogContent,DialogTitle
  } 
 from '@mui/material'
-import { useState } from 'react'
+import { useState,useRef } from 'react'
 import RenderInput from './RenderInput';
 
 export default function UpdateItemDialog({inputConfig,dataValue,instance,refetch}) {
-    const [open,setOpen] = useState(false);
+  const inputRef = useRef();  
+  const [open,setOpen] = useState(false);
     const [input,setinput] = useState(inputConfig||[]);
     const [data,setData] = useState(dataValue||{});
     const handleClick = () => {
@@ -16,7 +17,11 @@ export default function UpdateItemDialog({inputConfig,dataValue,instance,refetch
     const handleUpdate = async (event) => {
       event.preventDefault();
       try{
-        const result = await instance.update(data.id, data);
+        const newData = inputRef.current.getData();
+        let result = null;
+        if(confirm("Xác nhận cập nhật dữ liệu?")){
+          result = await instance.update(newData.id, newData);
+        }
         if(result) {
           alert(result.message);
           handleClick();
@@ -35,7 +40,7 @@ export default function UpdateItemDialog({inputConfig,dataValue,instance,refetch
       <Dialog open={open} onClose={handleClick}>
         <DialogTitle>Cập nhật</DialogTitle>
         <DialogContent>
-        <RenderInput inputConfig={input} data={data} setData={setData}/>
+        <RenderInput ref={inputRef} inputConfig={input} data={data}/>
         </DialogContent>
         <DialogActions>
         <Button onClick={handleUpdate}>Lưu thay đổi</Button>

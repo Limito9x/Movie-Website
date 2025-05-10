@@ -4,6 +4,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
+import TextField from "@mui/material/TextField";
 
 /**
  * name: Tên của trường dữ liệu
@@ -12,21 +13,22 @@ import "dayjs/locale/vi";
  * label: Nhãn hiển thị
  */
 
-export default function CustomDatePicker({ date, name, setDate, label },props) {
-  const [selectedDate, setSelectedDate] = useState(date ? dayjs(date) : null);
+export default function CustomDatePicker({ date, setDate, ...props }) {
   const handleDateChange = (newValue) => {
-    if (newValue && dayjs(newValue).isValid()) {
-      setSelectedDate(newValue);
-      setDate((prev) => ({ ...prev, [name]: newValue }));
+    if (newValue) {
+      setDate((prev) => ({ ...prev, [props.name]: newValue}));
     }
   };
 
   return (
       <LocalizationProvider dateAdapter={AdapterDayjs} locale="vi">
         <DatePicker
-          label={label}
-          value={selectedDate}
+          label={props.label}
+          value={date?dayjs(date):null}
           onChange={handleDateChange}
+          renderInput={(params) => (
+            <TextField {...params} {...props}/>
+          )}
           format="DD/MM/YYYY"
         />
       </LocalizationProvider>

@@ -7,7 +7,7 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
-import { useState } from "react";
+import { useState,useRef, use } from "react";
 import RenderInput from "./RenderInput";
 import { createFormData } from "@/utils/formUtils";
 import AddIcon from "@mui/icons-material/Add";
@@ -25,7 +25,6 @@ export default function AddItemDialog({
   inputConfig,
   instance,
   refetch,
-  name
 }) {
   const title = `Thêm ${label.toLowerCase()}`;
   const [hasFile, setHasFile] = useState(false);
@@ -41,6 +40,7 @@ export default function AddItemDialog({
     });
     return initialData;
   });
+  const inputRef = useRef();
 
   const handleClick = () => {
     setOpen(!open);
@@ -49,18 +49,19 @@ export default function AddItemDialog({
   const handleAdd = async (event) => {
     event.preventDefault();
     try {
-      console.log("data", data);
+      const newData = inputRef.current.getData();
+      console.log("data", newData);
       if (!instance) return console.log("Instance chưa được khởi tạo");
       if (confirm("Xác nhận thêm dữ liệu?")) {
         let result = null;
         if (hasFile) {
-          const {images,...rest} = data;
+          const {images,...rest} = newData;
           console.log("rest", rest);
           console.log("images", images);
           const formData = createFormData(rest, null, images);
           result = await instance.create(formData);
         } else {
-          result = await instance.add(data);
+          result = await instance.add(newData);
         }
         if (result) {
           alert(result.message);
@@ -83,7 +84,11 @@ export default function AddItemDialog({
       <Dialog open={open} onClose={handleClick}>
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
-          <RenderInput inputName={name} inputConfig={input} data={data} setData={setData}/>
+          <RenderInput
+          ref={inputRef} 
+          inputConfig={input} 
+          data={data} 
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleAdd}>Thêm</Button>
