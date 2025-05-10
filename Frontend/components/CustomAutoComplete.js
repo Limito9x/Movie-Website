@@ -18,7 +18,7 @@ export default function CustomAutoComplete({
   handleChange,
   inputs,
 }) {
-  const { data } = useApi(serviceType, null);
+  const { data,refetch } = useApi(serviceType, null);
   const [value,setValue] = useState([])
   const handleAutoCompleteChange = (event, newValue) => {
     setValue(newValue);
@@ -39,7 +39,7 @@ export default function CustomAutoComplete({
         sx={{ width: "350px" }}
         disableCloseOnSelect // Keeps the dropdown open when selecting an option
       />
-      <AddItemDialog instance={serviceType} inputConfig={inputs} label={label}/>
+      <AddItemDialog name={name} instance={serviceType} refetch={refetch} inputConfig={inputs} label={label}/>
     </div>
   );
 }

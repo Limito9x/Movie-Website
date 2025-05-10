@@ -1,45 +1,72 @@
-import { TextField,Input } from "@mui/material";
+import { TextField, Input } from "@mui/material";
 import CustomDatePicker from "./CustomDatePicker";
-import { handleInputChange } from "@/utils/formUtils";
-import { useState } from "react";
-
-const inputComponents = {
-  text: (props) => <TextField {...props} />,
-  date: (props) => <CustomDatePicker {...props} />,
-  file: (props) => <Input type="file" {...props} />,
-};
+import { handleInputChange, handleFileChange } from "@/utils/formUtils";
+import MenuItem from "@mui/material/MenuItem";
+import React from "react";
 
 const commonProps = {
-    fullWidth: true,
-    variant: "outlined",
-    margin: "dense",
+  fullWidth: true,
+  variant: "outlined",
+  margin: "dense",
 };
 
-export default function RenderInput({inputConfig}) {
-  const [data, setData] = useState({});
+export default function RenderInput({ inputName, inputConfig, data, setData }) {
+  console.log("Bắt đầu render", data);
+  const handleFile = (event) => {
+    const file = event.target.files[0];
+    setData((prev) => ({
+      ...prev,
+      [props.name]: [file],
+    }));
+  };
+
   const handleChange = (event) => {
+    if (event.target.name === "images") {
+      handleFile(event);
+    }
     handleInputChange(setData, event);
   };
 
-  return (
-    <div className="">
-      {inputConfig?.map((config) => {
+  const inputComponents = {
+    date: React.memo((props) => (
+      <CustomDatePicker {...props} date={data[props.name]} setDate={setData} />
+    )),
+    file: React.memo((props) => {
+      const { value, onChange, ...restProps } = props; // Exclude the value prop
+      return (
+        <Input
+          onChange={(event) => {
+            const file = event.target.files[0];
+            setData((prev) => ({
+              ...prev,
+              [props.name]: [file],
+            }));
+          }}
+          accept="image/*"
+          type="file"
+          {...restProps}
+        ></Input>
+      );
+    }),
+    sex: React.memo((props) => (
+      <TextField {...props} select>
+        <MenuItem value="false">Nam</MenuItem>
+        <MenuItem value="true">Nữ</MenuItem>
+      </TextField>
+    )),
+  };
+
+  return inputConfig?.map((config) => {
     const InputComponent = inputComponents[config.type] || TextField;
     const inputProps = {
       ...commonProps,
       label: config.label,
       name: config.key,
-      type: config.type || "text",
       value: data[config.key] || "",
       onChange: handleChange,
-      ...(config.type === "date" && {
-        date: data[config.key],
-        setDate: setData,
-      }),
     };
-    return <InputComponent key={config.key} {...inputProps}/>;
-  })}
-    </div>
-  );
-  
+    return (
+      <InputComponent key={`${config.key}_${inputName}`} {...inputProps} />
+    );
+  });
 }

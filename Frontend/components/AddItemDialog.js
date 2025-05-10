@@ -1,6 +1,5 @@
 import {
   Button,
-  TextField,
   Dialog,
   DialogActions,
   DialogContent,
@@ -9,9 +8,8 @@ import {
   Tooltip,
 } from "@mui/material";
 import { useState } from "react";
-import CustomDatePicker from "./CustomDatePicker";
 import RenderInput from "./RenderInput";
-import { handleInputChange, createFormData } from "@/utils/formUtils";
+import { createFormData } from "@/utils/formUtils";
 import AddIcon from "@mui/icons-material/Add";
 
 /**
@@ -22,40 +20,49 @@ import AddIcon from "@mui/icons-material/Add";
  *
  */
 
-
-
 export default function AddItemDialog({
   label,
   inputConfig,
   instance,
   refetch,
+  name
 }) {
   const title = `Thêm ${label.toLowerCase()}`;
+  const [hasFile, setHasFile] = useState(false);
   const [open, setOpen] = useState(false);
   const [input, setinput] = useState(inputConfig || []);
-  const [data, setData] = useState({
-    // Khởi tạo các giá trị mặc định cho các trường dữ liệu
-    ...input.reduce((acc, config) => {
-      acc[config.key] = config.defaultValue || "";
-      return acc;
-    }, {}),
-  }); // Phần data khởi tạo để gửi lên server
+  const [data, setData] = useState(() => {
+    const initialData = {};
+    inputConfig?.forEach((field) => {
+      if (field.type === "file") {
+        setHasFile(true);
+      }
+      initialData[field.key] = field.defaultValue || "";
+    });
+    return initialData;
+  });
+  console.log("data", data);
 
   const handleClick = () => {
     setOpen(!open);
   };
 
-  const handleChange = (event) => {
-    handleInputChange(setData, event);
-  };
-
   const handleAdd = async (event) => {
     event.preventDefault();
     try {
-      if (!instance) return alert("Instance chưa được khởi tạo");
+      console.log("data", data);
+      if (!instance) return console.log("Instance chưa được khởi tạo");
       if (confirm("Xác nhận thêm dữ liệu?")) {
-        const result = await instance.add(data);
-        console.log(result);
+        let result = null;
+        if (hasFile) {
+          const {images,...rest} = data;
+          console.log("rest", rest);
+          console.log("images", images);
+          const formData = createFormData(rest, null, images);
+          result = await instance.create(formData);
+        } else {
+          result = await instance.add(data);
+        }
         if (result) {
           alert(result.message);
           handleClick();
@@ -77,28 +84,7 @@ export default function AddItemDialog({
       <Dialog open={open} onClose={handleClick}>
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
-          {/* {input.map((config) => {
-            return config.type === "date" ? (
-              <CustomDatePicker
-                key={config.key}
-                label={config.label}
-                name={config.key}
-                setDate={setData}
-              />
-            ) : (
-              <TextField
-                key={config.key}
-                label={config.label}
-                name={config.key}
-                variant="outlined"
-                margin="dense"
-                fullWidth
-                type={config.type || "text"}
-                onChange={handleChange}
-              />
-            );
-          })} */}
-          <RenderInput inputConfig={input} setData={setData} />
+          <RenderInput inputName={name} inputConfig={input} data={data} setData={setData}/>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleAdd}>Thêm</Button>

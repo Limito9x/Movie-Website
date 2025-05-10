@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import {useApi,deleteOne} from "@/services/useApi";
 import { Button } from "@mui/material";
 import Carousel from "@/components/Carousel";
-import FormDialog from "@/components/FormDialog";
+import UpdateItemDialog from "@/components/UpdateItemDialog";
 import movieApi from "@/services/movie.api";
 
 export default function Video() {
@@ -74,7 +74,7 @@ export default function Video() {
       >
         Xóa
       </Button>
-      <FormDialog
+      <UpdateItemDialog
         inputConfig={inputs}
         dataValue={movie}
         instance={movieApi}

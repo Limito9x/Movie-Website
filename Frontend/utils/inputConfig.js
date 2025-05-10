@@ -1,7 +1,8 @@
-const def = (key, label, type) => ({
+const def = (key, label, type,defaultValue) => ({
   key,
   label,
   type,
+  defaultValue: defaultValue || "",
 });
 
 export const actorInput = [
@@ -10,9 +11,9 @@ export const actorInput = [
   // { key: "dateOfBirth", label: "Ngày sinh", type: "date" },
   // { key: "avatar", label: "Ảnh đại diện", type: "file" },
   def("name", "Tên diễn viên"),
-  def("sex", "Giới tính"),
-  def("dateOfBirth", "Ngày sinh", "date"),
-  def("avatar", "Ảnh đại diện", "file"),
+  def("sex", "Giới tính","sex"),
+  def("dateOfBirth", "Ngày sinh", "date",null),
+  def("images", "Ảnh đại diện", "file",[]),
 ];
 
 export const genreInput = [

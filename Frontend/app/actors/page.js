@@ -1,8 +1,8 @@
 "use client";
 import { TextField, Box, Button, Typography, MenuItem } from "@mui/material";
-import { useState,useEffect, use } from "react";
+import { useState, useEffect, use } from "react";
 import ActorApi from "@/services/actor.api";
-import {createFormData,handleInputChange} from "@/utils/formUtils";
+import { createFormData, handleInputChange } from "@/utils/formUtils";
 import CustomDatePicker from "@/components/CustomDatePicker";
 import RenderInput from "@/components/RenderInput";
 import { actorInput } from "@/utils/inputConfig";
@@ -97,9 +97,15 @@ export default function Actors() {
       </form>
       <div className="mt-3">
         <Typography variant="h4" component="h1" gutterBottom>
-          Test</Typography>
-        <RenderInput inputConfig={actorInput}/>
-        </div>
+          Test
+        </Typography>
+        <RenderInput
+          inputConfig={actorInput}
+          data={actorData}
+          setData={setActorData}
+          setFile={setImageFile}
+        />
+      </div>
       <div className="mt-3">
         <Typography variant="h4" component="h1" gutterBottom>
           Danh sách diễn viên

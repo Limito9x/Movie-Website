@@ -3,21 +3,15 @@ import { Button,TextField,Dialog,DialogActions,
  } 
 from '@mui/material'
 import { useState } from 'react'
-import CustomDatePicker from './CustomDatePicker';
 import RenderInput from './RenderInput';
 
-export default function FormDialog({inputConfig,dataValue,instance,refetch}) {
+export default function UpdateItemDialog({inputConfig,dataValue,instance,refetch}) {
     const [open,setOpen] = useState(false);
     const [input,setinput] = useState(inputConfig||[]);
     const [data,setData] = useState(dataValue||{});
     const handleClick = () => {
         setOpen(!open);
     }
-
-    const handleInputChange = (event) => {
-      const { name, value } = event.target;
-      setData({...data,[name]:value})
-    };
 
     const handleUpdate = async (event) => {
       event.preventDefault();
@@ -41,30 +35,7 @@ export default function FormDialog({inputConfig,dataValue,instance,refetch}) {
       <Dialog open={open} onClose={handleClick}>
         <DialogTitle>Cập nhật</DialogTitle>
         <DialogContent>
-        {input.map((config) => (
-          config.type === "date" ? (
-          <CustomDatePicker
-            key={config.key}
-            label={config.label}
-            name={config.key}
-            date={data[config.key]}
-            setDate={setData}
-          />
-          ) : (
-          <TextField
-            key={config.key}
-            label={config.label}
-            name={config.key}
-            variant="outlined"
-            margin="dense"
-            value={data[config.key]}
-            fullWidth
-            type={config.type || "text"}
-            onChange={handleInputChange}
-          />
-          )
-        ))}
-        <RenderInput inputConfig={input}/>
+        <RenderInput inputConfig={input} data={data} setData={setData}/>
         </DialogContent>
         <DialogActions>
         <Button onClick={handleUpdate}>Lưu thay đổi</Button>
