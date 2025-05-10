@@ -41,7 +41,6 @@ export default function AddItemDialog({
     });
     return initialData;
   });
-  console.log("data", data);
 
   const handleClick = () => {
     setOpen(!open);

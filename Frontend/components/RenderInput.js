@@ -11,7 +11,6 @@ const commonProps = {
 };
 
 export default function RenderInput({ inputName, inputConfig, data, setData }) {
-  console.log("Bắt đầu render", data);
   const handleFile = (event) => {
     const file = event.target.files[0];
     setData((prev) => ({
@@ -28,10 +27,10 @@ export default function RenderInput({ inputName, inputConfig, data, setData }) {
   };
 
   const inputComponents = {
-    date: React.memo((props) => (
+    date: (props) => (
       <CustomDatePicker {...props} date={data[props.name]} setDate={setData} />
-    )),
-    file: React.memo((props) => {
+    ),
+    file: (props) => {
       const { value, onChange, ...restProps } = props; // Exclude the value prop
       return (
         <Input
@@ -47,13 +46,13 @@ export default function RenderInput({ inputName, inputConfig, data, setData }) {
           {...restProps}
         ></Input>
       );
-    }),
-    sex: React.memo((props) => (
+    },
+    sex: (props) => (
       <TextField {...props} select>
         <MenuItem value="false">Nam</MenuItem>
         <MenuItem value="true">Nữ</MenuItem>
       </TextField>
-    )),
+    ),
   };
 
   return inputConfig?.map((config) => {

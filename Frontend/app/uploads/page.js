@@ -90,9 +90,8 @@ export default function Uploads() {
           />
           <CustomDatePicker
             date={movieData.releaseDate}
-            setDate={(newDate) =>
-              setMovieData((prev) => ({ ...prev, releaseDate: newDate }))
-            }
+            setDate={setMovieData}
+            name="releaseDate"
             label={"Ngày phát hành"}
           />
           Video
