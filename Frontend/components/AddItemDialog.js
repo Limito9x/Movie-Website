@@ -33,7 +33,7 @@ export default function AddItemDialog({
   const [data, setData] = useState(() => {
     const initialData = {};
     inputConfig?.forEach((field) => {
-      if (field.type === "file") {
+      if (field.type === "dropzone") {
         setHasFile(true);
       }
       initialData[field.key] = field.defaultValue || "";

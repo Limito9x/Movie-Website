@@ -1,9 +1,10 @@
 "use client";
 import { TextField, Box, Button, Typography, MenuItem } from "@mui/material";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import ActorApi from "@/services/actor.api";
 import { createFormData, handleInputChange } from "@/utils/formUtils";
 import CustomDatePicker from "@/components/CustomDatePicker";
+import Dropzone from "@/components/Dropzone";
 import RenderInput from "@/components/RenderInput";
 import { actorInput } from "@/utils/inputConfig";
 import { useApi, deleteOne } from "@/services/useApi";
@@ -16,10 +17,6 @@ export default function Actors() {
     dateOfBirth: "",
   });
 
-  useEffect(() => {
-    console.log("actorData", actorData);
-  }, [actorData]);
-
   const { data: actors, loading, error } = useApi(ActorApi, null);
 
   const handleChange = (event) => {
@@ -28,11 +25,18 @@ export default function Actors() {
 
   const [imageFile, setImageFile] = useState([]);
 
+  useEffect(() => {
+    console.log("actorData", actorData);
+    console.log("images", imageFile);
+  }, [actorData, imageFile]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log("actorData", actorData);
+    console.log("images", imageFile);
     const formData = createFormData(actorData, null, imageFile);
 
-    try {
+  if(confirm("Do you want to create actor")) try {
       const response = await ActorApi.create(formData);
       console.log("Actor created:", response);
       alert(response.message);
@@ -82,14 +86,17 @@ export default function Actors() {
             label="Ngày sinh"
           ></CustomDatePicker>
           Ảnh đại diện:
-          <input
+          {/* <input
             type="file"
             name="images"
             accept="image/*"
             onChange={(event) => {
               setImageFile([event.target.files[0]]);
             }}
-          ></input>
+          ></input> */}
+          <Dropzone
+            state={imageFile}
+            setState={setImageFile}/>
           <Button type="submit" variant="contained" color="primary">
             Thêm Diễn Viên
           </Button>
@@ -102,8 +109,6 @@ export default function Actors() {
         <RenderInput
           inputConfig={actorInput}
           data={actorData}
-          setData={setActorData}
-          setFile={setImageFile}
         />
       </div>
       <div className="mt-3">

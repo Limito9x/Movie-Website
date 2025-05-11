@@ -36,4 +36,4 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
 ## My note
-Có thể sử các thư viện cho file upload như react-filepond hoặc react-dropzone
+Có thể sử các thư viện cho file upload như react-dropzone, uppy, react-filepond

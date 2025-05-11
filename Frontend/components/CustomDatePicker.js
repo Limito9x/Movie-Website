@@ -21,16 +21,14 @@ export default function CustomDatePicker({ date, setDate, ...props }) {
   };
 
   return (
-      <LocalizationProvider dateAdapter={AdapterDayjs} locale="vi">
-        <DatePicker
-          label={props.label}
-          value={date?dayjs(date):null}
-          onChange={handleDateChange}
-          renderInput={(params) => (
-            <TextField {...params} {...props}/>
-          )}
-          format="DD/MM/YYYY"
-        />
-      </LocalizationProvider>
+    <LocalizationProvider dateAdapter={AdapterDayjs} locale="vi">
+      <DatePicker
+        label={props.label}
+        value={date === "" ? null : dayjs(date)}
+        onChange={handleDateChange}
+        format="DD/MM/YYYY"
+        slotProps={{ textField: { ...props } }}
+      />
+    </LocalizationProvider>
   );
 }

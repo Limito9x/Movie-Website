@@ -13,7 +13,7 @@ export const actorInput = [
   def("name", "Tên diễn viên"),
   def("sex", "Giới tính","sex"),
   def("dateOfBirth", "Ngày sinh", "date",null),
-  def("images", "Ảnh đại diện", "file",[]),
+  def("images", "Ảnh đại diện", "dropzone",[]),
 ];
 
 export const genreInput = [

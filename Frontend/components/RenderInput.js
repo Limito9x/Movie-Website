@@ -1,8 +1,8 @@
-import { TextField, Input } from "@mui/material";
+import { TextField, Input,MenuItem } from "@mui/material";
 import CustomDatePicker from "./CustomDatePicker";
+import Dropzone from "./Dropzone";
 import { handleInputChange, handleFileChange } from "@/utils/formUtils";
-import MenuItem from "@mui/material/MenuItem";
-import { useState, forwardRef, useImperativeHandle, use } from "react";
+import { useState, forwardRef, useImperativeHandle } from "react";
 
 const commonProps = {
   fullWidth: true,
@@ -18,11 +18,10 @@ const RenderInput = forwardRef(({ inputConfig, data }, ref) => {
     },
   }));
 
-  const handleFile = (event) => {
-    const file = event.target.files[0];
+  const handleFile = (newVal) => {
     setLocalData((prev) => ({
       ...prev,
-      [event.target.name]: [file],
+      images: [newVal],
     }));
   };
 
@@ -59,6 +58,11 @@ const RenderInput = forwardRef(({ inputConfig, data }, ref) => {
         <MenuItem value="true">Nữ</MenuItem>
       </TextField>
     ),
+    dropzone: (props) => {
+      const { value, ...restProps } = props;
+      console.log(value);
+      return <Dropzone {...restProps} state={value} setState={setLocalData} />;
+    },
   };
 
   return inputConfig?.map((config) => {
