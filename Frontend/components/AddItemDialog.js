@@ -7,7 +7,7 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
-import { useState,useRef, use } from "react";
+import { useState,useRef, useEffect } from "react";
 import RenderInput from "./RenderInput";
 import { createFormData } from "@/utils/formUtils";
 import AddIcon from "@mui/icons-material/Add";
@@ -29,17 +29,24 @@ export default function AddItemDialog({
   const title = `Thêm ${label.toLowerCase()}`;
   const [hasFile, setHasFile] = useState(false);
   const [open, setOpen] = useState(false);
-  const [input, setinput] = useState(inputConfig || []);
-  const [data, setData] = useState(() => {
-    const initialData = {};
-    inputConfig?.forEach((field) => {
-      if (field.type === "dropzone") {
-        setHasFile(true);
+  const [imageName, setImageName] = useState("");
+  const [videoName, setVideoName] = useState("");
+  useEffect(() => {
+    const fileInputs = inputConfig.filter((input) => input.type === "dropzone");
+    if (fileInputs.length > 0) {
+      setHasFile(true);
+      fileInputs.forEach((fileInput) => {
+      if (fileInput.fileType === "image") {
+        setImageName(fileInput.name);
       }
-      initialData[field.key] = field.defaultValue || "";
-    });
-    return initialData;
-  });
+      if (fileInput.fileType === "video") {
+        setVideoName(fileInput.name);
+      }
+      console.log("File type:", fileInput.fileType);
+      });
+    }
+  }, [inputConfig]);
+  
   const inputRef = useRef();
 
   const handleClick = () => {
@@ -55,10 +62,11 @@ export default function AddItemDialog({
       if (confirm("Xác nhận thêm dữ liệu?")) {
         let result = null;
         if (hasFile) {
-          const {images,...rest} = newData;
+          const { [imageName]: imageFile, [videoName]: videoFile, ...rest } = newData;
           console.log("rest", rest);
-          console.log("images", images);
-          const formData = createFormData(rest, null, images);
+          console.log("imageFile", imageFile);
+          console.log("videoFile", videoFile);
+          const formData = createFormData(rest, videoFile, imageFile);
           result = await instance.create(formData);
         } else {
           result = await instance.add(newData);
@@ -86,8 +94,7 @@ export default function AddItemDialog({
         <DialogContent>
           <RenderInput
           ref={inputRef} 
-          inputConfig={input} 
-          data={data} 
+          inputConfig={inputConfig} 
           />
         </DialogContent>
         <DialogActions>

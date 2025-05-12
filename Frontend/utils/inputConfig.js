@@ -1,32 +1,36 @@
-const def = (key, label, type,defaultValue) => ({
-  key,
-  label,
-  type,
-  defaultValue: defaultValue || "",
+const def = (key, label, type, defaultValue, fileConfig) => {
+  const baseConfig = {
+    key,
+    name: key,
+    label,
+    type: type || "text",
+    defaultValue: defaultValue || "",
+  };
+  if (fileConfig) {
+    return {
+      ...baseConfig,
+      ...fileConfig,
+    };
+  }
+
+  return baseConfig;
+};
+
+const fileConfig = (fileType, maxFiles) => ({
+  fileType: fileType || "image",
+  maxFiles: maxFiles || 5,
 });
 
 export const actorInput = [
-  // { key: "title", label: "Tên diễn viên" },
-  // { key: "sex", label: "Giới tính" },
-  // { key: "dateOfBirth", label: "Ngày sinh", type: "date" },
-  // { key: "avatar", label: "Ảnh đại diện", type: "file" },
   def("name", "Tên diễn viên"),
-  def("sex", "Giới tính","sex"),
-  def("dateOfBirth", "Ngày sinh", "date",null),
-  def("images", "Ảnh đại diện", "dropzone",[]),
+  def("sex", "Giới tính", "sex"),
+  def("dateOfBirth", "Ngày sinh", "date"),
+  def("avatar", "Ảnh đại diện", "dropzone", [], fileConfig("image", 1)),
 ];
 
 export const genreInput = [
-  // { key: "name", label: "Tên thể loại" },
-  // { key: "description", label: "Mô tả" },
   def("name", "Tên thể loại"),
   def("description", "Mô tả"),
 ];
 
-export const tagInput = [
-  // { key: "name", label: "Tên tag" },
-  // { key: "description", label: "Mô tả" },
-  def("name", "Tên tag"),
-  def("description", "Mô tả"),
-];
-
+export const tagInput = [def("name", "Tên tag"), def("description", "Mô tả")];

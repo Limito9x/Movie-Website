@@ -3,32 +3,54 @@ import { FilePond, registerPlugin } from "react-filepond";
 // Import FilePond styles
 import "filepond/dist/filepond.min.css";
 
-// Import the Image EXIF Orientation and Image Preview plugins
-// Note: These need to be installed separately
-// `npm i filepond-plugin-image-preview filepond-plugin-image-exif-orientation --save`
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 
-// Register the plugins
+registerPlugin(FilePondPluginFileValidateType);
 
-// Our app
-export default function Dropzone({ state, setState }) {
+export default function Dropzone({
+  state,
+  setState,
+  name,
+  maxFiles,
+  fileType,
+  label,
+}) {
   const setFiles = (files) => {
-    setState((prevState) => ({
-      ...prevState,
-      images: files,
-    }));
+    if (!name) {
+      setState(files);
+      return;
+    }
+    setState((prevState) => {
+      return {
+        ...prevState,
+        [name]: files,
+      };
+    });
+  };
+  const acceptedFileTypes = {
+    image: "image/*",
+    video: "video/*",
+    audio: "audio/*",
+    document: "application/pdf",
   };
 
   return (
     <div className="App">
       <FilePond
+        acceptedFileTypes={[acceptedFileTypes[fileType]]|| []}
+        allowFileTypeValidation={true}
         files={state || []}
         onupdatefiles={(fileItems) => {
           setFiles(fileItems.map((fileItem) => fileItem.file));
         }}
-        allowMultiple={true}
-        maxFiles={3}
-        name="images" /* sets the file input name, it's filepond by default */
-        labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+        allowMultiple={maxFiles > 1}
+        maxFiles={maxFiles || 1}
+        name={name} /* sets the file input name, it's filepond by default */
+        labelIdle={
+          label
+            ? `Kéo, thả hoặc chọn ${label.toLowerCase()}`
+            : 'Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+        }
       />
     </div>
   );

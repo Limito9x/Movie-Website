@@ -9,6 +9,7 @@ import { createFormData, handleInputChange } from "@/utils/formUtils";
 import CustomDatePicker from "@/components/CustomDatePicker";
 import CustomAutoComplete from "@/components/CustomAutoComplete";
 import { actorInput,genreInput, tagInput } from "@/utils/inputConfig";
+import Dropzone from "@/components/Dropzone";
 
 export default function Uploads() {
   const [movieData, setMovieData] = useState({
@@ -29,7 +30,9 @@ export default function Uploads() {
 
   useEffect(() => {
     console.log("Thông tin phim:", movieData);
-  }, [movieData]);
+    console.log("Video file:", videoFile);
+    console.log("Image files:", imageFiles);
+  }, [movieData, videoFile, imageFiles]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -95,26 +98,21 @@ export default function Uploads() {
             label={"Ngày phát hành"}
           />
           Video
-          <input
-            type="file"
-            name="video"
-            accept="video/*"
-            required
-            onChange={(event) => {
-              setVideoFile(event.target.files[0]);
-            }}
-          ></input>
+          <Dropzone
+            state={videoFile}
+            setState={setVideoFile}
+            fileType="video"
+            maxFiles={1}
+            label={"Video"}
+          />
           Hình ảnh
-          <input
-            type="file"
-            name="images"
-            multiple
-            accept="image/*"
-            required
-            onChange={(event) => {
-              setImageFiles([...event.target.files]);
-            }}
-          ></input>
+          <Dropzone
+            state={imageFiles}
+            setState={setImageFiles}
+            fileType="image"
+            maxFiles={5}
+            label={"Hình ảnh"}
+            />
           <Button type="submit" variant="contained" color="primary">
             Thêm Phim
           </Button>

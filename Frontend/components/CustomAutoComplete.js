@@ -39,7 +39,7 @@ export default function CustomAutoComplete({
         sx={{ width: "350px" }}
         disableCloseOnSelect // Keeps the dropdown open when selecting an option
       />
-      <AddItemDialog name={name} instance={serviceType} refetch={refetch} inputConfig={inputs} label={label}/>
+      <AddItemDialog instance={serviceType} refetch={refetch} inputConfig={inputs} label={label}/>
     </div>
   );
 }

@@ -1,10 +1,8 @@
 "use client";
-import { TextField, Box, Button, Typography, MenuItem } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import ActorApi from "@/services/actor.api";
 import { createFormData, handleInputChange } from "@/utils/formUtils";
-import CustomDatePicker from "@/components/CustomDatePicker";
-import Dropzone from "@/components/Dropzone";
 import RenderInput from "@/components/RenderInput";
 import { actorInput } from "@/utils/inputConfig";
 import { useApi, deleteOne } from "@/services/useApi";
@@ -54,57 +52,10 @@ export default function Actors() {
   }
 
   return (
-    <main style={{ padding: "20px" }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Thêm Diễn Viên Mới
-      </Typography>
-      <form className="mt-3" onSubmit={handleSubmit}>
-        <Box className="flex flex-col gap-3" maxWidth="500px">
-          <TextField
-            label="Tên diễn viên"
-            variant="outlined"
-            name="name"
-            value={actorData.name}
-            onChange={handleChange}
-            required
-          />
-          <TextField
-            select
-            name="sex"
-            label="Giới tính"
-            variant="outlined"
-            value={actorData.sex}
-            onChange={handleChange}
-          >
-            <MenuItem value={false}>Nam</MenuItem>
-            <MenuItem value={true}>Nữ</MenuItem>
-          </TextField>
-          <CustomDatePicker
-            date={actorData.dateOfBirth}
-            setDate={setActorData}
-            name="dateOfBirth"
-            label="Ngày sinh"
-          ></CustomDatePicker>
-          Ảnh đại diện:
-          {/* <input
-            type="file"
-            name="images"
-            accept="image/*"
-            onChange={(event) => {
-              setImageFile([event.target.files[0]]);
-            }}
-          ></input> */}
-          <Dropzone
-            state={imageFile}
-            setState={setImageFile}/>
-          <Button type="submit" variant="contained" color="primary">
-            Thêm Diễn Viên
-          </Button>
-        </Box>
-      </form>
+    <div>
       <div className="mt-3">
         <Typography variant="h4" component="h1" gutterBottom>
-          Test
+          Thêm diễn viên
         </Typography>
         <RenderInput
           inputConfig={actorInput}
@@ -143,6 +94,6 @@ export default function Actors() {
           ))}
         </div>
       </div>
-    </main>
+    </div>
   );
 }
