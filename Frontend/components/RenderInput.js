@@ -1,6 +1,7 @@
 import { TextField,MenuItem } from "@mui/material";
 import CustomDatePicker from "./CustomDatePicker";
 import Dropzone from "./Dropzone";
+import CustomAutoComplete from "./CustomAutoComplete";
 import { handleInputChange } from "@/utils/formUtils";
 import { useState, useEffect ,forwardRef, useImperativeHandle, useRef } from "react";
 import React from "react";
@@ -13,7 +14,6 @@ const commonProps = {
 
 const inputComponents = {
   date: (props) => {
-    console.log("date",props);
     const { value,onChange, ...restProps } = props; // Exclude the value prop
     return (
       <CustomDatePicker
@@ -24,7 +24,6 @@ const inputComponents = {
     );
   },
   text: (props) => {
-    console.log("text",props);
     return (
       <TextField
       {...props}
@@ -32,7 +31,6 @@ const inputComponents = {
     )
   },
   sex: (props) => {
-    console.log("sex",props);
     return (
       <TextField {...props} select>
         <MenuItem value="false">Nam</MenuItem>
@@ -41,11 +39,22 @@ const inputComponents = {
     );
   },
   dropzone: (props) => {
-    const { value, name,data,onChange ,...restProps } = props;
+    const { value, name,onChange ,...restProps } = props;
     return (
       <Dropzone {...restProps} name={name} state={value} setState={onChange} />
     );
   },
+  autoComplete: (props) => {
+    return (
+      <CustomAutoComplete
+        {...props}
+        initValue={props.value}
+        handleChange={props.onChange}
+        serviceType={props.instance}
+        inputs={props.detailconfig}
+      />
+    );
+  }
 };
 
 const RenderInput = forwardRef(({ inputConfig, data }, ref) => {
@@ -57,15 +66,14 @@ const RenderInput = forwardRef(({ inputConfig, data }, ref) => {
     },
   }));
 
-  const handleChange = (event) => {
-    console.log("name",event.target.name);
-    console.log("value",event.target.value);
-    handleInputChange(setLocalData,event);
+  const handleChange = (event,values,propName) => {
+    handleInputChange(setLocalData,event,values,propName);
   }
 
   const handle = {
     text: handleChange,
     sex: handleChange,
+    autoComplete: handleChange,
     date: setLocalData,
     dropzone: setLocalData,
   }
@@ -73,12 +81,10 @@ const RenderInput = forwardRef(({ inputConfig, data }, ref) => {
   return inputConfig?.map((config) => {
     const InputComponent = inputComponents[config.type] || TextField;
     const {key,type,defaultValue,...restConfig} = config;
-    console.log(config);
     const inputProps = {
       ...commonProps,
       ...restConfig,
       value: localData[config.key] || "",
-      data: localData,
       onChange: handle[config.type] || handleChange,
     };
     return <InputComponent key={config.key} {...inputProps} />;

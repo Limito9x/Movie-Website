@@ -7,7 +7,7 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
-import { useState,useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import RenderInput from "./RenderInput";
 import { createFormData } from "@/utils/formUtils";
 import AddIcon from "@mui/icons-material/Add";
@@ -32,21 +32,22 @@ export default function AddItemDialog({
   const [imageName, setImageName] = useState("");
   const [videoName, setVideoName] = useState("");
   useEffect(() => {
-    const fileInputs = inputConfig.filter((input) => input.type === "dropzone");
-    if (fileInputs.length > 0) {
+    const fileInputs = inputConfig?.filter(
+      (input) => input.type === "dropzone"
+    );
+    if (fileInputs?.length > 0) {
       setHasFile(true);
       fileInputs.forEach((fileInput) => {
-      if (fileInput.fileType === "image") {
-        setImageName(fileInput.name);
-      }
-      if (fileInput.fileType === "video") {
-        setVideoName(fileInput.name);
-      }
-      console.log("File type:", fileInput.fileType);
+        if (fileInput.fileType === "image") {
+          setImageName(fileInput.name);
+        }
+        if (fileInput.fileType === "video") {
+          setVideoName(fileInput.name);
+        }
       });
     }
   }, [inputConfig]);
-  
+
   const inputRef = useRef();
 
   const handleClick = () => {
@@ -62,7 +63,11 @@ export default function AddItemDialog({
       if (confirm("Xác nhận thêm dữ liệu?")) {
         let result = null;
         if (hasFile) {
-          const { [imageName]: imageFile, [videoName]: videoFile, ...rest } = newData;
+          const {
+            [imageName]: imageFile,
+            [videoName]: videoFile,
+            ...rest
+          } = newData;
           console.log("rest", rest);
           console.log("imageFile", imageFile);
           console.log("videoFile", videoFile);
@@ -92,10 +97,7 @@ export default function AddItemDialog({
       <Dialog open={open} onClose={handleClick}>
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
-          <RenderInput
-          ref={inputRef} 
-          inputConfig={inputConfig} 
-          />
+          <RenderInput ref={inputRef} inputConfig={inputConfig} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleAdd}>Thêm</Button>

@@ -7,11 +7,12 @@ import { Button } from "@mui/material";
 import Carousel from "@/components/Carousel";
 import UpdateItemDialog from "@/components/UpdateItemDialog";
 import movieApi from "@/services/movie.api";
+import { movieInput } from "@/utils/inputConfig";
 
 export default function Video() {
   const id = useParams().id;
   const {data: movie,loading,error,refetch} = useApi(MovieApi,id);
-
+  console.log("movie", movie);
   const inputs = [
     {key: 'title',name:'title',label: 'Tên phim',type: 'text'},
     {key: 'description',name:'description',label: 'Mô tả',type: 'text'},
@@ -75,7 +76,7 @@ export default function Video() {
         Xóa
       </Button>
       <UpdateItemDialog
-        inputConfig={inputs}
+        inputConfig={movieInput}
         dataValue={movie}
         instance={movieApi}
         refetch={refetch}

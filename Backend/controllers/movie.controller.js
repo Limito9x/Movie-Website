@@ -191,9 +191,40 @@ exports.deleleMovie = async (req, res) => {
 // Cập nhật phim
 exports.updateMovie = async (req, res) => {
   try {
-    const [updatedRows] = await Movie.update(req.body, {
+    const { actors, genres, tags, ...movieData } = req.body;
+
+    // Update movie basic information
+    const [updatedRows] = await Movie.update(movieData, {
       where: { id: req.params.id },
     });
+
+    if (updatedRows > 0) {
+      const movie = await Movie.findByPk(req.params.id);
+
+      // Update actors
+      if (actors) {
+        const actorRecords = await Actor.findAll({
+          where: { id: { [Op.in]: actors } },
+        });
+        await movie.setActors(actorRecords);
+      }
+
+      // Update genres
+      if (genres) {
+        const genreRecords = await Genre.findAll({
+          where: { id: { [Op.in]: genres } },
+        });
+        await movie.setGenres(genreRecords);
+      }
+
+      // Update tags
+      if (tags) {
+        const tagRecords = await Tag.findAll({
+          where: { id: { [Op.in]: tags } },
+        });
+        await movie.setTags(tagRecords);
+      }
+    }
     if (updatedRows > 0)
       return res.status(200).json({ message: "Movie updated successfully!" });
     else return res.status(404).json({ message: "Movie not found!" });

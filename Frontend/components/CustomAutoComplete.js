@@ -17,10 +17,12 @@ export default function CustomAutoComplete({
   label,
   handleChange,
   inputs,
+  initValue,
 }) {
   const { data,refetch } = useApi(serviceType, null);
-  const [value,setValue] = useState([])
+  const [value,setValue] = useState(initValue||[])
   const handleAutoCompleteChange = (event, newValue) => {
+    console.log("newValue", newValue);
     setValue(newValue);
     handleChange(event, newValue, name);
   };
@@ -34,7 +36,7 @@ export default function CustomAutoComplete({
         onChange={handleAutoCompleteChange}
         noOptionsText={`Không tìm thấy ${label.toLowerCase()}`}
         renderInput={(params) => (
-          <TextField {...params} label={label} variant="outlined" />
+          <TextField {...params} label={label} variant="outlined" margin="dense"/>
         )}
         sx={{ width: "350px" }}
         disableCloseOnSelect // Keeps the dropdown open when selecting an option

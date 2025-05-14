@@ -20,7 +20,7 @@ export const createFormData = (data, video, images) => {
 };
 
 export const handleInputChange = (setData, event, values, propName) => {
-  if (values) {
+  if (values&&propName) {
     const ids = values.map((value) => value.id);
     setData((prev) => ({
       ...prev,
