@@ -1,4 +1,5 @@
 import { FilePond, registerPlugin } from "react-filepond";
+import { useState } from "react";
 
 // Import FilePond styles
 import "filepond/dist/filepond.min.css";
@@ -15,6 +16,17 @@ export default function Dropzone({
   fileType,
   label,
 }) {
+  const initialState = () => {
+    if(state === undefined || state === null){
+      return [];
+    }
+    else if (Array.isArray(state)) {
+      return state;
+    } else if (typeof state === "object") {
+      return [state];
+    } 
+  }
+
   const setFiles = (files) => {
     if (!name) {
       setState(files);
@@ -39,8 +51,12 @@ export default function Dropzone({
       <FilePond
         acceptedFileTypes={[acceptedFileTypes[fileType]]|| []}
         allowFileTypeValidation={true}
-        files={state || []}
+        files={initialState() || []}
         onupdatefiles={(fileItems) => {
+          if(fileType === "video"){
+            setFiles(fileItems[0] ? fileItems[0].file : null);
+            return;
+          }
           setFiles(fileItems.map((fileItem) => fileItem.file));
         }}
         allowMultiple={maxFiles > 1}

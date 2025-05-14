@@ -13,9 +13,9 @@ export default function Video() {
   const {data: movie,loading,error,refetch} = useApi(MovieApi,id);
 
   const inputs = [
-    {key: 'title',label: 'Tên phim'},
-    {key: 'description',label: 'Mô tả'},
-    {key: 'releaseDate',label: 'Ngày phát hành',type: 'date'},
+    {key: 'title',name:'title',label: 'Tên phim',type: 'text'},
+    {key: 'description',name:'description',label: 'Mô tả',type: 'text'},
+    {key: 'releaseDate',name:'releaseDate',label: 'Ngày phát hành',type: 'date'},
   ]
 
   if (loading) {

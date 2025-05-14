@@ -12,7 +12,6 @@ const def = (key, label, type, defaultValue, fileConfig) => {
       ...fileConfig,
     };
   }
-
   return baseConfig;
 };
 

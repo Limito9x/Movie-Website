@@ -6,10 +6,8 @@ import { useState,useRef } from 'react'
 import RenderInput from './RenderInput';
 
 export default function UpdateItemDialog({inputConfig,dataValue,instance,refetch}) {
-  const inputRef = useRef();  
+  const inputRef = useRef(); 
   const [open,setOpen] = useState(false);
-    const [input,setinput] = useState(inputConfig||[]);
-    const [data,setData] = useState(dataValue||{});
     const handleClick = () => {
         setOpen(!open);
     }
@@ -40,7 +38,7 @@ export default function UpdateItemDialog({inputConfig,dataValue,instance,refetch
       <Dialog open={open} onClose={handleClick}>
         <DialogTitle>Cập nhật</DialogTitle>
         <DialogContent>
-        <RenderInput ref={inputRef} inputConfig={input} data={data}/>
+        <RenderInput ref={inputRef} inputConfig={inputConfig} data={dataValue}/>
         </DialogContent>
         <DialogActions>
         <Button onClick={handleUpdate}>Lưu thay đổi</Button>
