@@ -48,7 +48,7 @@ const inputComponents = {
     return (
       <CustomAutoComplete
         {...props}
-        initValue={props.value}
+        initIds={props.value}
         handleChange={props.onChange}
         serviceType={props.instance}
         inputs={props.detailconfig}
@@ -59,7 +59,6 @@ const inputComponents = {
 
 const RenderInput = forwardRef(({ inputConfig, data }, ref) => {
   const [localData, setLocalData] = useState(data||{});
-
   useImperativeHandle(ref, () => ({
     getData: () => {
       return localData;

@@ -1,8 +1,5 @@
-import { useState } from "react";
-import {
-  TextField,
-  Autocomplete,
-} from "@mui/material";
+import { useState, useEffect } from "react";
+import { TextField, Autocomplete } from "@mui/material";
 import ApiClient from "@/services/axios";
 import AddItemDialog from "./AddItemDialog";
 import { useApi } from "@/services/useApi";
@@ -17,31 +14,50 @@ export default function CustomAutoComplete({
   label,
   handleChange,
   inputs,
-  initValue,
+  initIds,
 }) {
-  const { data,refetch } = useApi(serviceType, null);
-  const [value,setValue] = useState(initValue||[])
+  const optionlabel = inputs[0].key;
+  const { data, refetch } = useApi(serviceType, null);
+  const [value, setValue] = useState([]);
+  let initValue = [];
+  useEffect(() => {
+  if (initIds) {
+    initValue = data?.filter((item) => initIds.includes(item.id)) || [];
+    setValue(initValue);
+  }
+}, [data,initIds]);
+
   const handleAutoCompleteChange = (event, newValue) => {
-    console.log("newValue", newValue);
     setValue(newValue);
     handleChange(event, newValue, name);
   };
+
   return (
     <div className="autoComplete">
       <Autocomplete
         multiple
-        options={data || []}
+        options={(data || []).sort((a, b) => a[optionlabel].localeCompare(b[optionlabel]))}
         value={value}
-        getOptionLabel={(option) => option.name}
+        getOptionLabel={(option) => option[optionlabel]}
         onChange={handleAutoCompleteChange}
         noOptionsText={`Không tìm thấy ${label.toLowerCase()}`}
         renderInput={(params) => (
-          <TextField {...params} label={label} variant="outlined" margin="dense"/>
+          <TextField
+            {...params}
+            label={label}
+            variant="outlined"
+            margin="dense"
+          />
         )}
         sx={{ width: "350px" }}
         disableCloseOnSelect // Keeps the dropdown open when selecting an option
       />
-      <AddItemDialog instance={serviceType} refetch={refetch} inputConfig={inputs} label={label}/>
+      <AddItemDialog
+        instance={serviceType}
+        refetch={refetch}
+        inputConfig={inputs}
+        label={label}
+      />
     </div>
   );
 }

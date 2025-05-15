@@ -192,7 +192,7 @@ exports.deleleMovie = async (req, res) => {
 exports.updateMovie = async (req, res) => {
   try {
     const { actors, genres, tags, ...movieData } = req.body;
-
+    console.log(actors, genres, tags);
     // Update movie basic information
     const [updatedRows] = await Movie.update(movieData, {
       where: { id: req.params.id },

@@ -12,12 +12,6 @@ import { movieInput } from "@/utils/inputConfig";
 export default function Video() {
   const id = useParams().id;
   const {data: movie,loading,error,refetch} = useApi(MovieApi,id);
-  console.log("movie", movie);
-  const inputs = [
-    {key: 'title',name:'title',label: 'Tên phim',type: 'text'},
-    {key: 'description',name:'description',label: 'Mô tả',type: 'text'},
-    {key: 'releaseDate',name:'releaseDate',label: 'Ngày phát hành',type: 'date'},
-  ]
 
   if (loading) {
     return <div>Đang tải dữ liệu phim...</div>;
