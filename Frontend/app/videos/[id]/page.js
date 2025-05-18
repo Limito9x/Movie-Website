@@ -8,10 +8,13 @@ import Carousel from "@/components/Carousel";
 import UpdateItemDialog from "@/components/UpdateItemDialog";
 import movieApi from "@/services/movie.api";
 import { movieInput } from "@/utils/inputConfig";
+import { useState } from "react";
 
 export default function Video() {
   const id = useParams().id;
   const {data: movie,loading,error,refetch} = useApi(MovieApi,id);
+
+  const [openDialog,setOpenDialog] = useState(false);
 
   if (loading) {
     return <div>Đang tải dữ liệu phim...</div>;
@@ -69,7 +72,12 @@ export default function Video() {
       >
         Xóa
       </Button>
+      <Button variant="outlined" onClick={()=>setOpenDialog(true)}>
+        Cập nhật
+      </Button>
       <UpdateItemDialog
+        openState={openDialog}
+        handleClose={()=>setOpenDialog(false)}
         inputConfig={movieInput}
         dataValue={movie}
         instance={movieApi}
