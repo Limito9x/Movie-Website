@@ -1,4 +1,4 @@
-const Tag = require('../models/tag');
+const {Tag} = require('../models');
 
 exports.getTags = async (req, res) => {
   try {

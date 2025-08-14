@@ -1,6 +1,6 @@
 const { sequelize } = require("../config");
 const { DataTypes } = require("sequelize");
-const { deleteFile } = require("../utils/file");
+const { cloudinaryDelete } = require("../utils/file");
 
 const Actor = sequelize.define("Actor", {
   name: {
@@ -26,7 +26,7 @@ const Actor = sequelize.define("Actor", {
     beforeDestroy: async (actor, options) => {
       // Xóa ảnh trên firebase storage
       if (actor.avatarStoragePath) {
-        await deleteFile(actor.avatarStoragePath);
+        await cloudinaryDelete(actor.avatarStoragePath);
       }
     },
   },

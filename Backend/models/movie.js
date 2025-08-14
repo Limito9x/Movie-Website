@@ -1,7 +1,7 @@
 const { sequelize } = require("../config");
 const { DataTypes } = require("sequelize");
-const MovieImage = require("./movieImages");
-const { deleteFile } = require("../utils/file");
+const {MovieImage} = require(".");
+const { cloudinaryDelete } = require("../utils/file");
 
 const Movie = sequelize.define(
   "Movie",
@@ -39,14 +39,14 @@ const Movie = sequelize.define(
     hooks: {
       beforeDestroy: async (movie, options) => {
         // Xóa video trên firebase storage
-        await deleteFile(movie.storagePath);
+        await cloudinaryDelete(movie.storagePath,"video");
         const imagesToDelete = await MovieImage.findAll({
           where: { movieId: movie.id },
           transaction: options.transaction,
         });
         for (const image of imagesToDelete) {
           // console.log("Xóa ảnh thủ công trong hook Movie:", image.id);
-          await deleteFile(image.storagePath); // Gọi destroy trên từng instance để kích hoạt hook của MovieImage
+          await cloudinaryDelete(image.storagePath); // Gọi destroy trên từng instance để kích hoạt hook của MovieImage
         }
       },
     },

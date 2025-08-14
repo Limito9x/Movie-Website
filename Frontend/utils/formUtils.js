@@ -37,7 +37,6 @@ export const handleInputChange = (setData, event, values, propName) => {
 
 export const handleFileChange = (setFile, event) => {
   const file = event.target.files[0];
-  console.log("Selected file:", file);
   if (file) {
     setFile(file);
   }

@@ -1,10 +1,6 @@
-const Movie = require("../models/movie");
-const MovieImage = require("../models/movieImages");
-const Actor = require("../models/actor");
-const Genre = require("../models/genre");
-const Tag = require("../models/tag");
+const {Movie,MovieImage,Actor,Genre,Tag} = require('../models');
 const { Op } = require("sequelize");
-const { firebaseUpload } = require("../utils/file");
+const { cloudinaryUpload } = require("../utils/file");
 
 // Lấy danh sách phim
 exports.getMovies = async (req, res) => {
@@ -99,22 +95,22 @@ exports.addMovie = async (req, res) => {
       storagePath: "",
     });
     // Gọi hàm upload video lên firebase storage
-    const videoResult = await firebaseUpload(videoFile);
+    const videoResult = await cloudinaryUpload(videoFile,"videos");
     // Lưu url video
     newMovie.url = videoResult.url;
     // Lưu đường dẫn storage trên firebase (có thể dùng để tạo signed url và xóa file)
-    newMovie.storagePath = videoResult.storagePath;
+    newMovie.storagePath = videoResult.public_id;
     await newMovie.save();
     // Với các file ảnh sẽ cho chạy vòng lặp imageFiles và tạo đối tượng movieImage với url tương ứng
     const movieImagePromises = imageFiles.map(async (imageFile) => {
       try {
-        const imageResult = await firebaseUpload(imageFile);
-        if (imageResult && imageResult.url) {
+        const imageResult = await cloudinaryUpload(imageFile,"images");
+        if (imageResult && imageResult.public_id) {
           // Tạo bản ghi MovieImage và liên kết với newMovie
           return await MovieImage.create({
             movieId: newMovie.id, // Sử dụng id của newMovie
             image_url: imageResult.url,
-            storagePath: imageResult.storagePath,
+            storagePath: imageResult.public_id,
           });
         } else {
           console.warn(`Failed to upload image: ${imageFile.originalname}`);

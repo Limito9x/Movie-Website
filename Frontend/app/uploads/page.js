@@ -28,12 +28,6 @@ export default function Uploads() {
     handleInputChange(setMovieData, event, values, propName);
   };
 
-  useEffect(() => {
-    console.log("Thông tin phim:", movieData);
-    console.log("Video file:", videoFile);
-    console.log("Image files:", imageFiles);
-  }, [movieData, videoFile, imageFiles]);
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = createFormData(movieData, videoFile, imageFiles);

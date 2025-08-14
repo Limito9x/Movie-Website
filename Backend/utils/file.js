@@ -1,6 +1,8 @@
 const multer = require('multer');
+require("dotenv").config();
 const path = require('path');
-const {bucket} = require('../config')
+const {cloudinary} = require('../config');
+const streamifier = require('streamifier');
 
 const storage = multer.memoryStorage();
 
@@ -18,69 +20,39 @@ const bufferUpload = multer({
     }
 })
 
-function getPublicImageUrl(destinationPath) {
-  const baseUrl = process.env.STORAGE_BASE_URL;
-  const bucketName = process.env.STORAGE_BUCKET;
 
-  if (!baseUrl || !bucketName) {
-    console.warn(
-      "Firebase Storage base URL or bucket name not configured in .env"
+async function cloudinaryUpload(file, folderPath) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder: `Movie Project/${folderPath}`,
+        resource_type: "auto",
+      },
+      (error, result) => {
+        if (error) reject(error);
+        else
+          resolve({
+            url: result.secure_url,
+            public_id: result.public_id,
+          });
+      }
     );
-    return null;
-  }
 
-  return `${baseUrl}/${bucketName}/o/${encodeURIComponent(
-    destinationPath
-  )}?alt=media`;
+    streamifier.createReadStream(file.buffer).pipe(stream);
+  });
 }
 
-async function firebaseUpload(file) {
+// Xóa file (ảnh / video)
+async function cloudinaryDelete(publicId, resourceType = "image") {
   try {
-    if (!file) {
-      throw new Error("No file provided");
-    }
-    const fileName = `${Date.now()}-${file.originalname}`; //Tên file là duy nhất
-    const fileBuffer = file.buffer; // Lấy dữ liệu file từ buffer (đã được viết từ middleware bufferUpload)
-    const fileType = file.mimetype; // mimetype --> loại file hoặc hiểu là đuôi file như jpg,mp4,...
-    let destinationPath = ""; // điểm đến cuối ta sẽ lưu trong storage
-  
-    // Xác định thư mục dựa trên loại file
-    if (fileType.includes("image/")) {
-      destinationPath = `images/${fileName}`;
-    } else if (fileType.includes("video/")) {
-      destinationPath = `videos/${fileName}`;
-    } else {
-      throw new Error("The file type is not supported");
-    }
-
-    // Cấu hình metadata (tìm hiều trong readme) tùy chọn (ví dụ: Content-Type)
-    const metadata = {
-      contentType: fileType,
-      cacheControl: 'public, max-age=86400',// Lưu cache khi có yêu để sử dụng lại từ cache khi reload trang
-    };
-    // Tải lên file lên Firebase Storage từ buffer
-    await bucket.file(destinationPath).save(fileBuffer,{metadata});
-    // Lấy URL công khai của file vừa tải lên
-    const publicUrl = getPublicImageUrl(destinationPath);
-
-    return {
-      message: "File has been uploaded to Firebase Storage successfully!",
-      url: publicUrl,
-      storagePath: destinationPath, // Đường dẫn trên Storage
-    };
-  } catch (error) {
-    console.error("Error uploading to Firebase Storage:", error);
-    throw error; // Ném lỗi để caller xử lý
+    const result = await cloudinary.uploader.destroy(publicId, { resource_type: resourceType });
+    console.log("Delete result:", result);
+    return result;
+  } catch (err) {
+    console.error("Error deleting file from Cloudinary:", err);
+    throw err;
   }
 }
 
-async function deleteFile(storagePath) {
-  try {
-    const file = bucket.file(storagePath);
-    file.delete();
-  }catch(error){
-    throw error;
-  }
-}
 
-module.exports = {bufferUpload,firebaseUpload,deleteFile};
+module.exports = {bufferUpload, cloudinaryUpload, cloudinaryDelete};

@@ -1,5 +1,5 @@
-const Actor = require('../models/actor');
-const { firebaseUpload } = require("../utils/file");
+const {Actor} = require('../models');
+const { cloudinaryUpload } = require("../utils/file");
 
 exports.getActors = async (req, res) => {
   try {
@@ -29,9 +29,9 @@ exports.addActor = async (req, res) => {
     const avatar = req.files["images"][0];
     const newActor = new Actor({name,dateOfBirth,sex,avatarUrl: ''});
     if (avatar) {
-      const result = (await firebaseUpload(avatar));
+      const result = (await cloudinaryUpload(avatar,"actors"));
       newActor.avatarUrl = result.url;
-      newActor.avatarStoragePath = result.storagePath;
+      newActor.avatarStoragePath = result.public_id;
     }
     await newActor.save();
     res.status(201).json({message: "Actor added successfully!",actor: newActor});

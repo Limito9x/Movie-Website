@@ -50,9 +50,3 @@ input{
   margin: 10px auto;
   border-radius: 5px;
 }
-
-.autoComplete{
-  display: flex;
-  width: fit-content;
-  gap: 10px;
-}
