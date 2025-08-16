@@ -1,11 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import {
-  TextField,
-  Autocomplete,
-} from "@mui/material";
+import { TextField, Autocomplete, IconButton, Tooltip } from "@mui/material";
 import ApiClient from "@/services/axios";
-import AddItemDialog from "./AddItemDialog";
+import DataManage from "./DataManage";
 import { useApi } from "@/services/useApi";
+import SettingsIcon from "@mui/icons-material/Settings";
 /**
  * @param {ApiClient} serviceType
  */
@@ -21,6 +19,10 @@ export default function CustomAutoComplete({
   const optionlabel = inputs[0].key;
   const { data, refetch } = useApi(serviceType, null);
   const [value, setValue] = useState([]);
+  const [openMange, setOpenManage] = useState(false);
+  const toggleManage = () => {
+    setOpenManage(!openMange);
+  };
 
   let initValue = [];
   useEffect(() => {
@@ -57,11 +59,19 @@ export default function CustomAutoComplete({
         )}
         sx={{ width: "350px" }}
       />
-      <AddItemDialog
-        instance={serviceType}
-        refetch={refetch}
-        inputConfig={inputs}
-        label={label}
+      <Tooltip title={`Quản lý ${label.toLowerCase()}`}>
+        <IconButton onClick={toggleManage}>
+          <SettingsIcon />
+        </IconButton>
+      </Tooltip>
+      <DataManage
+        open={openMange}
+        onClose={toggleManage}
+        categoryName={label.toLowerCase()}
+        data={data}
+        api={serviceType}
+        addConfig={inputs}
+        updateConfig={inputs}
       />
     </div>
   );

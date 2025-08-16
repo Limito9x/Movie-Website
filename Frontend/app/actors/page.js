@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import ActorApi from "@/services/actor.api";
 import { createFormData, handleInputChange } from "@/utils/formUtils";
 import RenderInput from "@/components/RenderInput";
-import { actorInput } from "@/utils/inputConfig";
+import DataMange from "@/components/DataManage";
+import { actorInput, def } from "@/utils/inputConfig";
 import { useApi, deleteOne } from "@/services/useApi";
 import dayjs from "dayjs";
 
@@ -14,6 +15,15 @@ export default function Actors() {
     sex: "",
     dateOfBirth: "",
   });
+  const updateActorConfig = [
+    def("name", "Tên diễn viên"),
+    def("sex", "Giới tính", "sex"),
+    def("dateOfBirth", "Ngày sinh", "date"),
+  ];
+  const [openMange,setOpenManage] = useState(false);
+  const toggleManage = () => {
+    setOpenManage(!openMange);
+  }
 
   const { data: actors, loading, error } = useApi(ActorApi, null);
 
@@ -34,13 +44,14 @@ export default function Actors() {
     console.log("images", imageFile);
     const formData = createFormData(actorData, null, imageFile);
 
-  if(confirm("Do you want to create actor")) try {
-      const response = await ActorApi.create(formData);
-      console.log("Actor created:", response);
-      alert(response.message);
-    } catch (error) {
-      console.error("Error creating movie:", error);
-    }
+    if (confirm("Do you want to create actor"))
+      try {
+        const response = await ActorApi.create(formData);
+        console.log("Actor created:", response);
+        alert(response.message);
+      } catch (error) {
+        console.error("Error creating movie:", error);
+      }
   };
 
   if (loading) {
@@ -57,10 +68,7 @@ export default function Actors() {
         <Typography variant="h4" component="h1" gutterBottom>
           Thêm diễn viên
         </Typography>
-        <RenderInput
-          inputConfig={actorInput}
-          data={actorData}
-        />
+        <RenderInput inputConfig={actorInput} data={actorData} />
       </div>
       <div className="mt-3">
         <Typography variant="h4" component="h1" gutterBottom>
@@ -93,6 +101,19 @@ export default function Actors() {
             </div>
           ))}
         </div>
+      </div>
+      <div>
+        <h4>Test</h4>
+        <Button onClick={toggleManage}>Quản lý dữ liệu</Button>
+        <DataMange
+        open={openMange}
+        onClose={toggleManage}
+          categoryName={"diễn viên"}
+          data={actors}
+          addConfig={actorInput}
+          updateConfig={updateActorConfig}
+          api={ActorApi}
+        />
       </div>
     </div>
   );

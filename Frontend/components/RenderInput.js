@@ -59,6 +59,7 @@ const inputComponents = {
 
 const RenderInput = forwardRef(({ inputConfig, data }, ref) => {
   const [localData, setLocalData] = useState(data||{});
+
   useImperativeHandle(ref, () => ({
     getData: () => {
       return localData;
@@ -83,7 +84,7 @@ const RenderInput = forwardRef(({ inputConfig, data }, ref) => {
     const inputProps = {
       ...commonProps,
       ...restConfig,
-      value: localData[config.key] || "",
+      value: localData[config.key],
       onChange: handle[config.type] || handleChange,
     };
     return <InputComponent key={config.key} {...inputProps} />;

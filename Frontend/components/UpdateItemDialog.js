@@ -25,7 +25,7 @@ export default function UpdateItemDialog({
       if (input.type === "autoComplete") {
         data[input.key] = dataValue[input.name]?.map((item) => item.id) || [];
       } else {
-        data[input.key] = dataValue[input.name] || "";
+        data[input.key] = dataValue[input.name];
       }
     })
     }

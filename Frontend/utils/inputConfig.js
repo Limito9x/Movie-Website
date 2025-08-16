@@ -2,7 +2,7 @@ import genreApi from "@/services/genre.api";
 import actorApi from "@/services/actor.api";
 import tagApi from "@/services/tag.api";
 
-const def = (key, label, type, defaultValue, fileConfig, instance, detailconfig) => {
+export const def = (key, label, type, defaultValue, fileConfig, instance, detailconfig) => {
   const baseConfig = {
     key,
     name: key,
