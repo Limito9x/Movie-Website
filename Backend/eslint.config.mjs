@@ -1,11 +1,19 @@
-import { defineConfig } from "eslint/config";
 import globals from "globals";
 import js from "@eslint/js";
 
-
-export default defineConfig([
-  { files: ["**/*.{js,mjs,cjs}"] },
-  { files: ["**/*.js"], languageOptions: { sourceType: "commonjs" } },
-  { files: ["**/*.{js,mjs,cjs}"], languageOptions: { globals: globals.browser } },
-  { files: ["**/*.{js,mjs,cjs}"], plugins: { js }, extends: ["js/recommended"] },
-]);
+export default [
+  js.configs.recommended,
+  {
+    files: ["**/*.{js,mjs,cjs}"],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: "module", // Sử dụng ES Modules
+      globals: {
+        ...globals.node, // Đặt biến toàn cục cho Node.js
+      },
+    },
+    rules: {
+      // Các quy tắc khác
+    },
+  },
+];

@@ -1,10 +1,11 @@
-import "dotenv/config";
-const { Sequelize } = require("sequelize");
-const cloudinary = require("cloudinary").v2;
+import dotenv from "dotenv";
+dotenv.config();
+import { Sequelize } from "sequelize";
+import { v2 as cloudinary} from "cloudinary";
 
 // Backend Server
 const appConfig = {
-  port: process.env.PORT || 3000,
+  port: Number(process.env.PORT) || 3000,
 };
 
 // Database
@@ -13,7 +14,7 @@ const dbConfig = {
   username: process.env.DB_USER || "root",
   password: process.env.DB_PASS || "",
   database: process.env.DB_NAME || "moviedb",
-  port: process.env.DB_PORT || 3306,
+  port: Number(process.env.DB_PORT) || 3306,
 };
 
 const sequelize = new Sequelize(
@@ -44,8 +45,4 @@ cloudinary.config({
   api_secret: API_SECRET,
 });
 
-module.exports = {
-  appConfig,
-  sequelize,
-  cloudinary,
-};
+export {appConfig, dbConfig ,sequelize, cloudinary};

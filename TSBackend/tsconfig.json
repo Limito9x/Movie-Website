@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2020",
+
+    "lib": ["esnext"],
+    "types": ["node", "express"],
+
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "typeRoots": [
+      "./src/types", // Đường dẫn đến thư mục chứa file .d.ts của bạn
+      "./node_modules/@types" // Luôn bao gồm thư mục @types mặc định
+    ]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}
