@@ -1,15 +1,15 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"type": "npm",
-			"script": "dev",
-			"path": "Frontend",
-			"problemMatcher": [],
-			"label": "npm: dev - Frontend",
-			"detail": "next dev -p 3001 --turbo"
-		},
-		{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "dev",
+      "path": "Frontend",
+      "problemMatcher": [],
+      "label": "npm: dev - Frontend",
+      "detail": "next dev -p 3001 --turbo"
+    },
+    {
       "label": "Frontend Terminal",
       "type": "shell",
       "command": "npm run dev",
@@ -30,7 +30,7 @@
       "type": "shell",
       "command": "npm run dev",
       "options": {
-        "cwd": "${workspaceFolder}/Backend"
+        "cwd": "${workspaceFolder}/TSBackend"
       },
       "isBackground": true,
       "problemMatcher": [],
@@ -46,5 +46,5 @@
       "dependsOn": ["Frontend Terminal", "Backend Terminal"],
       "dependsOrder": "parallel"
     }
-	]
+  ]
 }
