@@ -15,7 +15,7 @@ const storage = multer.memoryStorage();
 
 const bufferUpload = multer({
   storage, // Lưu vào req.file.buffer (bộ nhớ tạm thời)
-  limits: { fileSize: 30 * 1024 * 1024 }, // Giới hạn file là 10MB
+  limits: { fileSize: 30 * 1024 * 1024 }, // Giới hạn file là 30MB
   fileFilter: (req, file, cb) => {
     const filetypes = /jpeg|jpg|png|webm|webp|mp4|mov/;
     const extname = filetypes.test(
