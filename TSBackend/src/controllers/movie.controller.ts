@@ -1,5 +1,6 @@
 import { Movie, MovieImage, Actor, Genre, Tag } from "../models";
 import BaseController, { ExpressHandler } from "./baseController";
+import { syncRelationship } from "../utils/relationship";
 
 const movieIncludes = [
   {
@@ -66,20 +67,9 @@ class MovieController extends BaseController {
       }
 
       // Thiết lập các mối quan hệ (actors, genres, tags)
-      if (selectedActors && selectedActors.length > 0) {
-        const actors = await Actor.findAll({ where: { id: selectedActors } });
-        await (newMovie as any).addActors(actors);
-      }
-
-      if (selectedGenres && selectedGenres.length > 0) {
-        const genres = await Genre.findAll({ where: { id: selectedGenres } });
-        await (newMovie as any).addGenres(genres);
-      }
-
-      if (selectedTags && selectedTags.length > 0) {
-        const tags = await Tag.findAll({ where: { id: selectedTags } });
-        await (newMovie as any).addTags(tags);
-      }
+      syncRelationship(newMovie, "actors", selectedActors);
+      syncRelationship(newMovie, "genres", selectedGenres);
+      syncRelationship(newMovie, "tags", selectedTags);
 
       // Lấy lại đối tượng movie hoàn chỉnh để trả về
       const finalMovie = await Movie.findByPk(newMovie.id, {
@@ -96,10 +86,45 @@ class MovieController extends BaseController {
         movie: finalMovie,
       });
     } catch (error) {
-      console.log(error)
+      console.log(error);
       res
         .status(500)
         .json({ message: "An error occurs while adding movies", error });
+    }
+  };
+
+  update: ExpressHandler = async (req, res) => {
+    try {
+      // Lấy thông tin cơ bản của phim
+      const {
+        actors,
+        genres,
+        tags,
+        ...movieData
+      } = req.body;
+      console.log(req.params.id);
+      console.log(actors,genres,tags);
+
+     // Update movie basic information
+         const [updatedRows] = await Movie.update(movieData, {
+           where: { id: req.params.id },
+         });
+
+          if (updatedRows > 0) {
+            const movie = await Movie.findByPk(req.params.id);
+            
+           syncRelationship(movie,"actors",actors);
+           syncRelationship(movie,"genres",genres);
+           syncRelationship(movie,"tags",tags);
+
+           res.status(200).json({message: "Movie updated successfully!"})
+          }
+          else res.status(404).json({ message: "Movie not found!" });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(500)
+        .json({ message: "An error occurs while updating movies", error });
     }
   };
 }

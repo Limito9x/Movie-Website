@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { bufferUpload, cloudinaryUpload } from "../utils/file";
+import { cloudinaryUpload } from "../utils/file";
 
 export const uploadMovie = async (
   req: Request,

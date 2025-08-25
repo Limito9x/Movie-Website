@@ -4,7 +4,7 @@ import { createBaseRouter } from "./baseRouter";
 import { bufferUpload } from "../utils/file";
 
 const actorMiddlewares = {
-  create: [bufferUpload.single("image"), uploadSingle],
+  create: [bufferUpload.single("images"), uploadSingle],
 };
 
 const actorRouter = createBaseRouter(actorController, actorMiddlewares);
