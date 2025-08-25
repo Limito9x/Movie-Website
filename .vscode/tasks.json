@@ -30,7 +30,7 @@
       "type": "shell",
       "command": "npm run dev",
       "options": {
-        "cwd": "${workspaceFolder}/TSBackend"
+        "cwd": "${workspaceFolder}/Backend"
       },
       "isBackground": true,
       "problemMatcher": [],
