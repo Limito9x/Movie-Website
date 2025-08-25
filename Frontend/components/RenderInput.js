@@ -58,7 +58,28 @@ const inputComponents = {
 };
 
 const RenderInput = forwardRef(({ inputConfig, data }, ref) => {
-  const [localData, setLocalData] = useState(data||{});
+  const [localData, setLocalData] = useState(() => {
+    // Logic khởi tạo ban đầu, chỉ chạy một lần
+    const initialState = {};
+    if (data) {
+      // Trường hợp cập nhật: Khởi tạo với dữ liệu từ prop 'data'
+      inputConfig.forEach((input) => {
+        if (input.type === "autoComplete") {
+          // Chuyển đổi dữ liệu từ mảng đối tượng thành mảng ID
+          initialState[input.key] =
+            data[input.name]?.map((item) => item.id) || [];
+        } else {
+          initialState[input.key] = data[input.name] || "";
+        }
+      });
+    } else {
+      // Trường hợp thêm mới: Khởi tạo với giá trị mặc định
+      inputConfig?.forEach((config) => {
+        initialState[config.key] = config.defaultValue || "";
+      });
+    }
+    return initialState;
+  });
 
   useImperativeHandle(ref, () => ({
     getData: () => {
@@ -66,9 +87,9 @@ const RenderInput = forwardRef(({ inputConfig, data }, ref) => {
     },
   }));
 
-  const handleChange = (event,values,propName) => {
-    handleInputChange(setLocalData,event,values,propName);
-  }
+  const handleChange = (event, values, propName) => {
+    handleInputChange(setLocalData, event, values, propName);
+  };
 
   const handle = {
     text: handleChange,
@@ -76,16 +97,16 @@ const RenderInput = forwardRef(({ inputConfig, data }, ref) => {
     autoComplete: handleChange,
     date: setLocalData,
     dropzone: setLocalData,
-  }
+  };
 
   return inputConfig?.map((config) => {
     const InputComponent = inputComponents[config.type] || TextField;
-    const {key,type,defaultValue,...restConfig} = config;
+    const { key, type, defaultValue, ...restConfig } = config;
     const inputProps = {
       ...commonProps,
       ...restConfig,
-      value: localData[config.key],
-      onChange: handle[config.type] || handleChange,
+      value: localData[key],
+      onChange: handle[type] || handleChange,
     };
     return <InputComponent key={config.key} {...inputProps} />;
   });

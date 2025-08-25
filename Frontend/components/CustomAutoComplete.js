@@ -17,18 +17,18 @@ export default function CustomAutoComplete({
   initIds,
 }) {
   const optionlabel = inputs[0].key;
-  const { data, refetch } = useApi(serviceType, null);
+  const { data,refetch } = useApi(serviceType, null);
   const [value, setValue] = useState([]);
   const [openMange, setOpenManage] = useState(false);
   const toggleManage = () => {
     setOpenManage(!openMange);
   };
 
-  let initValue = [];
   useEffect(() => {
-    if (initIds) {
-      initValue = data?.filter((item) => initIds.includes(item.id)) || [];
-      setValue(initValue);
+    if (initIds && data) {
+      // Chỉ set value khi data đã có và initIds là mảng hợp lệ
+      const selected = data.filter((item) => initIds.includes(item.id));
+      setValue(selected);
     }
   }, [data, initIds]);
 
@@ -68,10 +68,10 @@ export default function CustomAutoComplete({
         open={openMange}
         onClose={toggleManage}
         categoryName={label.toLowerCase()}
-        data={data}
         api={serviceType}
         addConfig={inputs}
         updateConfig={inputs}
+        atcRefetch={refetch}
       />
     </div>
   );

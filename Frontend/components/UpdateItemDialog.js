@@ -17,32 +17,17 @@ export default function UpdateItemDialog({
   refetch,
 }) {
   const inputRef = useRef();
-  let data = {};
-  useEffect(() => {
-    if(dataValue){
-    data.id = dataValue.id;
-    inputConfig.forEach((input) => {
-      if (input.type === "autoComplete") {
-        data[input.key] = dataValue[input.name]?.map((item) => item.id) || [];
-      } else {
-        data[input.key] = dataValue[input.name];
-      }
-    })
-    }
-  },[openState,dataValue,inputConfig]);
 
   const handleUpdate = async (event) => {
     event.preventDefault();
     try {
       const newData = inputRef.current.getData();
-      console.log(newData);
       let result = null;
       if (confirm("Xác nhận cập nhật dữ liệu?")) {
-        result = await instance.update(newData.id, newData);
+        result = await instance.update(dataValue.id, newData);
       }
       if (result) {
         alert(result.message);
-        handleClick();
         if (refetch) refetch();
       }
     } catch (error) {
@@ -58,7 +43,7 @@ export default function UpdateItemDialog({
       <Dialog open={openState} onClose={handleClose}>
         <DialogTitle>Cập nhật</DialogTitle>
         <DialogContent>
-          <RenderInput ref={inputRef} inputConfig={inputConfig} data={data} />
+          <RenderInput ref={inputRef} inputConfig={inputConfig} data={dataValue} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleUpdate}>Lưu thay đổi</Button>
