@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import ActorApi from "@/services/actor.api";
 import { createFormData, handleInputChange } from "@/utils/formUtils";
 import RenderInput from "@/components/RenderInput";
-import DataMange from "@/components/DataManage";
+import UpdateFile from "@/components/UpdateFile";
 import { actorInput, def } from "@/utils/inputConfig";
 import { useApi, deleteOne } from "@/services/useApi";
 import dayjs from "dayjs";
@@ -20,12 +20,22 @@ export default function Actors() {
     def("sex", "Giới tính", "sex"),
     def("dateOfBirth", "Ngày sinh", "date"),
   ];
-  const [openMange,setOpenManage] = useState(false);
+  const [openMange, setOpenManage] = useState(false);
   const toggleManage = () => {
     setOpenManage(!openMange);
-  }
+  };
 
   const { data: actors, loading, error } = useApi(ActorApi, null);
+  const [images, setImages] = useState([]);
+  useEffect(() => {
+    if (actors) {
+      setImages(
+        actors.map((actor) => {
+          return { id: actor.avatarStoragePath, url: actor.avatarUrl };
+        })
+      );
+    }
+  }, [actors]);
 
   const handleChange = (event) => {
     handleInputChange(setActorData, event);
@@ -33,15 +43,8 @@ export default function Actors() {
 
   const [imageFile, setImageFile] = useState([]);
 
-  useEffect(() => {
-    console.log("actorData", actorData);
-    console.log("images", imageFile);
-  }, [actorData, imageFile]);
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("actorData", actorData);
-    console.log("images", imageFile);
     const formData = createFormData(actorData, null, imageFile);
 
     if (confirm("Do you want to create actor"))
@@ -64,12 +67,38 @@ export default function Actors() {
 
   return (
     <div>
-      <div className="mt-3">
+      <div>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Test
+          <UpdateFile
+            idName={"id"}
+            fileType={"image"}
+            label={"Hình ảnh"}
+            handleChange={setActorData}
+            delPropName={"deletedIds"}
+            addPropName={"addImages"}
+            maxFiles={images.length}
+            items={images}
+            urlPropName={"url"}
+          ></UpdateFile>
+        </Typography>
+        {/* <Button onClick={toggleManage}>Quản lý dữ liệu</Button>
+        <DataMange
+          open={openMange}
+          onClose={toggleManage}
+          categoryName={"diễn viên"}
+          data={actors}
+          addConfig={actorInput}
+          updateConfig={updateActorConfig}
+          api={ActorApi}
+        /> */}
+      </div>
+      {/* <div className="mt-3">
         <Typography variant="h4" component="h1" gutterBottom>
           Thêm diễn viên
         </Typography>
         <RenderInput inputConfig={actorInput} data={actorData} />
-      </div>
+      </div> */}
       <div className="mt-3">
         <Typography variant="h4" component="h1" gutterBottom>
           Danh sách diễn viên
@@ -101,19 +130,6 @@ export default function Actors() {
             </div>
           ))}
         </div>
-      </div>
-      <div>
-        <h4>Test</h4>
-        <Button onClick={toggleManage}>Quản lý dữ liệu</Button>
-        <DataMange
-        open={openMange}
-        onClose={toggleManage}
-          categoryName={"diễn viên"}
-          data={actors}
-          addConfig={actorInput}
-          updateConfig={updateActorConfig}
-          api={ActorApi}
-        />
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { FilePond, registerPlugin } from "react-filepond";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // Import FilePond styles
 import "filepond/dist/filepond.min.css";
@@ -17,15 +17,25 @@ export default function Dropzone({
   label,
 }) {
   const initialState = () => {
-    if(state === undefined || state === null){
+    if (state === undefined || state === null) {
       return [];
-    }
-    else if (Array.isArray(state)) {
+    } else if (Array.isArray(state)) {
       return state;
     } else if (typeof state === "object") {
       return [state];
-    } 
-  }
+    }
+  };
+
+  const [localFile, setLocalFile] = useState([]);
+
+  useEffect(()=>{
+    setLocalFile((prevFiles) => {
+      if (prevFiles.length > maxFiles) {
+      return prevFiles.slice(0, maxFiles);
+      }
+      return prevFiles;
+    });
+  },[maxFiles])
 
   const setFiles = (files) => {
     if (!name) {
@@ -49,14 +59,15 @@ export default function Dropzone({
   return (
     <div className="App">
       <FilePond
-        acceptedFileTypes={[acceptedFileTypes[fileType]]|| []}
+        acceptedFileTypes={[acceptedFileTypes[fileType]] || []}
         allowFileTypeValidation={true}
-        files={initialState() || []}
+        files={localFile}
         onupdatefiles={(fileItems) => {
-          if(fileType === "video"){
+          if (fileType === "video") {
             setFiles(fileItems[0] ? fileItems[0].file : null);
             return;
           }
+          setLocalFile(fileItems);
           setFiles(fileItems.map((fileItem) => fileItem.file));
         }}
         allowMultiple={maxFiles > 1}
