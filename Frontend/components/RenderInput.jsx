@@ -1,9 +1,9 @@
-import { TextField,MenuItem } from "@mui/material";
+import { TextField, MenuItem } from "@mui/material";
 import CustomDatePicker from "./CustomDatePicker";
 import Dropzone from "./Dropzone";
 import CustomAutoComplete from "./CustomAutoComplete";
-import { handleInputChange } from "@/utils/formUtils";
-import { useState, useEffect ,forwardRef, useImperativeHandle, useRef } from "react";
+import UpdateFile from "./UpdateFile";
+import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import React from "react";
 
 const commonProps = {
@@ -14,47 +14,73 @@ const commonProps = {
 
 const inputComponents = {
   date: (props) => {
-    const { value,onChange, ...restProps } = props; // Exclude the value prop
+    const { onChange, ...restProps } = props; // Exclude the value prop
     return (
       <CustomDatePicker
         {...restProps}
-        date={value}
-        setDate={onChange}
+        onChange={(value) => onChange(value, restProps.name)}
       />
     );
   },
   text: (props) => {
     return (
       <TextField
-      {...props}
+        {...props}
+        onChange={(event) =>
+          props.onChange(event.target.value, event.target.name)
+        }
       />
-    )
+    );
   },
   sex: (props) => {
     return (
-      <TextField {...props} select>
-        <MenuItem value="false">Nam</MenuItem>
-        <MenuItem value="true">Nữ</MenuItem>
+      <TextField
+        {...props}
+        onChange={(event) =>
+          props.onChange(event.target.value, event.target.name)
+        }
+        select
+      >
+        <MenuItem value={"false"}>Nam</MenuItem>
+        <MenuItem value={"true"}>Nữ</MenuItem>
       </TextField>
     );
   },
   dropzone: (props) => {
-    const { value, name,onChange ,...restProps } = props;
+    const { value, onChange, ...restProps } = props;
     return (
-      <Dropzone {...restProps} name={name} state={value} setState={onChange} />
+      <Dropzone
+        {...restProps}
+        value={value}
+        onChange={(values) => onChange(values, props.name)}
+      />
     );
   },
   autoComplete: (props) => {
     return (
       <CustomAutoComplete
         {...props}
-        initIds={props.value}
-        handleChange={props.onChange}
+        ids={props.value}
+        onChange={(values) => props.onChange(values, props.name)}
         serviceType={props.instance}
         inputs={props.detailconfig}
       />
     );
-  }
+  },
+  updateFile: (props) => {
+    const { value, addImages ,onChange, detailconfig, ...restProps } = props;
+    console.log(props.addImages)
+    return (
+      <UpdateFile
+        items={value}
+        addImages={addImages}
+        onAdd={(value) => onChange(value, "addImages")}
+        onDelete={(value) => onChange(value, "deleteIds")}
+        {...restProps}
+        {...detailconfig}
+      ></UpdateFile>
+    );
+  },
 };
 
 const RenderInput = forwardRef(({ inputConfig, data }, ref) => {
@@ -68,6 +94,12 @@ const RenderInput = forwardRef(({ inputConfig, data }, ref) => {
           // Chuyển đổi dữ liệu từ mảng đối tượng thành mảng ID
           initialState[input.key] =
             data[input.name]?.map((item) => item.id) || [];
+        } else if (input.type === "sex") {
+          initialState[input.key] = data[input.name] || "false";
+        } else if (input.type === "fileInput") {
+          initialState[input.key] = data[input.name] || [];
+          initialState["addImages"] = [];
+          initialState["deleteIds"] = [];
         } else {
           initialState[input.key] = data[input.name] || "";
         }
@@ -87,26 +119,33 @@ const RenderInput = forwardRef(({ inputConfig, data }, ref) => {
     },
   }));
 
-  const handleChange = (event, values, propName) => {
-    handleInputChange(setLocalData, event, values, propName);
+  const handleChange = (values, propName) => {
+    setLocalData((prev) => ({
+      ...prev,
+      [propName]: values,
+    }));
   };
 
-  const handle = {
-    text: handleChange,
-    sex: handleChange,
-    autoComplete: handleChange,
-    date: setLocalData,
-    dropzone: setLocalData,
-  };
+  useEffect(() => {
+    console.log(localData);
+  }, [localData]);
 
   return inputConfig?.map((config) => {
+    let extraProps = {};
+    if (config.type === "updateFile") {
+      extraProps = {
+      addImages: localData["addImages"],
+      deleteIds: localData["deleteIds"],
+      };
+    }
     const InputComponent = inputComponents[config.type] || TextField;
     const { key, type, defaultValue, ...restConfig } = config;
     const inputProps = {
       ...commonProps,
       ...restConfig,
+      ...extraProps,
       value: localData[key],
-      onChange: handle[type] || handleChange,
+      onChange: handleChange,
     };
     return <InputComponent key={config.key} {...inputProps} />;
   });

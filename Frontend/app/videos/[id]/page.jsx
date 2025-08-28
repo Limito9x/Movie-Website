@@ -7,12 +7,14 @@ import { Button } from "@mui/material";
 import Carousel from "@/components/Carousel";
 import UpdateItemDialog from "@/components/UpdateItemDialog";
 import movieApi from "@/services/movie.api";
-import { movieInput } from "@/utils/inputConfig";
-import { useState } from "react";
+import { movieInput,updateMovieConfig } from "@/utils/inputConfig";
+import { useEffect, useState } from "react";
 
 export default function Video() {
   const id = useParams().id;
   const {data: movie,loading,error,refetch} = useApi(MovieApi,id);
+
+  const updateMovieInput = [...movieInput,...updateMovieConfig]
 
   const [openDialog,setOpenDialog] = useState(false);
 
@@ -78,7 +80,7 @@ export default function Video() {
       <UpdateItemDialog
         openState={openDialog}
         handleClose={()=>setOpenDialog(false)}
-        inputConfig={movieInput}
+        inputConfig={updateMovieInput}
         dataValue={movie}
         instance={movieApi}
         refetch={refetch}

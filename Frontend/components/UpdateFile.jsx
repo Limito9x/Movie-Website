@@ -11,12 +11,11 @@ export default function UpdateFile({
   idName,
   fileType,
   label,
-  handleChange,
-  delPropName,
-  addPropName,
+  onAdd,
+  onDelete,
   maxFiles,
   items,
-  urlPropName
+  urlPropName,
 }) {
   const [markedSet, setMarkedSet] = useState(new Set());
   const markedAll = markedSet.size === items.length;
@@ -38,24 +37,19 @@ export default function UpdateFile({
   };
 
   useEffect(() => {
-    if (handleChange)
-      handleChange((prev) => {
-        return {
-          ...prev,
-          [delPropName]: Array.from(markedSet), //Chuyển set sang array
-        };
-      });
+    if (onDelete) {
+      onDelete(Array.from(markedSet));
+    }
   }, [markedSet]);
 
   const maxAdd = useMemo(() => {
-    console.log(items);
     return maxFiles - (items.length - markedSet.size);
   }, [items, markedSet]);
 
   return (
     <Accordion
       sx={{
-        width: 500,
+        width: "100%",
       }}
     >
       <AccordionSummary
@@ -63,9 +57,7 @@ export default function UpdateFile({
         aria-controls="panel2-content"
         id="panel2-header"
       >
-        <Typography component="span">
-          Tiêu đề - {label || "Hình ảnh/Video"}
-        </Typography>
+        <Typography component="span">{label || "Hình ảnh/Video"}</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <div className="flex flex-col gap-5">
@@ -101,14 +93,15 @@ export default function UpdateFile({
                     height: 150,
                     flex: "0 0 auto",
                     borderRadius: 2,
-                    backgroundImage: item[urlPropName] && item[urlPropName] !== ""
-                      ? `url("${item[urlPropName]}")`
-                      : "none",
+                    backgroundImage:
+                      item[urlPropName] && item[urlPropName] !== ""
+                        ? `url("${item[urlPropName]}")`
+                        : "none",
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
                     position: "relative",
-                    overflow: "hidden",
+                    overflow: "auto",
                   }}
                 >
                   {/* Overlay sáng */}
@@ -154,11 +147,12 @@ export default function UpdateFile({
             <div>
               <Typography>Thêm mới (tối đa {maxAdd} file)</Typography>
               <Dropzone
-                name={addPropName}
                 maxFiles={maxAdd}
                 fileType={fileType}
                 label={label}
-                setState={handleChange}
+                onChange={(value) => {
+                  onAdd(value);
+                }}
               ></Dropzone>
             </div>
           )}

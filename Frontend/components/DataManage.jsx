@@ -66,9 +66,23 @@ export default function DataManage({
     }
   };
   return (
-    <Dialog scroll="paper" open={open} onClose={onClose}>
-      <DialogTitle className="flex items-center gap-5">
-        Quản lý {categoryName}
+    <Dialog
+      scroll="paper"
+      slotProps={{
+        paper: {
+          sx: {
+            minWidth: 350, // Đảm bảo tối thiểu 350px
+            maxWidth: "fit-content", // Rộng vừa đủ nội dung
+            borderRadius: 2, // Bo góc đẹp
+            p: 1, // Padding trong dialog
+          },
+        },
+      }}
+      open={open}
+      onClose={onClose}
+    >
+      <DialogTitle className="flex items-center gap-5 justify-between">
+        <div>Quản lý {categoryName}</div>
         <Tooltip title="Thêm mới">
           <AddItemDialog
             label={categoryName}

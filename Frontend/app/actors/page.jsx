@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import ActorApi from "@/services/actor.api";
 import { createFormData, handleInputChange } from "@/utils/formUtils";
 import RenderInput from "@/components/RenderInput";
-import UpdateFile from "@/components/UpdateFile";
 import { actorInput, def } from "@/utils/inputConfig";
 import { useApi, deleteOne } from "@/services/useApi";
 import dayjs from "dayjs";
@@ -36,6 +35,10 @@ export default function Actors() {
       );
     }
   }, [actors]);
+
+  useEffect(() => {
+    console.log(actorData);
+  }, [actorData]);
 
   const handleChange = (event) => {
     handleInputChange(setActorData, event);
@@ -70,17 +73,6 @@ export default function Actors() {
       <div>
         <Typography variant="h4" component="h1" gutterBottom>
           Test
-          <UpdateFile
-            idName={"id"}
-            fileType={"image"}
-            label={"Hình ảnh"}
-            handleChange={setActorData}
-            delPropName={"deletedIds"}
-            addPropName={"addImages"}
-            maxFiles={images.length}
-            items={images}
-            urlPropName={"url"}
-          ></UpdateFile>
         </Typography>
         {/* <Button onClick={toggleManage}>Quản lý dữ liệu</Button>
         <DataMange

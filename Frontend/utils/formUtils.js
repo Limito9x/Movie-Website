@@ -1,5 +1,5 @@
-export const createFormData = (data, video, images) => {
-  console.log("Data to be sent:", data, video, images);
+export const createFormData = (data) => {
+  console.log("Data to be sent:", data);
   const formData = new FormData();
   Object.keys(data).forEach((key) => {
     if (Array.isArray(data[key])) {

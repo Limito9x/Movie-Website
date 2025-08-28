@@ -10,32 +10,22 @@ import SettingsIcon from "@mui/icons-material/Settings";
 
 export default function CustomAutoComplete({
   serviceType,
-  name,
   label,
-  handleChange,
+  onChange,
+  ids,
   inputs,
-  initIds,
 }) {
   const optionlabel = inputs[0].key;
-  const { data,refetch } = useApi(serviceType, null);
-  const [value, setValue] = useState([]);
+  const { data, refetch } = useApi(serviceType, null);
   const [openMange, setOpenManage] = useState(false);
   const toggleManage = () => {
     setOpenManage(!openMange);
   };
 
+  const [value, setValue] = useState([]);
   useEffect(() => {
-    if (initIds && data) {
-      // Chỉ set value khi data đã có và initIds là mảng hợp lệ
-      const selected = data.filter((item) => initIds.includes(item.id));
-      setValue(selected);
-    }
-  }, [data, initIds]);
-
-  const handleAutoCompleteChange = (event, newValue) => {
-    setValue(newValue);
-    handleChange(event, newValue, name);
-  };
+    if (data) setValue(data.filter((item) => ids.includes(item.id)));
+  }, [ids, data]);
 
   return (
     <div className="autoComplete flex items-center">
@@ -46,7 +36,9 @@ export default function CustomAutoComplete({
         )}
         value={value}
         getOptionLabel={(option) => option[optionlabel]}
-        onChange={handleAutoCompleteChange}
+        onChange={(event, newValues) =>
+          onChange(newValues.map((value) => value.id))
+        }
         noOptionsText={`Không tìm thấy ${label.toLowerCase()}`}
         disableCloseOnSelect // Keeps the dropdown open when selecting an option
         renderInput={(params) => (
@@ -57,7 +49,7 @@ export default function CustomAutoComplete({
             margin="dense"
           />
         )}
-        sx={{ width: "350px" }}
+        sx={{ width: "100%" }}
       />
       <Tooltip title={`Quản lý ${label.toLowerCase()}`}>
         <IconButton onClick={toggleManage}>

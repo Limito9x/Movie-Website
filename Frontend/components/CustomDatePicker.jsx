@@ -12,19 +12,14 @@ import "dayjs/locale/vi";
  * label: Nhãn hiển thị
  */
 
-export default function CustomDatePicker({ date, setDate, ...props }) {
-  const handleDateChange = (newValue) => {
-    if (newValue) {
-      setDate((prev) => ({ ...prev, [props.name]: newValue}));
-    }
-  };
+export default function CustomDatePicker({ value, onChange, ...props }) {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} locale="vi">
       <DatePicker
         label={props.label}
-        value={date === "" ? null : dayjs(date)}
-        onChange={handleDateChange}
+        value={value === "" ? null : dayjs(value)}
+        onChange={(value)=>onChange(value)}
         format="DD/MM/YYYY"
         slotProps={{ textField: { ...props } }}
       />
