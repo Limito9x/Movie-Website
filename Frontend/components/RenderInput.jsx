@@ -47,11 +47,10 @@ const inputComponents = {
     );
   },
   dropzone: (props) => {
-    const { value, onChange, ...restProps } = props;
+    const { onChange, ...restProps } = props;
     return (
       <Dropzone
         {...restProps}
-        value={value}
         onChange={(values) => onChange(values, props.name)}
       />
     );
