@@ -84,6 +84,7 @@ export default function Video() {
         dataValue={movie}
         instance={movieApi}
         refetch={refetch}
+        label={"phim"}
       />
     </div>
   );

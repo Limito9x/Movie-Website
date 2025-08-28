@@ -131,6 +131,7 @@ export default function DataManage({
           instance={api}
           dataValue={selectedItem}
           refetch={refetchData}
+          label={categoryName}
         ></UpdateItemDialog>
       </DialogContent>
       <DialogActions>

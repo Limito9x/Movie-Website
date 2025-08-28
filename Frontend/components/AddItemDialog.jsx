@@ -27,26 +27,7 @@ export default function AddItemDialog({
   refetch,
 }) {
   const title = `Thêm ${label.toLowerCase()}`;
-  const [hasFile, setHasFile] = useState(false);
   const [open, setOpen] = useState(false);
-  const [imageName, setImageName] = useState("");
-  const [videoName, setVideoName] = useState("");
-  useEffect(() => {
-    const fileInputs = inputConfig?.filter(
-      (input) => input.type === "dropzone"
-    );
-    if (fileInputs?.length > 0) {
-      setHasFile(true);
-      fileInputs.forEach((fileInput) => {
-        if (fileInput.fileType === "image") {
-          setImageName(fileInput.name);
-        }
-        if (fileInput.fileType === "video") {
-          setVideoName(fileInput.name);
-        }
-      });
-    }
-  }, [inputConfig]);
 
   const inputRef = useRef();
 
@@ -62,20 +43,7 @@ export default function AddItemDialog({
       if (!instance) return console.log("Instance chưa được khởi tạo");
       if (confirm("Xác nhận thêm dữ liệu?")) {
         let result = null;
-        if (hasFile) {
-          const {
-            [imageName]: imageFile,
-            [videoName]: videoFile,
-            ...rest
-          } = newData;
-          console.log("rest", rest);
-          console.log("imageFile", imageFile);
-          console.log("videoFile", videoFile);
-          const formData = createFormData(rest, videoFile, imageFile);
-          result = await instance.create(formData);
-        } else {
-          result = await instance.add(newData);
-        }
+        result = await instance.add(newData);
         if (result) {
           alert(result.message);
           handleClick();

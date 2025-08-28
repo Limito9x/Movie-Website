@@ -50,7 +50,7 @@ export default function Uploads() {
       <Typography variant="h4" component="h1" gutterBottom>
         Thêm Phim Mới
       </Typography>
-      <form onSubmit={handleSubmit} className="flex flex-col w-96">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2 w-96">
         <TextField
           label="Tên phim"
           variant="outlined"

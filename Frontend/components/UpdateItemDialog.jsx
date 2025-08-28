@@ -15,6 +15,7 @@ export default function UpdateItemDialog({
   dataValue,
   instance,
   refetch,
+  label
 }) {
   const inputRef = useRef();
 
@@ -41,7 +42,7 @@ export default function UpdateItemDialog({
         Cập nhật
       </Button>} */}
       <Dialog scroll="paper" open={openState} onClose={handleClose}>
-        <DialogTitle>Cập nhật</DialogTitle>
+        <DialogTitle>Cập nhật {label}</DialogTitle>
         <DialogContent>
           <RenderInput ref={inputRef} inputConfig={inputConfig} data={dataValue} />
         </DialogContent>

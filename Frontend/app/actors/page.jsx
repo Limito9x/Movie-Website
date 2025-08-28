@@ -2,7 +2,7 @@
 import { Button, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import ActorApi from "@/services/actor.api";
-import { createFormData, handleInputChange } from "@/utils/formUtils";
+import { createFormData} from "@/utils/formUtils";
 import RenderInput from "@/components/RenderInput";
 import { actorInput, def } from "@/utils/inputConfig";
 import { useApi, deleteOne } from "@/services/useApi";
@@ -25,24 +25,10 @@ export default function Actors() {
   };
 
   const { data: actors, loading, error } = useApi(ActorApi, null);
-  const [images, setImages] = useState([]);
-  useEffect(() => {
-    if (actors) {
-      setImages(
-        actors.map((actor) => {
-          return { id: actor.avatarStoragePath, url: actor.avatarUrl };
-        })
-      );
-    }
-  }, [actors]);
 
   useEffect(() => {
     console.log(actorData);
   }, [actorData]);
-
-  const handleChange = (event) => {
-    handleInputChange(setActorData, event);
-  };
 
   const [imageFile, setImageFile] = useState([]);
 
