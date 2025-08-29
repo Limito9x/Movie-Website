@@ -16,7 +16,7 @@ export default function Dropzone({
 }) {
   const [files,setFiles] = useState([]);
   useEffect(() => {
-    if (files.length > maxFiles) {
+    if (files && files.length > maxFiles) {
       const newFiles = files.slice(0, maxFiles);
       setFiles(newFiles);
       onChange(newFiles);

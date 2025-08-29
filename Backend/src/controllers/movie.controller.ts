@@ -1,6 +1,8 @@
 import { Movie, MovieImage, Actor, Genre, Tag } from "../models";
 import BaseController, { ExpressHandler } from "./baseController";
 import { syncRelationship } from "../utils/relationship";
+import { cloudinaryDelete, cloudinaryDeleteMultiple } from "../utils/file";
+import { sequelize } from "../config";
 
 const movieIncludes = [
   {
@@ -97,29 +99,63 @@ class MovieController extends BaseController {
     try {
       // Lấy thông tin cơ bản của phim
       const {
+        images,
+        deleteIds,
         actors,
         genres,
         tags,
+        uploadedImages,
         ...movieData
       } = req.body;
-      console.log(req.params.id);
-      console.log(actors,genres,tags);
+      console.log(deleteIds);
 
-     // Update movie basic information
-         const [updatedRows] = await Movie.update(movieData, {
-           where: { id: req.params.id },
-         });
+      // Update movie basic information
+      const [updatedRows] = await Movie.update(movieData, {
+        where: { id: req.params.id },
+      });
 
-          if (updatedRows > 0) {
-            const movie = await Movie.findByPk(req.params.id);
-            
-           syncRelationship(movie,"actors",actors);
-           syncRelationship(movie,"genres",genres);
-           syncRelationship(movie,"tags",tags);
+      if (updatedRows > 0) {
+        const movie = await Movie.findByPk(req.params.id);
 
-           res.status(200).json({message: "Movie updated successfully!"})
-          }
-          else res.status(404).json({ message: "Movie not found!" });
+        if (deleteIds && deleteIds.length > 0) {
+          const t = await sequelize.transaction();
+          const deleteImages = await MovieImage.findAll({
+            where: {
+              id: deleteIds,
+            },
+            transaction: t,
+          });
+          const deletePublicIds: string[] = deleteImages.map((image) =>
+            image.getDataValue("storagePath")
+          );
+          cloudinaryDeleteMultiple(deletePublicIds);
+          await MovieImage.destroy({
+            where:{
+              id: deleteIds
+            },
+            transaction: t
+          });
+          await t.commit();
+        }
+
+        if (uploadedImages && uploadedImages.length > 0) {
+          const movieImageRecords = uploadedImages.map(
+            (img: { imageUrl: string; imageStoragePath: string }) => ({
+              movieId: req.params.id, // Liên kết với ID của phim vừa tạo
+              image_url: img.imageUrl,
+              storagePath: img.imageStoragePath,
+            })
+          );
+          // Sử dụng bulkCreate để tạo nhiều bản ghi cùng lúc
+          await MovieImage.bulkCreate(movieImageRecords);
+        }
+
+        syncRelationship(movie, "actors", actors);
+        syncRelationship(movie, "genres", genres);
+        syncRelationship(movie, "tags", tags);
+
+        res.status(200).json({ message: "Movie updated successfully!" });
+      } else res.status(404).json({ message: "Movie not found!" });
     } catch (error) {
       console.log(error);
       res

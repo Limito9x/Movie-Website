@@ -78,13 +78,6 @@ const updateFileConfigDetail = (
     addImages:[],
   };
 };
-// idName={"id"}
-// fileType={"image"}
-// label={"Hình ảnh"}
-// delPropName={"deletedIds"}
-// addPropName={"addImages"}
-// maxFiles={images.length}
-// urlPropName={"url"}
 
 export const updateMovieConfig = [
   // def("video", "Video", "dropzone", [], fileConfig("video")),
@@ -96,7 +89,7 @@ export const updateMovieConfig = [
     null,
     null,
     updateFileConfigDetail(
-      "storagePath",
+      "id",
       "image",
       "Hình ảnh",
       5,

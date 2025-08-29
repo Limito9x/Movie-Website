@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import { useRef } from "react";
 import RenderInput from "./RenderInput";
+import { createFormData } from "@/utils/formUtils";
 
 export default function UpdateItemDialog({
   openState,
@@ -23,6 +24,7 @@ export default function UpdateItemDialog({
     event.preventDefault();
     try {
       const newData = inputRef.current.getData();
+      // createFormData(newData);
       let result = null;
       if (confirm("Xác nhận cập nhật dữ liệu?")) {
         result = await instance.update(dataValue.id, newData);

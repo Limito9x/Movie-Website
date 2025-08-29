@@ -1,13 +1,19 @@
 export const createFormData = (data) => {
-  console.log("Data to be sent:", data);
   const formData = new FormData();
   Object.keys(data).forEach((key) => {
-    if (Array.isArray(data[key])) {
-      data[key].forEach((item) => {
-        formData.append(`${key}[]`, item);
+    const value = data[key];
+    if (Array.isArray(value)) {
+      value.forEach((item) => {
+        const realFile = item instanceof File ? item : item.file;
+        if (realFile instanceof File) {
+          formData.append(key, realFile);
+        } else {
+          formData.append(`${key}[]`, item);
+        }
       });
+
     } else {
-      formData.append(key, data[key]);
+      formData.append(key, value);
     }
   });
   return formData;

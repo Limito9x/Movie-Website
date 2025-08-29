@@ -72,7 +72,6 @@ const inputComponents = {
     return (
       <UpdateFile
         items={value}
-        addImages={addImages}
         onAdd={(value) => onChange(value, "addImages")}
         onDelete={(value) => onChange(value, "deleteIds")}
         {...restProps}
@@ -133,7 +132,7 @@ const RenderInput = forwardRef(({ inputConfig, data }, ref) => {
     let extraProps = {};
     if (config.type === "updateFile") {
       extraProps = {
-      addImages: localData["addImages"],
+      addImages: localData["addImages"] || [],
       deleteIds: localData["deleteIds"],
       };
     }

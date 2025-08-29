@@ -1,6 +1,6 @@
 import { sequelize } from "../config";
 import { DataTypes } from "sequelize";
-import MovieImage from "./movieImages"
+import { MovieImage } from "./";
 import { cloudinaryDelete } from "../utils/file";
 
 const Movie = sequelize.define(
@@ -39,7 +39,7 @@ const Movie = sequelize.define(
     hooks: {
       beforeDestroy: async (movie: any, options) => {
         // Xóa video trên firebase storage
-        await cloudinaryDelete(movie.storagePath,"video");
+        await cloudinaryDelete(movie.storagePath, "video");
         const imagesToDelete = await MovieImage.findAll({
           where: { movieId: movie.id },
           transaction: options.transaction,

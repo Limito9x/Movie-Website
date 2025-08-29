@@ -62,4 +62,14 @@ async function cloudinaryDelete(publicId: string, resourceType = "image") {
   }
 }
 
-export { bufferUpload, cloudinaryUpload, cloudinaryDelete };
+async function cloudinaryDeleteMultiple(publicIds: string[]) {
+  try {
+    const result = await cloudinary.api.delete_resources(publicIds)
+    console.log("Delete result:", result);
+  } catch (err) {
+    console.error("Error deleting file from Cloudinary:", err);
+    throw err;
+  }
+}
+
+export { bufferUpload, cloudinaryUpload, cloudinaryDelete, cloudinaryDeleteMultiple };
