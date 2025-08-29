@@ -35,9 +35,8 @@ export default function Uploads() {
     event.preventDefault();
     console.log(movieData);
     if(!confirm("Xác nhận tạo phim ?")) return;
-    const formData = createFormData(movieData, videoFile, imageFiles);
     try {
-      const response = await MovieApi.create(formData);
+      const response = await MovieApi.create(movieData);
       console.log("Movie created:", response);
       alert(response.message);
     } catch (error) {
@@ -96,9 +95,8 @@ export default function Uploads() {
           label="Tag"
         />
         <CustomDatePicker
-          date={movieData.releaseDate}
-          onChange={handleChange}
-          name="releaseDate"
+          value={movieData.releaseDate}
+          onChange={(v) => handleChange(v, "releaseDate")}
           label={"Ngày phát hành"}
         />
         Video

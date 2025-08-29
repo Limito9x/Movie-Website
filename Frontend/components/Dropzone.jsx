@@ -19,7 +19,7 @@ export default function Dropzone({
     if (files && files.length > maxFiles) {
       const newFiles = files.slice(0, maxFiles);
       setFiles(newFiles);
-      onChange(newFiles);
+      onChange(newFiles.map(newFile=>newFile.file));
     }
   }, [maxFiles]);
 
@@ -33,12 +33,14 @@ export default function Dropzone({
   return (
     <div className="App">
       <FilePond
-        acceptedFileTypes={[acceptedFileTypes[fileType]] || []}
+        acceptedFileTypes={
+          fileType ? [acceptedFileTypes[fileType]] : []
+        }
         allowFileTypeValidation={true}
         files={files}
         onupdatefiles={(fileItems) => {
           setFiles(fileItems);
-          onChange(fileItems);
+          onChange(fileItems.map((fileItem) => fileItem.file));
         }}
         allowMultiple={maxFiles > 1}
         maxFiles={maxFiles || 1}
@@ -48,7 +50,7 @@ export default function Dropzone({
         to automatically upload without create formData */
         labelIdle={
           label
-            ? `Kéo, thả hoặc chọn ${label.toLowerCase()}`
+            ? `Kéo, thả hoặc chọn ${label.toLowerCase()} (tối đa ${maxFiles} file)`
             : 'Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
         }
       />
