@@ -2,35 +2,28 @@
 import { Button, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import ActorApi from "@/services/actor.api";
-import { createFormData} from "@/utils/formUtils";
+import { createFormData } from "@/utils/formUtils";
 import RenderInput from "@/components/RenderInput";
-import { actorInput, def } from "@/utils/inputConfig";
+import UpdateItemDialog from "@/components/UpdateItemDialog";
+import { actorConfig } from "@/utils/inputConfig";
 import { useApi, deleteOne } from "@/services/useApi";
 import dayjs from "dayjs";
+import actorApi from "@/services/actor.api";
 
 export default function Actors() {
-  const [actorData, setActorData] = useState({
-    name: "",
-    sex: "",
-    dateOfBirth: "",
-  });
-  const updateActorConfig = [
-    def("name", "Tên diễn viên"),
-    def("sex", "Giới tính", "sex"),
-    def("dateOfBirth", "Ngày sinh", "date"),
-  ];
-  const [openMange, setOpenManage] = useState(false);
-  const toggleManage = () => {
-    setOpenManage(!openMange);
+  const [actorData, setActorData] = useState({});
+  const [selectedActor, setSelectedActor] = useState(null);
+
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const toggleUpdate = () => {
+    setOpenUpdate(!openUpdate);
   };
 
-  const { data: actors, loading, error } = useApi(ActorApi, null);
+  const { data: actors, loading, error,refetch } = useApi(ActorApi, null);
 
   useEffect(() => {
     console.log(actorData);
   }, [actorData]);
-
-  const [imageFile, setImageFile] = useState([]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -97,14 +90,34 @@ export default function Actors() {
                 src={actor.avatarUrl}
                 alt={actor.name}
               />
-              <Button
-                onClick={() => {
-                  if (confirm(`Bạn có muốn xóa diễn viên ${actor.name}`))
-                    deleteOne(ActorApi, actor.id);
-                }}
-              >
-                Xóa diễn viên
-              </Button>
+              <div className="flex gap-2">
+                {" "}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    if (confirm(`Bạn có muốn xóa diễn viên ${actor.name}`))
+                      deleteOne(ActorApi, actor.id);
+                  }}
+                >
+                  Xóa diễn viên
+                </Button>
+                <Button variant="contained" color="primary" onClick={() => {
+                  setSelectedActor(actor);
+                  toggleUpdate();
+                }}>
+                  Cập nhật
+                </Button>
+              </div>
+              <UpdateItemDialog
+                openState={openUpdate}
+                handleClose={toggleUpdate}
+                inputConfig={actorConfig.update}
+                dataValue={selectedActor}
+                instance={actorApi}
+                refetch={refetch}
+                label={"Diễn viên"}
+              ></UpdateItemDialog>
             </div>
           ))}
         </div>

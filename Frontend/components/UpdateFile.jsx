@@ -8,14 +8,14 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useState, useEffect, useMemo } from "react";
 import Dropzone from "./Dropzone";
 export default function UpdateFile({
-  idName,
   fileType,
   label,
   onAdd,
   onDelete,
   maxFiles,
   items,
-  urlPropName,
+  urlName,
+  publicIdName,
 }) {
   const [markedSet, setMarkedSet] = useState(new Set());
   const markedAll = markedSet.size === items.length;
@@ -32,7 +32,7 @@ export default function UpdateFile({
     setMarkedSet((prev) =>
       prev.size === items.length
         ? new Set()
-        : new Set(items.map((item) => item[idName]))
+        : new Set(items.map((item) => item[publicIdName]))
     );
   };
 
@@ -87,15 +87,15 @@ export default function UpdateFile({
             >
               {items.map((item) => (
                 <Box
-                  key={item[idName]}
+                  key={item[publicIdName]}
                   sx={{
                     width: 150,
                     height: 150,
                     flex: "0 0 auto",
                     borderRadius: 2,
                     backgroundImage:
-                      item[urlPropName] && item[urlPropName] !== ""
-                        ? `url("${item[urlPropName]}")`
+                      item[urlName] && item[urlName] !== ""
+                        ? `url("${item[urlName]}")`
                         : "none",
                     backgroundSize: "cover",
                     backgroundPosition: "center",
@@ -105,7 +105,7 @@ export default function UpdateFile({
                   }}
                 >
                   {/* Overlay sáng */}
-                  {markedSet.has(item[idName]) && (
+                  {markedSet.has(item[publicIdName]) && (
                     <Box
                       sx={{
                         position: "absolute",
@@ -119,7 +119,7 @@ export default function UpdateFile({
                   {/* Nút X */}
                   <IconButton
                     size="small"
-                    onClick={() => toggleMark(item[idName])}
+                    onClick={() => toggleMark(item[publicIdName])}
                     sx={{
                       position: "absolute",
                       top: 4,
@@ -133,7 +133,7 @@ export default function UpdateFile({
                     <CloseIcon
                       fontSize="small"
                       sx={{
-                        opacity: markedSet.has(item[idName]) ? 1 : 0.2,
+                        opacity: markedSet.has(item[publicIdName]) ? 1 : 0.2,
                         transition: "0.2s",
                         color: "black",
                       }}

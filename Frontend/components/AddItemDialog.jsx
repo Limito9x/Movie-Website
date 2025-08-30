@@ -65,7 +65,7 @@ export default function AddItemDialog({
       <Dialog open={open} onClose={handleClick}>
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
-          <RenderInput ref={inputRef} inputConfig={inputConfig} />
+          <RenderInput ref={inputRef} formConfig={inputConfig} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleAdd}>Thêm</Button>

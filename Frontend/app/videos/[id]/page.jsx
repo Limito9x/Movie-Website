@@ -2,21 +2,19 @@
 import MovieApi from "@/services/movie.api";
 import dayjs from "dayjs";
 import { useParams } from "next/navigation";
-import {useApi,deleteOne} from "@/services/useApi";
+import { useApi, deleteOne } from "@/services/useApi";
 import { Button } from "@mui/material";
 import Carousel from "@/components/Carousel";
 import UpdateItemDialog from "@/components/UpdateItemDialog";
-import movieApi from "@/services/movie.api";
-import { movieInput,updateMovieConfig } from "@/utils/inputConfig";
+import movieApi from "@/services/movie.api";;
 import { useEffect, useState } from "react";
+import { movieConfig } from "@/utils/inputConfig";
 
 export default function Video() {
   const id = useParams().id;
-  const {data: movie,loading,error,refetch} = useApi(MovieApi,id);
+  const { data: movie, loading, error, refetch } = useApi(MovieApi, id);
 
-  const updateMovieInput = [...movieInput,...updateMovieConfig]
-
-  const [openDialog,setOpenDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
   if (loading) {
     return <div>Đang tải dữ liệu phim...</div>;
@@ -26,7 +24,7 @@ export default function Video() {
     return <div>Lỗi khi tải dữ liệu phim: {error}</div>;
   }
 
-  if (!movie ) {
+  if (!movie) {
     return <div>Không có dữ liệu phim.</div>;
   }
   return (
@@ -74,13 +72,13 @@ export default function Video() {
       >
         Xóa
       </Button>
-      <Button variant="outlined" onClick={()=>setOpenDialog(true)}>
+      <Button variant="outlined" onClick={() => setOpenDialog(true)}>
         Cập nhật
       </Button>
       <UpdateItemDialog
         openState={openDialog}
-        handleClose={()=>setOpenDialog(false)}
-        inputConfig={updateMovieInput}
+        handleClose={() => setOpenDialog(false)}
+        inputConfig={movieConfig.update}
         dataValue={movie}
         instance={movieApi}
         refetch={refetch}

@@ -1,14 +1,13 @@
 "use client";
-import { FormControl, TextField, Box, Button, Typography } from "@mui/material";
+import { TextField, Box, Button, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import MovieApi from "@/services/movie.api";
 import ActorApi from "@/services/actor.api";
 import GenreApi from "@/services/genre.api";
 import TagApi from "@/services/tag.api";
-import { createFormData, handleInputChange } from "@/utils/formUtils";
 import CustomDatePicker from "@/components/CustomDatePicker";
 import CustomAutoComplete from "@/components/CustomAutoComplete";
-import { actorInput,genreInput, tagInput } from "@/utils/inputConfig";
+import { actorConfig, tagConfig, genreConfig } from "@/utils/inputConfig";
 import Dropzone from "@/components/Dropzone";
 
 export default function Uploads() {
@@ -20,21 +19,21 @@ export default function Uploads() {
     selectedGenres: [],
     selectedTags: [],
     video: [],
-    images: []
+    images: [],
   });
 
-  const cateName=["selectedActors","selectedGenres","selectedTags"];
+  const cateName = ["selectedActors", "selectedGenres", "selectedTags"];
   const handleChange = (values, propName) => {
     setMovieData((prev) => ({
       ...prev,
-      [propName]: values
+      [propName]: values,
     }));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log(movieData);
-    if(!confirm("Xác nhận tạo phim ?")) return;
+    if (!confirm("Xác nhận tạo phim ?")) return;
     try {
       const response = await MovieApi.create(movieData);
       console.log("Movie created:", response);
@@ -72,27 +71,30 @@ export default function Uploads() {
           rows={4}
         />
         <CustomAutoComplete
-          serviceType={ActorApi}
-          inputs={actorInput}
-          ids={movieData[cateName[0]]}
+          api={ActorApi}
+          config={actorConfig}
+          value={movieData[cateName[0]]}
           onChange={(v) => handleChange(v, cateName[0])}
           label="Diễn viên"
+          optionLabel={"name"}
         />
         <CustomAutoComplete
-          serviceType={GenreApi}
+          api={GenreApi}
           name="selectedGenres"
-          inputs={genreInput}
-          ids={movieData[cateName[1]]}
+          config={genreConfig}
+          value={movieData[cateName[1]]}
           onChange={(v) => handleChange(v, cateName[1])}
           label="Thể loại"
+          optionLabel={"name"}
         />
         <CustomAutoComplete
-          serviceType={TagApi}
+          api={TagApi}
           name="selectedTags"
-          ids={movieData[cateName[2]]}
+          value={movieData[cateName[2]]}
           onChange={(v) => handleChange(v, cateName[2])}
-          inputs={tagInput}
+          config={tagConfig}
           label="Tag"
+          optionLabel={"name"}
         />
         <CustomDatePicker
           value={movieData.releaseDate}

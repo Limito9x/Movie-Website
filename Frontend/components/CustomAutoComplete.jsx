@@ -1,44 +1,47 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { TextField, Autocomplete, IconButton, Tooltip } from "@mui/material";
-import ApiClient from "@/services/axios";
 import DataManage from "./DataManage";
 import { useApi } from "@/services/useApi";
 import SettingsIcon from "@mui/icons-material/Settings";
-/**
- * @param {ApiClient} serviceType
- */
 
 export default function CustomAutoComplete({
-  serviceType,
-  label,
   onChange,
-  ids,
-  inputs,
+  value,
+  api,
+  config,
+  optionLabel,
+  label
 }) {
-  const optionlabel = inputs[0].key;
-  const { data, refetch } = useApi(serviceType, null);
+  const addConfig = config.create? config.create: config;
+  const updateConfig = config.update ? config.update : config;
+  const { data, refetch } = useApi(api, null);
   const [openMange, setOpenManage] = useState(false);
   const toggleManage = () => {
     setOpenManage(!openMange);
   };
 
-  const [value, setValue] = useState([]);
+  const [curVal, setCurVal] = useState([]);
   useEffect(() => {
-    if (data) setValue(data.filter((item) => ids.includes(item.id)));
-  }, [ids, data]);
+    if (value && data) {
+      const valueIds = value.map(v => (typeof v === "object" ? v.id : v));
+      const selected = data.filter(item => valueIds.includes(item.id));
+      setCurVal(selected);
+    }
+  }, [data]);
 
   return (
     <div className="autoComplete flex items-center">
       <Autocomplete
         multiple
         options={(data || []).sort((a, b) =>
-          a[optionlabel].localeCompare(b[optionlabel])
+          a[optionLabel].localeCompare(b[optionLabel])
         )}
-        value={value}
-        getOptionLabel={(option) => option[optionlabel]}
-        onChange={(event, newValues) =>
-          onChange(newValues.map((value) => value.id))
-        }
+        value={curVal}
+        getOptionLabel={(option) => option[optionLabel]}
+        onChange={(event, newValues) => {
+          setCurVal(newValues);
+          onChange(newValues.map((value) => value.id));
+        }}
         noOptionsText={`Không tìm thấy ${label.toLowerCase()}`}
         disableCloseOnSelect // Keeps the dropdown open when selecting an option
         renderInput={(params) => (
@@ -59,10 +62,11 @@ export default function CustomAutoComplete({
       <DataManage
         open={openMange}
         onClose={toggleManage}
+        api={api}
         categoryName={label.toLowerCase()}
-        api={serviceType}
-        addConfig={inputs}
-        updateConfig={inputs}
+        data={data}
+        addConfig={addConfig}
+        updateConfig={updateConfig}
         atcRefetch={refetch}
       />
     </div>

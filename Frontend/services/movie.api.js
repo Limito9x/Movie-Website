@@ -6,6 +6,30 @@ class MovieApi extends ApiClient {
     super("/movies");
   }
 
+  async getAll() {
+    const data = (await this.api.get("/")).data;
+    return data.map((item) => ({
+      ...item,
+      video: [
+        {
+          url: item.url,
+          publicId: item.storagePath,
+        },
+      ],
+    }));
+  }
+
+  async getById(id) {
+    const data = (await this.api.get(`/${id}`)).data;
+    return {
+      ...data,
+      video:
+        data.url && data.storagePath
+          ? [{ url: data.url, publicId: data.storagePath }]
+          : [],
+    };
+  }
+
   async create(data) {
     const formData = createFormData(data);
     return (

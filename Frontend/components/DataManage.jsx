@@ -16,50 +16,37 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import AddItemDialog from "./AddItemDialog";
 import UpdateItemDialog from "./UpdateItemDialog";
-import { useState,useEffect } from "react";
-/* Dialog:
-Header: Tiêu đề "Quan lý <tên danh mục>", góc phải là dấu + thêm đối tượng mới cho danh mục
-Phần thân sẽ gồm 1 list dữ liệu danh mục (có độ dài tối đa và auto scroll),
-mỗi dòng dữ liệu sẽ chỉ hiện tên và bên phải cùng sẽ là 2 nút cập nhật và xóa
-*/
+import { useState, useEffect } from "react";
+
 export default function DataManage({
   open,
   onClose,
-  categoryName,
   api,
+  categoryName,
+  data,
   atcRefetch,
   addConfig,
   updateConfig,
 }) {
-  const [data,setData] = useState([]);
   const [openUpdateState, setOpenUpdateState] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  // Hàm để gọi API lấy dữ liệu
-  const refetchData = async () => {
-    try {
-      const response = await api.getAll();
-      setData(response);
-      atcRefetch();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
   // Gọi hàm khi component mount hoặc khi open thay đổi
-  useEffect(() => {
-    if (open) {
-      refetchData();
-    }
-  }, [open]);
-    const handleUpdate = (item) => {
-      setOpenUpdateState(true);
-      setSelectedItem(item);
-    };
+  // useEffect(() => {
+  //   if (open) {
+  //     atcRefetch();
+  //   }
+  // }, [open]);
+  const handleUpdate = (item) => {
+    setOpenUpdateState(true);
+    setSelectedItem(item);
+  };
   const handleDelete = async (item) => {
     try {
       if (confirm("Xác nhận xóa ?")) {
         await api.delete(item.id);
         alert("Xóa thành công!");
-        await refetchData();
+        await atcRefetch();
       }
     } catch (error) {
       console.log(error);
@@ -88,7 +75,7 @@ export default function DataManage({
             label={categoryName}
             inputConfig={addConfig}
             instance={api}
-            refetch={refetchData}
+            refetch={atcRefetch}
           ></AddItemDialog>
         </Tooltip>
       </DialogTitle>
@@ -130,7 +117,7 @@ export default function DataManage({
           inputConfig={updateConfig}
           instance={api}
           dataValue={selectedItem}
-          refetch={refetchData}
+          refetch={atcRefetch}
           label={categoryName}
         ></UpdateItemDialog>
       </DialogContent>
