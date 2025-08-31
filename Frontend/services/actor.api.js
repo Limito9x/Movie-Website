@@ -8,7 +8,6 @@ class ActorApi extends ApiClient {
 
   async getAll() {
     const data = (await this.api.get("/")).data;
-    console.log(data)
     return data.map((item) => ({
       ...item,
       avatar: [

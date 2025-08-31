@@ -1,69 +1,12 @@
 import genreApi from "@/services/genre.api";
 import actorApi from "@/services/actor.api";
 import tagApi from "@/services/tag.api";
-
-// ---
-// ## 1. Các Hàm Hỗ Trợ
-// Các hàm này tạo ra các đối tượng cấu hình input.
-// ---
-
-const text = {
-  name: "text",
-  initValue: "",
-};
-
-const option = (value, label) => {
-  return { value, label };
-};
-
-const select = (range) => {
-  return {
-    name: "select",
-    initValue: "",
-    range,
-  };
-};
-
-const date = {
-  name: "date",
-  initValue: "",
-};
-
-// Hàm lấy tên thuộc tính nhãn (label prop name)
-const getOptionLabel = (config) => {
-  if (config.create) return config.create[0].key;
-  if (config.update) return config.update[0].key;
-  // Trường hợp không có create/update, lấy key đầu tiên từ mảng base
-  return config[0] ? config[0].key : "name";
-};
-
-const atc = (api, detailConfig) => ({
-  name: "autoComplete",
-  api,
-  initValue: [],
-  detailConfig,
-  optionLabel: getOptionLabel(detailConfig),
-});
-
-const dropzone = (maxFiles, fileType) => ({
-  name: "dropzone",
-  maxFiles,
-  fileType,
-});
-
-const updateFile = (maxFiles, fileType, urlName, publicIdName) => ({
-  name: "updateFile",
-  maxFiles,
-  fileType,
-  urlName,
-  publicIdName,
-  addPropname: `new${fileType}s`,
-  delPropname: `del${fileType}s`,
-});
+import {text,select,option,date,atc,dropzone,updateFile} from "./inputComponent";
 
 // Hàm định nghĩa thuộc tính đối tượng
 const attr = (key, label, input = text) => ({
   key,
+  propname: key,
   label,
   input,
 });
@@ -95,7 +38,7 @@ const defineConfig = (instanceName, base, create, update) => {
 };
 
 // ---
-// ## 2. Định nghĩa Cấu hình Cơ bản
+// ## Định nghĩa Cấu hình Cơ bản
 // Định nghĩa các thuộc tính cơ bản cho từng đối tượng
 // ---
 
@@ -118,7 +61,7 @@ const actorUpdate = [
 ];
 
 // ---
-// ## 3. Tạo Cấu hình Cuối cùng
+// ## Tạo Cấu hình Cuối cùng
 // Tạo các cấu hình cuối cùng trước khi sử dụng chúng.
 // ---
 

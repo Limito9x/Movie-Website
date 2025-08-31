@@ -21,10 +21,6 @@ export default function Actors() {
 
   const { data: actors, loading, error,refetch } = useApi(ActorApi, null);
 
-  useEffect(() => {
-    console.log(actorData);
-  }, [actorData]);
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = createFormData(actorData, null, imageFile);
