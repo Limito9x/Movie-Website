@@ -99,15 +99,17 @@ class MovieController extends BaseController {
     try {
       // Lấy thông tin cơ bản của phim
       const {
+        video,
         images,
-        deleteIds,
+        delImages,
+        delVideos,
         actors,
         genres,
         tags,
         uploadedImages,
         ...movieData
       } = req.body;
-      console.log(deleteIds);
+      console.log(delImages);
 
       // Update movie basic information
       const [updatedRows] = await Movie.update(movieData, {
@@ -117,23 +119,19 @@ class MovieController extends BaseController {
       if (updatedRows > 0) {
         const movie = await Movie.findByPk(req.params.id);
 
-        if (deleteIds && deleteIds.length > 0) {
+        if (delVideos && delVideos.length>0) {
+          cloudinaryDelete(delVideos[0], "video");
+        }
+
+        if (delImages && delImages.length > 0) {
           const t = await sequelize.transaction();
-          const deleteImages = await MovieImage.findAll({
+          
+          cloudinaryDeleteMultiple(delImages);
+          await MovieImage.destroy({
             where: {
-              id: deleteIds,
+              storagePath: delImages,
             },
             transaction: t,
-          });
-          const deletePublicIds: string[] = deleteImages.map((image) =>
-            image.getDataValue("storagePath")
-          );
-          cloudinaryDeleteMultiple(deletePublicIds);
-          await MovieImage.destroy({
-            where:{
-              id: deleteIds
-            },
-            transaction: t
           });
           await t.commit();
         }

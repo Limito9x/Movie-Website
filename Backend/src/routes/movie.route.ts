@@ -13,7 +13,10 @@ const movieMiddlewares = {
     uploadMovie,
   ],
   update: [
-    bufferUpload.fields([{ name: "addImages", maxCount: 5 }]),
+    bufferUpload.fields([
+      { name: "newVideos", maxCount: 1 },
+      { name: "newImages", maxCount: 5 },
+    ]),
     updateMovie,
   ],
 };

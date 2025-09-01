@@ -10,9 +10,9 @@ export default function CustomAutoComplete({
   api,
   config,
   optionLabel,
-  label
+  label,
 }) {
-  const addConfig = config.create? config.create: config;
+  const addConfig = config.create ? config.create : config;
   const updateConfig = config.update ? config.update : config;
   const { data, refetch } = useApi(api, null);
   const [openMange, setOpenManage] = useState(false);
@@ -23,9 +23,9 @@ export default function CustomAutoComplete({
   const [curVal, setCurVal] = useState([]);
   useEffect(() => {
     if (value && data) {
-      const valueIds = value.map(v => (typeof v === "object" ? v.id : v));
-      const selected = data.filter(item => valueIds.includes(item.id));
+      const selected = data.filter((item) => value.includes(item.id));
       setCurVal(selected);
+      onChange(value);
     }
   }, [data]);
 

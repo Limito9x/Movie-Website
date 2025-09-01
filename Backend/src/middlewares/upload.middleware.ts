@@ -50,15 +50,16 @@ export const updateMovie = async (
   next: NextFunction
 ) => {
   try {
-    // const videoFile = req.files?.["addVideo"]?.[0];
-    const imageFiles = req.files?.["addImages"] || []; // nếu ko có thì rỗng
+    const videoFile = req.files?.["newVideos"]?.[0];
+    const imageFiles = req.files?.["newImages"] || []; // nếu ko có thì rỗng
+    console.log("new video: ", videoFile);
     console.log("new images: ",imageFiles);
     // Xử lý upload video
-    // if (videoFile) {
-    //   const videoResult = await cloudinaryUpload(videoFile, "videos");
-    //   req.body.url = videoResult.url;
-    //   req.body.storagePath = videoResult.public_id;
-    // }
+    if (videoFile) {
+      const videoResult = await cloudinaryUpload(videoFile, "videos");
+      req.body.url = videoResult.url;
+      req.body.storagePath = videoResult.public_id;
+    }
 
     // Xử lý upload ảnh (sử dụng Promise.all để tải lên song song)
     if (imageFiles && imageFiles.length > 0) {
