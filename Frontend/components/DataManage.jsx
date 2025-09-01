@@ -1,6 +1,4 @@
 import {
-  Menu,
-  MenuItem,
   List,
   ListItem,
   ListItemText,
@@ -79,7 +77,7 @@ export default function DataManage({
           ></AddItemDialog>
         </Tooltip>
       </DialogTitle>
-      <DialogContent>
+      <DialogContent sx={{ maxHeight: 300 }}>
         <List sx={{ bgcolor: "background.paper" }}>
           {data?.map((item) => (
             <ListItem
