@@ -55,7 +55,7 @@ const actor = [
   ),
   attr("dateOfBirth", "Ngày sinh", date),
 ];
-const actorCreate = [attr("avatar", "Ảnh đại diện", dropzone(1, "image"))];
+const actorCreate = [attr("avatar", "Ảnh đại diện", dropzone(1, "image","create"))];
 const actorUpdate = [
   attr("avatar", "Ảnh đại diện", updateFile(1, "image", "url", "publicId")),
 ];
@@ -84,8 +84,8 @@ const movie = [
   attr("releaseDate", "Ngày phát hành", date),
 ];
 const movieCreate = [
-  attr("video", "Video", dropzone(1, "video")),
-  attr("images", "Hình ảnh", dropzone(5, "image")),
+  attr("video", "Video", dropzone(1, "video","create")),
+  attr("images", "Hình ảnh", dropzone(5, "image","create")),
 ];
 const movieUpdate = [
   attr("video", "Video", updateFile(1, "video", "url", "publicId")),

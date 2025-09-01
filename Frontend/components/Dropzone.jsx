@@ -1,5 +1,6 @@
 import { FilePond, registerPlugin } from "react-filepond";
 import { useEffect, useState } from "react";
+import { Typography } from "@mui/material";
 
 // Import FilePond styles
 import "filepond/dist/filepond.min.css";
@@ -13,6 +14,7 @@ export default function Dropzone({
   maxFiles,
   fileType,
   label,
+  purpose
 }) {
   const [files,setFiles] = useState([]);
   useEffect(() => {
@@ -32,10 +34,9 @@ export default function Dropzone({
 
   return (
     <div className="App">
+      {purpose === "create" && <Typography>{label}</Typography>}
       <FilePond
-        acceptedFileTypes={
-          fileType ? [acceptedFileTypes[fileType]] : []
-        }
+        acceptedFileTypes={fileType ? [acceptedFileTypes[fileType]] : []}
         allowFileTypeValidation={true}
         files={files}
         onupdatefiles={(fileItems) => {

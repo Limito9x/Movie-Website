@@ -39,9 +39,9 @@ class MovieController extends BaseController {
         releaseDate,
         url,
         storagePath,
-        selectedActors,
-        selectedGenres,
-        selectedTags,
+        actors,
+        genres,
+        tags,
         uploadedImages,
       } = req.body;
 
@@ -69,9 +69,9 @@ class MovieController extends BaseController {
       }
 
       // Thiết lập các mối quan hệ (actors, genres, tags)
-      syncRelationship(newMovie, "actors", selectedActors);
-      syncRelationship(newMovie, "genres", selectedGenres);
-      syncRelationship(newMovie, "tags", selectedTags);
+      syncRelationship(newMovie, "actors", actors);
+      syncRelationship(newMovie, "genres", genres);
+      syncRelationship(newMovie, "tags", tags);
 
       // Lấy lại đối tượng movie hoàn chỉnh để trả về
       const finalMovie = await Movie.findByPk(newMovie.id, {

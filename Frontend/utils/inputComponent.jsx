@@ -99,7 +99,7 @@ export const atc = (api, detailConfig) => {
   };
 };
 
-export const dropzone = (maxFiles, fileType) => ({
+export const dropzone = (maxFiles, fileType,purpose) => ({
   name: "dropzone",
   render: (props) => {
     const { onChange, ...restProps } = props;
@@ -108,6 +108,7 @@ export const dropzone = (maxFiles, fileType) => ({
         {...restProps}
         maxFiles={maxFiles}
         fileType={fileType}
+        purpose={purpose}
         onChange={(values) => onChange(values, props.propname)}
       />
     );
