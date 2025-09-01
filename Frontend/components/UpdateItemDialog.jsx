@@ -25,6 +25,7 @@ export default function UpdateItemDialog({
     event.preventDefault();
     try {
       const newData = inputRef.current.getData();
+      console.log("Data to update: ",newData);
       // createFormData(newData);
       let result = null;
       if (confirm("Xác nhận cập nhật dữ liệu?")) {

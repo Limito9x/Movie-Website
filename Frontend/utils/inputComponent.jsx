@@ -113,8 +113,9 @@ export const dropzone = (maxFiles, fileType) => ({
 });
 
 export const updateFile = (maxFiles, fileType, urlName, publicIdName) => {
-  const addPropname = `new${fileType}s`;
-  const delPropname = `del${fileType}s`;
+  const typeName = fileType.charAt(0).toUpperCase() + fileType.slice(1).toLowerCase();
+  const addPropname = `new${typeName}s`;
+  const delPropname = `del${typeName}s`;
   return {
     name: "updateFile",
     render: (props) => {
