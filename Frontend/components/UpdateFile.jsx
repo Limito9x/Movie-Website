@@ -135,7 +135,7 @@ export default function UpdateFile({
                 border: "1px solid #555",
                 borderRadius: 2,
                 padding: 1,
-                background: "white",
+                background: "#e5edfcff", // nền sáng dịu
                 width: "100%",
                 display: "flex",
                 justifyContent: "center",
@@ -145,30 +145,29 @@ export default function UpdateFile({
                 sx={{
                   display: "flex",
                   gap: 2,
-                  overflowX: "auto", // scroll ngang
+                  overflowX: "auto",
                   alignItems: "center",
-                  // giới hạn chiều rộng
-                          }}
-                          >
-                          {items.map((item) => (
-                            <Box 
-                            key={item[publicIdName]}
-                            sx={{
-                              flex: "0 0 auto",
-                              width: fileType === "video" ? 400 : "auto",
-                              height: fileType === "video" ? 250 : 200,
-                              borderRadius: 2,
-                              position: "relative",
-                              padding: 1,
-                            }}
-                            >
-                            <FileItem
-                              type={fileType}
-                              url={item[urlName]}
-                              isDeleted={markedSet.has(item[publicIdName])}
-                            ></FileItem>
+                }}
+              >
+                {items.map((item) => (
+                  <Box
+                    key={item[publicIdName]}
+                    sx={{
+                      flex: "0 0 auto",
+                      width: fileType === "video" ? 400 : "auto",
+                      height: fileType === "video" ? 250 : 200,
+                      borderRadius: 2,
+                      position: "relative",
+                      padding: 1,
+                    }}
+                  >
+                    <FileItem
+                      type={fileType}
+                      url={item[urlName]}
+                      isDeleted={markedSet.has(item[publicIdName])}
+                    ></FileItem>
 
-                            {/* Nút X */}
+                    {/* Nút X */}
                     <IconButton
                       size="small"
                       onClick={() => toggleMark(item[publicIdName])}
