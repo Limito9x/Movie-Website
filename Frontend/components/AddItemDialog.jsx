@@ -43,7 +43,7 @@ export default function AddItemDialog({
       if (!instance) return console.log("Instance chưa được khởi tạo");
       if (confirm("Xác nhận thêm dữ liệu?")) {
         let result = null;
-        result = await instance.add(newData);
+        result = await instance.create(newData);
         if (result) {
           alert(result.message);
           handleClick();
