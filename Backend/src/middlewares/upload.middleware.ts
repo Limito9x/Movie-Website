@@ -88,13 +88,34 @@ export const updateMovie = async (
   }
 };
 
+// export const uploadActor = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const avatar = req.file;
+//     if (avatar) {
+//       const result = await cloudinaryUpload(avatar, "actors");
+//       req.body.avatarUrl = result.url;
+//       req.body.avatarStoragePath = result.public_id;
+//     }
+//     delete req.file;
+//     next();
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
 export const uploadActor = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const avatar = req.file;
+    const avatar = (req.files as Express.Multer.File[] | undefined)?.[0];
+    console.log(req.files);
+    console.log(avatar)
     if (avatar) {
       const result = await cloudinaryUpload(avatar, "actors");
       req.body.avatarUrl = result.url;
