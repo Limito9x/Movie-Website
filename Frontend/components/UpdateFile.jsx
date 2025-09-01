@@ -3,10 +3,67 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { Box, IconButton, FormControlLabel, Checkbox } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  FormControlLabel,
+  Checkbox,
+  Card,
+  CardMedia,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useState, useEffect, useMemo } from "react";
 import Dropzone from "./Dropzone";
+
+function FileItem({ url, type, isDeleted }) {
+  return (
+    <Card
+      sx={{
+        position: "relative",
+        width: "auto",
+        height: "100%",
+        border: isDeleted ? "2px solid red" : "1px solid #ccc",
+        transition: "0.3s",
+        "&:hover": {
+          boxShadow: 20,
+        },
+      }}
+    >
+      {type === "image" ? (
+        <CardMedia
+          component="img"
+          image={url}
+          sx={{ height: "100%", width: "auto", objectFit: "cover" }}
+        />
+      ) : (
+        <CardMedia
+          component="video"
+          src={url}
+          controls
+          sx={{ height: "100%", objectFit: "contain" }}
+        />
+      )}
+
+      {isDeleted && (
+        <Box
+          sx={{
+            position: "absolute",
+            inset: 0,
+            bgcolor: "rgba(255,255,255,0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {/* <Typography variant="h5" color="red" fontWeight="bold">
+            X
+          </Typography> */}
+        </Box>
+      )}
+    </Card>
+  );
+}
+
 export default function UpdateFile({
   fileType,
   label,
@@ -75,72 +132,68 @@ export default function UpdateFile({
             </div>
             <Box
               sx={{
-                marginTop: 1,
-                display: "flex",
-                gap: 2,
-                overflowX: "auto", // scroll ngang
-                p: 2,
-                maxWidth: "100%", // giới hạn chiều rộng
                 border: "1px solid #555",
                 borderRadius: 2,
+                padding: 1,
+                background: "white",
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
               }}
             >
-              {items.map((item) => (
-                <Box
-                  key={item[publicIdName]}
-                  sx={{
-                    width: 150,
-                    height: 150,
-                    flex: "0 0 auto",
-                    borderRadius: 2,
-                    backgroundImage:
-                      item[urlName] && item[urlName] !== ""
-                        ? `url("${item[urlName]}")`
-                        : "none",
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat",
-                    position: "relative",
-                    overflow: "auto",
-                  }}
-                >
-                  {/* Overlay sáng */}
-                  {markedSet.has(item[publicIdName]) && (
-                    <Box
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: 2,
+                  overflowX: "auto", // scroll ngang
+                  alignItems: "center",
+                  // giới hạn chiều rộng
+                          }}
+                          >
+                          {items.map((item) => (
+                            <Box 
+                            key={item[publicIdName]}
+                            sx={{
+                              flex: "0 0 auto",
+                              width: fileType === "video" ? 400 : "auto",
+                              height: fileType === "video" ? 250 : 200,
+                              borderRadius: 2,
+                              position: "relative",
+                              padding: 1,
+                            }}
+                            >
+                            <FileItem
+                              type={fileType}
+                              url={item[urlName]}
+                              isDeleted={markedSet.has(item[publicIdName])}
+                            ></FileItem>
+
+                            {/* Nút X */}
+                    <IconButton
+                      size="small"
+                      onClick={() => toggleMark(item[publicIdName])}
                       sx={{
                         position: "absolute",
-                        inset: 0,
-                        bgcolor: "rgba(255,255,255,0.18)",
-                        borderRadius: 2,
+                        top: 0,
+                        right: 0,
+                        bgcolor: "rgba(255, 255, 255, 0.5)",
+                        border: 1,
+                        borderColor: "black",
+                        "&:hover": { bgcolor: "rgba(255,255,255,0.9)" },
                       }}
-                    />
-                  )}
-
-                  {/* Nút X */}
-                  <IconButton
-                    size="small"
-                    onClick={() => toggleMark(item[publicIdName])}
-                    sx={{
-                      position: "absolute",
-                      top: 4,
-                      right: 4,
-                      bgcolor: "rgba(255,255,255,0.5)",
-                      border: 1,
-                      borderColor: "white",
-                      "&:hover": { bgcolor: "rgba(255,255,255,0.9)" },
-                    }}
-                  >
-                    <CloseIcon
-                      fontSize="small"
-                      sx={{
-                        opacity: markedSet.has(item[publicIdName]) ? 1 : 0.2,
-                        transition: "0.2s",
-                        color: "black",
-                      }}
-                    />
-                  </IconButton>
-                </Box>
-              ))}
+                    >
+                      <CloseIcon
+                        fontSize="small"
+                        sx={{
+                          opacity: markedSet.has(item[publicIdName]) ? 1 : 0,
+                          transition: "0.2s",
+                          color: "black",
+                        }}
+                      />
+                    </IconButton>
+                  </Box>
+                ))}
+              </Box>
             </Box>
           </div>
           {maxAdd > 0 && (

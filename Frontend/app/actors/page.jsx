@@ -1,9 +1,8 @@
 "use client";
-import { Button, Typography } from "@mui/material";
+import { Button, Typography, Card, CardMedia, Box } from "@mui/material";
 import { useState, useEffect } from "react";
 import ActorApi from "@/services/actor.api";
 import { createFormData } from "@/utils/formUtils";
-import RenderInput from "@/components/RenderInput";
 import UpdateItemDialog from "@/components/UpdateItemDialog";
 import { actorConfig } from "@/utils/inputConfig";
 import { useApi, deleteOne } from "@/services/useApi";
@@ -19,7 +18,7 @@ export default function Actors() {
     setOpenUpdate(!openUpdate);
   };
 
-  const { data: actors, loading, error,refetch } = useApi(ActorApi, null);
+  const { data: actors, loading, error, refetch } = useApi(ActorApi, null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -48,24 +47,38 @@ export default function Actors() {
       <div>
         <Typography variant="h4" component="h1" gutterBottom>
           Test
+          <Card sx={{ position: "relative", width: 200, height: 150 }}>
+            <CardMedia
+              component={"video"}
+              src={
+                "http://res.cloudinary.com/dvchrgh5q/video/upload/v1755940352/Movie%20Project/videos/kaod09vpuiwk4ltyad5v.mp4"
+              }
+              // image={
+              //   "http://res.cloudinary.com/dvchrgh5q/image/upload/v1755940356/Movie%20Project/images/bzc9v7ykcpnrhtkrv3j1.jpg"
+              // }
+              controls
+              sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+            ></CardMedia>
+            {/* Overlay khi hover */}
+            {/* <Box
+              sx={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                bgcolor: "rgba(0,0,0,0.4)",
+                opacity: 0,
+                transition: "0.3s",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                "&:hover": { opacity: 1 },
+              }}
+            ></Box> */}
+          </Card>
         </Typography>
-        {/* <Button onClick={toggleManage}>Quản lý dữ liệu</Button>
-        <DataMange
-          open={openMange}
-          onClose={toggleManage}
-          categoryName={"diễn viên"}
-          data={actors}
-          addConfig={actorInput}
-          updateConfig={updateActorConfig}
-          api={ActorApi}
-        /> */}
       </div>
-      {/* <div className="mt-3">
-        <Typography variant="h4" component="h1" gutterBottom>
-          Thêm diễn viên
-        </Typography>
-        <RenderInput inputConfig={actorInput} data={actorData} />
-      </div> */}
       <div className="mt-3">
         <Typography variant="h4" component="h1" gutterBottom>
           Danh sách diễn viên
@@ -98,10 +111,14 @@ export default function Actors() {
                 >
                   Xóa diễn viên
                 </Button>
-                <Button variant="contained" color="primary" onClick={() => {
-                  setSelectedActor(actor);
-                  toggleUpdate();
-                }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    setSelectedActor(actor);
+                    toggleUpdate();
+                  }}
+                >
                   Cập nhật
                 </Button>
               </div>

@@ -13,6 +13,7 @@ import { movieConfig } from "@/utils/inputConfig";
 export default function Video() {
   const id = useParams().id;
   const { data: movie, loading, error, refetch } = useApi(MovieApi, id);
+  console.log(movie)
 
   const [openDialog, setOpenDialog] = useState(false);
 
