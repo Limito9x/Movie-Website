@@ -84,12 +84,10 @@ export const atc = (api, detailConfig) => {
     initValue: [],
     render: (props) => {
       const { onChange, ...restProp } = props;
-      const value = props.value.map(item=>item.id);
       return (
         <CustomAutoComplete
           {...restProp}
           api={api}
-          value={value}
           optionLabel={optionLabel}
           config={detailConfig}
           onChange={(values) => props.onChange(values, props.propname)}

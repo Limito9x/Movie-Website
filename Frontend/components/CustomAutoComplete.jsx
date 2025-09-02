@@ -25,7 +25,6 @@ export default function CustomAutoComplete({
     if (value && data) {
       const selected = data.filter((item) => value.includes(item.id));
       setCurVal(selected);
-      onChange(value);
     }
   }, [data]);
 

@@ -14,7 +14,10 @@ const RenderInput = forwardRef(({ formConfig, data }, ref) => {
     if (data) {
       // Trường hợp cập nhật: Khởi tạo với dữ liệu từ prop 'data'
       formConfig.forEach((attr) => {
-        initialState[attr.key] = data[attr.key];
+        if(attr.input.name==="autoComplete") {
+          initialState[attr.key] = data[attr.key].map(item=>item.id);
+        }
+        else initialState[attr.key] = data[attr.key];
       });
     } else {
       // Trường hợp thêm mới: Khởi tạo với giá trị mặc định
