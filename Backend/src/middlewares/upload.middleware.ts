@@ -114,8 +114,6 @@ export const uploadActor = async (
 ) => {
   try {
     const avatar = (req.files as Express.Multer.File[] | undefined)?.[0];
-    console.log(req.files);
-    console.log(avatar)
     if (avatar) {
       const result = await cloudinaryUpload(avatar, "actors");
       req.body.avatarUrl = result.url;

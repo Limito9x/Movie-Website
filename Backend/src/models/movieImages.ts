@@ -1,5 +1,5 @@
 import { sequelize } from "../config";
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import { cloudinaryDelete } from "../utils/file";
 
 // 1. Định nghĩa Interface cho các thuộc tính của MovieImage
@@ -12,12 +12,22 @@ interface MovieImageAttributes {
   movieId?: number;
 }
 
-interface MovieImageInstance
-  extends Model<MovieImageAttributes>,
-    MovieImageAttributes {}
+interface MovieImageCreationAttributes extends MovieImageAttributes {}
 
-const MovieImage = sequelize.define<MovieImageInstance>(
-  "MovieImage",
+class MovieImage extends Model<MovieImageAttributes, MovieImageCreationAttributes> implements MovieImageAttributes {
+  public id!: number;
+  public image_url!: string;
+  public storagePath!: string;
+  public alt_text?: string;
+  public is_thumbnail?: boolean;
+  public movieId?: number;
+
+  // Timestamps
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
+}
+
+MovieImage.init(
   {
     image_url: {
       type: DataTypes.STRING,
@@ -36,6 +46,9 @@ const MovieImage = sequelize.define<MovieImageInstance>(
     },
   },
   {
+    sequelize,
+    tableName: "movieImages",
+    modelName: "MovieImage",
     hooks: {
       beforeDestroy: async (image: any, options) => {
         if (image.storagePath) {

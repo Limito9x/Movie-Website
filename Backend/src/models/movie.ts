@@ -1,11 +1,53 @@
 import { sequelize } from "../config";
-import { DataTypes } from "sequelize";
+import { DataTypes, Optional, Model } from "sequelize";
 import { MovieImage } from "./";
-import { cloudinaryDelete } from "../utils/file";
+import { cloudinaryDelete,cloudinaryDeleteMultiple } from "../utils/file";
 
-const Movie = sequelize.define(
-  "Movie",
+// Định nghĩa kiểu dữ liệu cho tất cả thuộc tính
+interface MovieAttributes {
+  id: number;
+  title: string;
+  description?: string;
+  releaseDate: Date;
+  url?: string;
+  storagePath?: string;
+  isPublic: boolean;
+  isPremium: boolean;
+}
+
+// Một số thuộc tính có thể không cần thiết khi tạo mới
+interface MovieCreationAttributes
+  extends Optional<
+    MovieAttributes,
+    "id" | "description" | "url" | "storagePath"
+  > {}
+
+// Định nghĩa lớp Movie
+class Movie
+  extends Model<MovieAttributes, MovieCreationAttributes>
+  implements MovieAttributes
+{
+  public id!: number;
+  public title!: string;
+  public description?: string;
+  public releaseDate!: Date;
+  public url?: string;
+  public storagePath?: string;
+  public isPublic!: boolean;
+  public isPremium!: boolean;
+
+  // Timestamps
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
+}
+
+Movie.init(
   {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     title: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -36,17 +78,21 @@ const Movie = sequelize.define(
     },
   },
   {
+    sequelize,
+    modelName: "Movie",
+    tableName: "movies",
+    timestamps: true,
     hooks: {
-      beforeDestroy: async (movie: any, options) => {
-        // Xóa video trên firebase storage
-        await cloudinaryDelete(movie.storagePath, "video");
-        const imagesToDelete = await MovieImage.findAll({
-          where: { movieId: movie.id },
-          transaction: options.transaction,
-        });
-        for (const image of imagesToDelete) {
-          // console.log("Xóa ảnh thủ công trong hook Movie:", image.id);
-          await cloudinaryDelete(image.getDataValue("storagePath")); // Gọi destroy trên từng instance để kích hoạt hook của MovieImage
+      async beforeDestroy(movie: Movie) {
+        if (movie.storagePath) {
+          await cloudinaryDelete(movie.storagePath);
+        }
+        const images = await MovieImage.findAll({ where: { movieId: movie.id } });
+        const imagePaths = images
+          .map(image => image.storagePath)
+          .filter(path => !!path);
+        if (imagePaths.length > 0) {
+          await cloudinaryDeleteMultiple(imagePaths);
         }
       },
     },

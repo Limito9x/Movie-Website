@@ -52,6 +52,8 @@ class MovieController extends BaseController {
         releaseDate,
         url,
         storagePath,
+        isPublic: req.body.isPublic ?? false,
+        isPremium: req.body.isPremium ?? false,
       });
 
       if (uploadedImages && uploadedImages.length > 0) {
@@ -148,9 +150,11 @@ class MovieController extends BaseController {
           await MovieImage.bulkCreate(movieImageRecords);
         }
 
-        syncRelationship(movie, "actors", actors);
-        syncRelationship(movie, "genres", genres);
-        syncRelationship(movie, "tags", tags);
+        if (movie) {
+          syncRelationship(movie, "actors", actors);
+          syncRelationship(movie, "genres", genres);
+          syncRelationship(movie, "tags", tags);
+        }
 
         res.status(200).json({ message: "Movie updated successfully!" });
       } else res.status(404).json({ message: "Movie not found!" });
