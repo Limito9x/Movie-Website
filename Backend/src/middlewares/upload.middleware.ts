@@ -107,7 +107,7 @@ export const updateMovie = async (
 //   }
 // };
 
-export const uploadActor = async (
+export const uploadAvatar = async (
   req: Request,
   res: Response,
   next: NextFunction

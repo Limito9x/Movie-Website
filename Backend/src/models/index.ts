@@ -3,6 +3,8 @@ import MovieImage from "./movieImages";
 import Actor from "./actor";
 import Tag from "./tag";
 import Genre from "./genre";
+import User  from "./user";
+import StaffInfo from "./staffInfo";
 
 // Thiết lập mối quan hệ nhiều-nhiều giữa phim và diễn viên
 Movie.belongsToMany(Actor, { through: "MovieActor",as: "actors" });
@@ -27,4 +29,18 @@ MovieImage.belongsTo(Movie, {
   as: "movie", // Tên alias để truy cập thông tin phim từ ảnh
 });
 
-export { Movie, Actor, Genre, Tag ,MovieImage };
+// Thiết lập mối quan hệ một-một User[role:"staff"] và StaffInfo
+// Một User có thể có không hoặc một StaffInfo (hasOne)
+// Một StaffInfo phải thuộc về một User (belongsTo)
+User.hasOne(StaffInfo, {
+  as: "staffInfo",
+  foreignKey: "staffID",
+  sourceKey: "id",
+});
+StaffInfo.belongsTo(User, {
+  foreignKey: "staffID",
+  targetKey: "id",
+  as: "user",
+});
+
+export { Movie, Actor, Genre, Tag ,MovieImage, User };
