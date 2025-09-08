@@ -1,6 +1,7 @@
 import { sequelize } from "../config";
 import { DataTypes, Model, Optional } from "sequelize";
 import { cloudinaryDelete } from "../utils/file";
+import bcrypt from "bcrypt";
 
 // Định nghĩa kiểu dữ liệu cho thuộc tính của User
 interface UserAttributes {
@@ -31,7 +32,7 @@ class User
   public fullName!: string;
   public sex!: boolean;
   public dateOfBirth?: Date;
-    public role!: "user" | "staff" | "admin";
+  public role!: "user" | "staff" | "admin";
   public avatarUrl?: string;
   public avatarStoragePath?: string;
   public email!: string;
@@ -94,6 +95,13 @@ User.init(
           userInstance.getDataValue("avatarStoragePath");
         if (avatarStoragePath) {
           await cloudinaryDelete(avatarStoragePath);
+        }
+      },
+      beforeCreate: async (userInstance, options) => {
+        if (userInstance.password) {
+          const salt = await bcrypt.genSalt(10);
+          const hashedPassword = await bcrypt.hash(userInstance.password, salt);
+          userInstance.password = hashedPassword;
         }
       },
     },

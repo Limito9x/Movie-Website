@@ -33,14 +33,14 @@ MovieImage.belongsTo(Movie, {
 // Một User có thể có không hoặc một StaffInfo (hasOne)
 // Một StaffInfo phải thuộc về một User (belongsTo)
 User.hasOne(StaffInfo, {
+  foreignKey: "userId", // Sequelize sẽ tự động tìm khóa chính của User để liên kết
   as: "staffInfo",
-  foreignKey: "staffID",
-  sourceKey: "id",
+  onDelete: "CASCADE",
 });
+
 StaffInfo.belongsTo(User, {
-  foreignKey: "staffID",
-  targetKey: "id",
+  foreignKey: "userId", // Tương tự
   as: "user",
 });
 
-export { Movie, Actor, Genre, Tag ,MovieImage, User };
+export { Movie, Actor, Genre, Tag ,MovieImage, User, StaffInfo };
