@@ -4,8 +4,7 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import darkTheme from "./theme";
-import Image from "next/image";
-import Link from "next/link";
+import Header from "@/components/Header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,21 +30,7 @@ export default function RootLayout({ children }) {
         <AppRouterCacheProvider>
           <ThemeProvider theme={darkTheme}>
             <CssBaseline />
-            <header>
-              <Image
-                className="invert"
-                src="/next.svg"
-                alt="Next.js logo"
-                width={180}
-                height={38}
-                priority
-              />
-              <nav className="flex w-max mx-auto gap-4">
-                <Link href="/">Trang chủ</Link>
-                <Link href="/actors">Diễn viên</Link>
-                <Link href="/uploads">Uploads</Link>
-              </nav>
-            </header>
+            <Header />
             <div className="w-max mx-auto mt-5">{children}</div>
           </ThemeProvider>
         </AppRouterCacheProvider>
