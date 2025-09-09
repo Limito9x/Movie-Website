@@ -22,11 +22,11 @@ export default function Uploads() {
   };
 
   return (
-    <main className="flex flex-col max-w-full">
+    <main className="flex flex-col max-w-full p-5">
       <Typography variant="h4" component="h1" gutterBottom>
         Thêm Phim Mới
       </Typography>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-2 w-96">
+      <form onSubmit={handleSubmit} className="items-center">
         <RenderInput
           formConfig={movieConfig.create}
           ref={inputRef}

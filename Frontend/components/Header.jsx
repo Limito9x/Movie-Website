@@ -7,7 +7,7 @@ export default function Header() {
   const showHeader = pathname !== "/login";
   if (!showHeader) return null;
   return (
-    <header>
+    <header className="mb-3">
       <div className="flex justify-between items-center p-4">
         <Image
           className="invert"

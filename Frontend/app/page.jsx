@@ -20,7 +20,7 @@ export default function Home() {
     return <div>Không có dữ liệu phim.</div>;
   }
   return (
-    <main className="container flex flex-col items-center">
+    <main className="flex flex-col items-center">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {movies.map((movie) => (
           <Link

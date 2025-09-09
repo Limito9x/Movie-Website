@@ -25,13 +25,18 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-[#18181c] text-white min-h-screen flex flex-col`}
       >
         <AppRouterCacheProvider>
           <ThemeProvider theme={darkTheme}>
             <CssBaseline />
             <Header />
-            <div className="w-max mx-auto mt-5">{children}</div>
+            <main className="flex-1 flex justify-center">
+              <div className="w-full">{children}</div>
+            </main>
+            <footer className="w-full text-center py-4 text-sm text-gray-400 border-t border-gray-800">
+              © {new Date().getFullYear()} Movie Web. All rights reserved.
+            </footer>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

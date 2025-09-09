@@ -29,7 +29,7 @@ export default function Video() {
     return <div>Không có dữ liệu phim.</div>;
   }
   return (
-    <div className="border p-4 rounded-md shadow-md">
+    <div className="border p-4 rounded-md shadow-md max-w-2xl mx-auto flex flex-col gap-4">
       <h2 className="text-xl font-bold mb-2">{movie.title}</h2>
       <p className="text-gray-500 mb-2">{movie.description}</p>
       {movie.actors && (

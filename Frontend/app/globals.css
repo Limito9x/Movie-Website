@@ -26,7 +26,7 @@ input{
 
 .video-container {
   width: 100%; /* Chiều rộng khung cố định */
-  height: 225px; /* Chiều cao khung cố định (tỷ lệ 16:9) */
+  height: 275px; /* Chiều cao khung cố định (tỷ lệ 16:9) */
   background-color: black; /* Màu nền cho khung đen */
 }
 
@@ -42,7 +42,7 @@ input{
   margin: auto;
 }
 .SliderContainer{
-  width: 400px;
+  
 }
 
 .slide{
