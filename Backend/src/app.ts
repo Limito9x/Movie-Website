@@ -7,6 +7,7 @@ import genreRoutes from "./routes/genre.route";
 import tagRoutes from "./routes/tag.route";
 import userRouter from "./routes/user.route";
 import staffRouter from "./routes/staff.route";
+import authRouter from "./routes/auth.route";
 import { createAdmin } from "./services/admin.service";
 const app = express();
 
@@ -22,6 +23,7 @@ app.use("/genres", genreRoutes);
 app.use("/tags", tagRoutes);
 app.use("/users", userRouter);
 app.use("/staffs", staffRouter);
+app.use("/auth", authRouter);
 
 sequelize
   .sync()
