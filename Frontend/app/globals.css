@@ -3,8 +3,8 @@
 :root {
   --background: #0a0a0a; /* Màu nền tối mặc định */
   --foreground: #ededed; /* Màu chữ sáng mặc định */
-  --font-geist-sans: ''; /* Biến font Geist Sans (sẽ được gán trong JS) */
-  --font-geist-mono: ''; /* Biến font Geist Mono (sẽ được gán trong JS) */
+  --font-geist-sans: ""; /* Biến font Geist Sans (sẽ được gán trong JS) */
+  --font-geist-mono: ""; /* Biến font Geist Mono (sẽ được gán trong JS) */
 }
 
 body {
@@ -13,13 +13,13 @@ body {
   font-family: var(--font-geist-sans), sans-serif; /* Sử dụng biến CSS cho font chính */
 }
 
-header{
+header {
   background-color: #666060;
   padding: 10px;
   font-size: 24px;
 }
 
-input{
+input {
   border: 1px solid rgb(88, 87, 87);
   border-radius: 3px;
 }
@@ -36,16 +36,15 @@ input{
   object-fit: contain; /* Thu nhỏ video để vừa với container, giữ nguyên tỷ lệ */
 }
 
-.movieImg{
+.movieImg {
   height: 200px;
   padding: 10px;
   margin: auto;
 }
-.SliderContainer{
-  
+.SliderContainer {
 }
 
-.slide{
+.slide {
   height: 200px;
   margin: 10px auto;
   border-radius: 5px;

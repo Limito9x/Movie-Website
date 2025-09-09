@@ -1,6 +1,32 @@
+"use client";
 import { TextField, Button, Box, Typography } from "@mui/material";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import authApi from "@/services/auth.api";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [loginForm, setLoginForm] = useState({
+    loginName: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setLoginForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await authApi.login(loginForm);
+      console.log("Login successful:", response);
+      router.push("/");
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -29,84 +55,95 @@ export default function LoginPage() {
             backgroundImage: 'url("/loginBg.webp")',
             backgroundSize: "cover",
             backgroundPosition: "center",
+            display: { xs: "none", sm: "block" },
           }}
         ></Box>
         <Box
           sx={{
             flexShrink: 0, // Ngăn form co lại
             width: { xs: "100%", sm: 350 }, // Chiều rộng linh hoạt
-            p: 4,
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-            justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          <Typography
-            variant="h4"
-            color="#fff"
-            fontWeight="bold"
-            textAlign="center"
+          <form
+            onSubmit={handleSubmit}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
+            }}
           >
-            Đăng nhập
-          </Typography>
+            <Typography
+              variant="h4"
+              color="#fff"
+              fontWeight="bold"
+              textAlign="center"
+            >
+              Đăng nhập
+            </Typography>
 
-          <TextField
-            name="loginName"
-            label="Tên đăng nhập hoặc email"
-            variant="outlined"
-            margin="normal"
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                backgroundColor: "#333",
-                "& fieldset": {
-                  borderColor: "#555",
+            <TextField
+              name="loginName"
+              onChange={handleChange}
+              label="Tên đăng nhập hoặc email"
+              variant="outlined"
+              margin="normal"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  backgroundColor: "#333",
+                  "& fieldset": {
+                    borderColor: "#555",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "primary.main",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "primary.main",
+                  },
                 },
-                "&:hover fieldset": {
-                  borderColor: "primary.main",
+                "& .MuiInputLabel-root": {
+                  color: "#ccc",
                 },
-                "&.Mui-focused fieldset": {
-                  borderColor: "primary.main",
+                "& .MuiInputBase-input": {
+                  color: "#eee",
                 },
-              },
-              "& .MuiInputLabel-root": {
-                color: "#ccc",
-              },
-              "& .MuiInputBase-input": {
-                color: "#eee",
-              },
-            }}
-          />
-          <TextField
-            name="password"
-            label="Mật khẩu"
-            type="password"
-            variant="outlined"
-            margin="normal"
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                backgroundColor: "#333",
-                "& fieldset": {
-                  borderColor: "#555",
+              }}
+            />
+            <TextField
+              name="password"
+              onChange={handleChange}
+              label="Mật khẩu"
+              type="password"
+              variant="outlined"
+              margin="normal"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  backgroundColor: "#333",
+                  "& fieldset": {
+                    borderColor: "#555",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "primary.main",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "primary.main",
+                  },
                 },
-                "&:hover fieldset": {
-                  borderColor: "primary.main",
+                "& .MuiInputLabel-root": {
+                  color: "#ccc",
                 },
-                "&.Mui-focused fieldset": {
-                  borderColor: "primary.main",
+                "& .MuiInputBase-input": {
+                  color: "#eee",
                 },
-              },
-              "& .MuiInputLabel-root": {
-                color: "#ccc",
-              },
-              "& .MuiInputBase-input": {
-                color: "#eee",
-              },
-            }}
-          />
-          <Button variant="contained" color="primary" sx={{ mt: 2 }}>
-            Đăng nhập
-          </Button>
+              }}
+            />
+            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+              Đăng nhập
+            </Button>
+          </form>
         </Box>
       </Box>
     </Box>
