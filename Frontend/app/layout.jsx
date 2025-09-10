@@ -3,6 +3,7 @@ import "./globals.css";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import { CookiesProvider } from "react-cookie";
 import darkTheme from "./theme";
 import Header from "@/components/Header";
 
@@ -28,16 +29,18 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} bg-[#18181c] text-white min-h-screen flex flex-col`}
       >
         <AppRouterCacheProvider>
-          <ThemeProvider theme={darkTheme}>
-            <CssBaseline />
-            <Header />
-            <main className="flex-1 flex justify-center">
-              <div className="w-full">{children}</div>
-            </main>
-            <footer className="w-full text-center py-4 text-sm text-gray-400 border-t border-gray-800">
-              © {new Date().getFullYear()} Movie Web. All rights reserved.
-            </footer>
-          </ThemeProvider>
+          <CookiesProvider>
+            <ThemeProvider theme={darkTheme}>
+              <CssBaseline />
+              <Header />
+              <main className="flex-1 flex justify-center">
+                <div className="w-full">{children}</div>
+              </main>
+              <footer className="w-full text-center py-4 text-sm text-gray-400 border-t border-gray-800">
+                © {new Date().getFullYear()} Movie Web. All rights reserved.
+              </footer>
+            </ThemeProvider>
+          </CookiesProvider>
         </AppRouterCacheProvider>
       </body>
     </html>

@@ -2,6 +2,8 @@
 import { TextField, Button, Box, Typography } from "@mui/material";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useCookies } from "react-cookie";
+import { decode } from "jsonwebtoken";
 import authApi from "@/services/auth.api";
 
 export default function LoginPage() {
@@ -10,6 +12,7 @@ export default function LoginPage() {
     loginName: "",
     password: "",
   });
+  const [cookies, setCookie] = useCookies(["token"]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,6 +24,11 @@ export default function LoginPage() {
     try {
       const response = await authApi.login(loginForm);
       console.log("Login successful:", response);
+      if (response.token) {
+        const decodedToken = decode(response.token);
+        const expiresAt = new Date(decodedToken.exp * 1000); // JWT exp là UNIX timestamp (giây), Date cần miligiây
+        setCookie("token", response.token, { path: "/", expires: expiresAt });
+      }
       router.push("/");
     } catch (error) {
       console.error("Login failed:", error);
@@ -87,6 +95,7 @@ export default function LoginPage() {
 
             <TextField
               name="loginName"
+              required
               onChange={handleChange}
               label="Tên đăng nhập hoặc email"
               variant="outlined"
@@ -114,6 +123,7 @@ export default function LoginPage() {
             />
             <TextField
               name="password"
+              required
               onChange={handleChange}
               label="Mật khẩu"
               type="password"
@@ -140,7 +150,12 @@ export default function LoginPage() {
                 },
               }}
             />
-            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{ mt: 2 }}
+            >
               Đăng nhập
             </Button>
           </form>
