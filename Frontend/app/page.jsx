@@ -43,7 +43,7 @@ export default function Home() {
               </p>
             )}
             {/* Bạn có thể hiển thị thumbnail ở đây nếu có */}
-            <img className="movieImg" src={movie.images[0]?.image_url}/>
+            <img className="movieImg" src={movie.images[0]?.image_url} />
           </Link>
         ))}
       </div>

@@ -3,9 +3,9 @@ import "./globals.css";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import { CookiesProvider } from "react-cookie";
 import darkTheme from "./theme";
 import Header from "@/components/Header";
+import Provider from "@/components/Provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +29,7 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} bg-[#18181c] text-white min-h-screen flex flex-col`}
       >
         <AppRouterCacheProvider>
-          <CookiesProvider>
+          <Provider>
             <ThemeProvider theme={darkTheme}>
               <CssBaseline />
               <Header />
@@ -40,7 +40,7 @@ export default function RootLayout({ children }) {
                 © {new Date().getFullYear()} Movie Web. All rights reserved.
               </footer>
             </ThemeProvider>
-          </CookiesProvider>
+          </Provider>
         </AppRouterCacheProvider>
       </body>
     </html>

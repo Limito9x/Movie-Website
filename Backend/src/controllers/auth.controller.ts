@@ -25,7 +25,7 @@ export const login: RequestHandler = async (req, res) => {
     if (!process.env.JWT_SECRET) {
       return res.status(500).json({ message: "JWT secret is not defined" });
     }
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string, {
+    const token = jwt.sign({ id: user.id, name: user.fullName }, process.env.JWT_SECRET as string, {
       expiresIn: "1h",
     });
     res.status(200).json({ message: "Login successful", token });

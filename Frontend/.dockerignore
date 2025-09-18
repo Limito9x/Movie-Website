@@ -1,0 +1,5 @@
+node_modules
+.next/
+
+browsing_history
+.env
