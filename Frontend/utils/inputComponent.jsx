@@ -6,18 +6,21 @@ import UpdateFile from "@/components/UpdateFile";
 
 // Các hàm này tạo ra các đối tượng cấu hình input.
 // ---
-export const text = {
-  name: "text",
-  initValue: "",
-  render: (props) => {
-    const { onChange, ...restProp } = props;
-    return (
-      <TextField
-        {...restProp}
-        onChange={(event) => onChange(event.target.value, props.propname)}
-      />
-    );
-  },
+export const text = (type = "text") => {
+  return {
+    name: "text",
+    initValue: "",
+    render: (props) => {
+      const { onChange, ...restProp } = props;
+      return (
+        <TextField
+          type={type}
+          {...restProp}
+          onChange={(event) => onChange(event.target.value, props.propname)}
+        />
+      );
+    },
+  };
 };
 
 export const option = (value, label) => {

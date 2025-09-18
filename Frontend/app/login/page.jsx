@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useCookies } from "react-cookie";
 import { decode } from "jsonwebtoken";
 import authApi from "@/services/auth.api";
+import RenderInput from "@/components/RenderInput";
+import { registerConfig } from "@/utils/inputConfig";
 
 function LoginBox() {
     const router = useRouter();
@@ -127,36 +129,53 @@ function LoginBox() {
   );
 }
 
-export default function LoginPage() {
-  const router = useRouter();
-  const [loginForm, setLoginForm] = useState({
-    loginName: "",
-    password: "",
-  });
-  const [cookies, setCookie] = useCookies(["token","user"]);
+function RegisterBox() {
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setLoginForm((prev) => ({ ...prev, [name]: value }));
-  };
+  const [cookies, setCookie] = useCookies(["token", "user"]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await authApi.login(loginForm);
-      console.log("Login successful:", response);
-      if (response.token) {
-        const decodedToken = decode(response.token);
-        console.log("Decoded Token:", decodedToken);
-        const expiresAt = new Date(decodedToken.exp * 1000); // JWT exp là UNIX timestamp (giây), Date cần miligiây
-        setCookie("token", response.token, { path: "/", expires: expiresAt });
-        setCookie("user", JSON.stringify(decodedToken), { path: "/", expires: expiresAt });
-      }
-      router.push("/");
+      console.log("Register successful:", response);
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error("Register failed:", error);
     }
   };
+  return (
+    <form
+      onSubmit={handleSubmit}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        alignItems: "center",
+        justifyContent: "center",
+        width: "80%",
+      }}
+    >
+      <Typography
+        variant="h4"
+        color="#fff"
+        fontWeight="bold"
+        textAlign="center"
+        marginBottom={2}
+      >
+        Đăng ký
+      </Typography>
+      <RenderInput formConfig={registerConfig} />
+      <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+        Đăng ký
+      </Button>
+    </form>
+  );
+}
+
+export default function LoginPage() {
+  const router = useRouter();
+  const [isLogin, setIsLogin] = useState(true);
+
+  const [cookies, setCookie] = useCookies(["token","user"]);
+
 
   return (
     <Box
@@ -199,8 +218,8 @@ export default function LoginPage() {
             flexDirection: "column",
           }}
         >
-          <LoginBox></LoginBox>
-          <Button>Tạo tài khoản</Button>
+          {isLogin?<LoginBox></LoginBox>:<RegisterBox></RegisterBox>}
+          <Button onClick={() => setIsLogin(!isLogin)}>{isLogin?"Tạo tài khoản":"Đăng nhập"}</Button>
         </Box>
       </Box>
     </Box>

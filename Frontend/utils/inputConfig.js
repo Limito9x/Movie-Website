@@ -1,10 +1,18 @@
 import genreApi from "@/services/genre.api";
 import actorApi from "@/services/actor.api";
 import tagApi from "@/services/tag.api";
-import {text,select,option,date,atc,dropzone,updateFile} from "./inputComponent";
+import {
+  text,
+  select,
+  option,
+  date,
+  atc,
+  dropzone,
+  updateFile,
+} from "./inputComponent";
 
 // Hàm định nghĩa thuộc tính đối tượng
-const attr = (key, label, input = text) => ({
+const attr = (key, label, input = text()) => ({
   key,
   propname: key,
   label,
@@ -55,9 +63,24 @@ const actor = [
   ),
   attr("dateOfBirth", "Ngày sinh", date),
 ];
-const actorCreate = [attr("avatar", "Ảnh đại diện", dropzone(1, "image","create"))];
+const actorCreate = [
+  attr("avatar", "Ảnh đại diện", dropzone(1, "image", "create")),
+];
 const actorUpdate = [
   attr("avatar", "Ảnh đại diện", updateFile(1, "image", "url", "publicId")),
+];
+
+const register = [
+  attr("fullname", "Họ và tên"),
+  attr("dateOfBirth", "Ngày sinh", date),
+  attr(
+    "sex",
+    "Giới tính",
+    select([option("true", "Nữ"), option("false", "Nam")])
+  ),
+  attr("email","Email",text("email")),
+  attr("username","Tên đăng nhập"),
+  attr("password","Mật khẩu",text("password"))
 ];
 
 // ---
@@ -84,8 +107,8 @@ const movie = [
   attr("releaseDate", "Ngày phát hành", date),
 ];
 const movieCreate = [
-  attr("video", "Video", dropzone(1, "video","create")),
-  attr("images", "Hình ảnh", dropzone(5, "image","create")),
+  attr("video", "Video", dropzone(1, "video", "create")),
+  attr("images", "Hình ảnh", dropzone(5, "image", "create")),
 ];
 const movieUpdate = [
   attr("video", "Video", updateFile(1, "video", "url", "publicId")),
@@ -102,3 +125,5 @@ export const movieConfig = defineConfig(
   movieCreate,
   movieUpdate
 );
+
+export const registerConfig = defineConfig("register",register);
