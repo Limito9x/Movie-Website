@@ -1,12 +1,13 @@
 "use client";
 import { TextField, Button, Box, Typography } from "@mui/material";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useCookies } from "react-cookie";
 import { decode } from "jsonwebtoken";
 import authApi from "@/services/auth.api";
 import RenderInput from "@/components/RenderInput";
 import { registerConfig } from "@/utils/inputConfig";
+import userApi from "@/services/user.api";
 
 function LoginBox() {
     const router = useRouter();
@@ -89,7 +90,7 @@ function LoginBox() {
           "& .MuiInputBase-input": {
             color: "#eee",
           },
-          width: "80%",
+          width: "100%",
         }}
       />
       <TextField
@@ -119,7 +120,7 @@ function LoginBox() {
           "& .MuiInputBase-input": {
             color: "#eee",
           },
-          width: "80%",
+          width: "100%",
         }}
       />
       <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
@@ -131,11 +132,13 @@ function LoginBox() {
 
 function RegisterBox() {
 
-  const [cookies, setCookie] = useCookies(["token", "user"]);
+  const ref = useRef();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const formData = ref.current.getData();
+      const response = await userApi.create(formData);
       console.log("Register successful:", response);
     } catch (error) {
       console.error("Register failed:", error);
@@ -150,7 +153,7 @@ function RegisterBox() {
         gap: 2,
         alignItems: "center",
         justifyContent: "center",
-        width: "80%",
+        width: "100%",
       }}
     >
       <Typography
@@ -158,12 +161,11 @@ function RegisterBox() {
         color="#fff"
         fontWeight="bold"
         textAlign="center"
-        marginBottom={2}
       >
         Đăng ký
       </Typography>
-      <RenderInput formConfig={registerConfig} />
-      <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+      <RenderInput formConfig={registerConfig} ref={ref} />
+      <Button type="submit" variant="contained" color="primary">
         Đăng ký
       </Button>
     </form>
@@ -181,22 +183,22 @@ export default function LoginPage() {
     <Box
       sx={{
         display: "flex",
-        justifyContent: "center", // Canh giữa theo chiều ngang
-        alignItems: "center", // Canh giữa theo chiều dọc
-        minHeight: "100vh", // Chiều cao tối thiểu 100% của viewport
-        backgroundColor: "#5f5f5fff", // Màu nền tổng thể
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+        backgroundColor: "#5f5f5fff",
       }}
     >
       <Box
         sx={{
           display: "flex",
-          width: "80%", // Giới hạn chiều rộng tổng thể của card
-          maxWidth: 950, // Chiều rộng tối đa
-          height: "60vh",
+          width: "80%",
+          maxWidth: 950,
+          height: "65vh",
           boxShadow: 15,
           borderRadius: 4,
-          overflow: "hidden", // Quan trọng để bo tròn góc
-          backgroundColor: "#242424", // Màu nền form
+          overflow: "hidden",
+          backgroundColor: "#242424",
         }}
       >
         <Box
@@ -206,20 +208,39 @@ export default function LoginPage() {
             backgroundImage: 'url("/loginBg.webp")',
             backgroundSize: "cover",
             backgroundPosition: "center",
-            display: { xs: "none", sm: "block" },
+            display: { xs: "none", sm: "none", md: "block" },
           }}
         ></Box>
         <Box
           sx={{
             display: "flex",
-            width: { xs: "100%", sm: 350 }, // Chiều rộng linh hoạt
+            width: { xs: "100%", sm: "100%", md: 350, lg: 400 },
             alignItems: "center",
-            justifyContent: "center",
             flexDirection: "column",
+            position: "relative",
+            height: "100%", // Sử dụng hết chiều cao còn lại của Box cha
           }}
         >
-          {isLogin?<LoginBox></LoginBox>:<RegisterBox></RegisterBox>}
-          <Button onClick={() => setIsLogin(!isLogin)}>{isLogin?"Tạo tài khoản":"Đăng nhập"}</Button>
+          <Box
+            sx={{
+              width: "100%",
+              maxWidth: 400,
+              p: 3,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flex: 1, // Chiếm hết phần còn lại
+              flexDirection: "column",
+              height: "100%", // Đảm bảo chiếm hết chiều cao
+            }}
+          >
+            {isLogin ? <LoginBox /> : <RegisterBox />}
+          </Box>
+          <Box sx={{ width: "100%", position: "absolute", bottom: 0, height: 50 }}>
+            <Button fullWidth onClick={() => setIsLogin(!isLogin)}>
+              {isLogin ? "Tạo tài khoản" : "Đến đăng nhập"}
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Box>

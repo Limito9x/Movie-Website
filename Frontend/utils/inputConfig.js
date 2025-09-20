@@ -71,7 +71,7 @@ const actorUpdate = [
 ];
 
 const register = [
-  attr("fullname", "Họ và tên"),
+  attr("fullName", "Họ và tên"),
   attr("dateOfBirth", "Ngày sinh", date),
   attr(
     "sex",
