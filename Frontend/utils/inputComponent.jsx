@@ -11,7 +11,13 @@ export const text = (type = "text") => {
     name: "text",
     initValue: "",
     render: (props) => {
-      const { onChange, ...restProp } = props;
+      let { onChange, name, ...restProp } = props;
+      if (type === "password") {
+        // Bỏ prop name khi type là password
+        restProp = { ...restProp };
+      } else {
+        restProp = { name, ...restProp };
+      }
       return (
         <TextField
           type={type}

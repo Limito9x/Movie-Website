@@ -7,8 +7,6 @@ import {
 } from "@mui/material";
 import { useRef } from "react";
 import RenderInput from "./RenderInput";
-import RenderInput2 from "./RenderInput";
-import { createFormData } from "@/utils/formUtils";
 
 export default function UpdateItemDialog({
   openState,
@@ -42,14 +40,10 @@ export default function UpdateItemDialog({
 
   return (
     <div>
-      {/* {updateButton&&<Button variant="outlined" onClick={handleClick}>
-        Cập nhật
-      </Button>} */}
       <Dialog scroll="paper" open={openState} onClose={handleClose}>
         <DialogTitle>Cập nhật {label}</DialogTitle>
         <DialogContent>
-          {/* <RenderInput ref={inputRef} inputConfig={inputConfig} data={dataValue} /> */}
-          <RenderInput2
+          <RenderInput
             ref={inputRef}
             formConfig={inputConfig}
             data={dataValue}

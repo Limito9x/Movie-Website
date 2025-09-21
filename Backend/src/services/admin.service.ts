@@ -5,7 +5,7 @@ dotenv.config();
 async function createAdmin() {
   const existingAdmin = await User.findOne({ where: { role: "admin" } });
   if (existingAdmin) {
-    throw new Error("Admin user already exists");
+    return;
   }
 
   const newAdmin = await User.create({

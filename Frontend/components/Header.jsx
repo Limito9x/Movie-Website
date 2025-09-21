@@ -14,10 +14,12 @@ import {
   ListItemText,
   ListItemButton,
   ListItemIcon,
+  Tooltip,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
 import PersonIcon from "@mui/icons-material/Person";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useCookies } from "react-cookie";
 import { useRouter } from "next/navigation";
@@ -80,9 +82,9 @@ export default function Header() {
             justifyContent: "space-between",
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 5 }}>
             <IconButton
-              sx={{ display: { xs: "block", md: "none" } }}
+              sx={{ display: { xs: "block", lg: "none" } }}
               edge="start"
               color="inherit"
               aria-label="menu"
@@ -117,22 +119,28 @@ export default function Header() {
                 height={37}
               />
             </Link>
-          </Box>
-          <Box
-            component="nav"
-            sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}
-          >
-            {navLinks.map((link) => (
-              <Link key={link.path} href={link.path}>
-                {link.title}
-              </Link>
-            ))}
+            <Box
+              component="nav"
+              sx={{ display: { xs: "none", lg: "flex" }, gap: 2 }}
+            >
+              {navLinks.map((link) => (
+                <Link key={link.path} href={link.path}>
+                  {link.title}
+                </Link>
+              ))}
+            </Box>
           </Box>
           <Box>
             {cookies.token ? (
               <div className="flex items-center gap-4">
                 {/* ✅ Kiểm tra user trước khi truy cập .name */}
-                {user ? <div>Xin chào {user.name}</div> : <div>Xin chào</div>}
+                {user && (
+                  <Tooltip title={`${user.name}`}>
+                    <IconButton>
+                      <AccountCircleIcon sx={{ fontSize: 40 }} />
+                    </IconButton>
+                  </Tooltip>
+                )}
                 <Button
                   onClick={handleLogout}
                   variant="contained"
