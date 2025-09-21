@@ -29,7 +29,7 @@ export default function CustomAutoComplete({
   }, [data]);
 
   return (
-    <div className="autoComplete flex items-center">
+    <div className="autoComplete flex w-full items-center">
       <Autocomplete
         multiple
         options={(data || []).sort((a, b) =>

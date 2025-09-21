@@ -22,12 +22,13 @@ export default function Uploads() {
   };
 
   return (
-    <main className="flex flex-col max-w-full p-5">
+    <div className="flex flex-col w-4/5 max-w-2xl jusitify-center items-center">
       <Typography variant="h4" component="h1" gutterBottom>
         Thêm Phim Mới
       </Typography>
-      <form onSubmit={handleSubmit} className="items-center">
+      <form onSubmit={handleSubmit} className="flex flex-col w-full justify-center items-center">
         <RenderInput
+        className="w-full"
           formConfig={movieConfig.create}
           ref={inputRef}
         ></RenderInput>
@@ -35,6 +36,6 @@ export default function Uploads() {
           Thêm Phim
         </Button>
       </form>
-    </main>
+    </div>
   );
 }

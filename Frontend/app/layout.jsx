@@ -6,6 +6,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import darkTheme from "./theme";
 import Header from "@/components/Header";
 import Provider from "@/components/Provider";
+import { Toolbar } from "@mui/material";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,7 +35,7 @@ export default function RootLayout({ children }) {
               <CssBaseline />
               <Header />
               <main className="flex-1 flex justify-center">
-                <div className="w-full">{children}</div>
+                {children}
               </main>
               <footer className="w-full text-center py-4 text-sm text-gray-400 border-t border-gray-800">
                 © {new Date().getFullYear()} Movie Web. All rights reserved.

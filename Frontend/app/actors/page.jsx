@@ -43,14 +43,8 @@ export default function Actors() {
   }
 
   return (
-    <div>
-      <div>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Test
-        </Typography>
-      </div>
-      <div className="mt-3">
-        <Typography variant="h4" component="h1" gutterBottom>
+      <div className="flex flex-col justify-center items-center">
+        <Typography sx={{fontWeight: 'bold', mb: 2}} variant="h4" component="h1" gutterBottom>
           Danh sách diễn viên
         </Typography>
         {actors.length === 0 && <div>Không có dữ liệu diễn viên.</div>}
@@ -105,6 +99,5 @@ export default function Actors() {
           ))}
         </div>
       </div>
-    </div>
   );
 }

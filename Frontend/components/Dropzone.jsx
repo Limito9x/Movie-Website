@@ -33,7 +33,7 @@ export default function Dropzone({
   };
 
   return (
-    <div className="App">
+    <div className="w-full">
       {purpose === "create" && <Typography>{label}</Typography>}
       <FilePond
         acceptedFileTypes={fileType ? [acceptedFileTypes[fileType]] : []}
