@@ -22,7 +22,7 @@ class BaseController {
       const searchKeys = Object.keys(req.query);
 
       if (searchKeys.length > 0) {
-        where[Op.and] = searchKeys.map((key) => ({
+        where[Op.or] = searchKeys.map((key) => ({
           [key]: { [Op.like]: `%${req.query[key]}%` },
         }));
       }
