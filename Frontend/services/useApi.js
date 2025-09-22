@@ -28,7 +28,7 @@ export const useApi = (instance,watchValue) => {
         const fetchedData = currentWatchValue
           ? await instance.getById(currentWatchValue)
           : await instance.getAll();
-        setData(fetchedData);
+        setData(fetchedData||fetchData.data);
       } catch (err) {
         setError(err.message);
       } finally {

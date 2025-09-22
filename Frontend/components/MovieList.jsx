@@ -32,7 +32,11 @@ export default function MovieList({movies}) {
                 </p>
               )}
               {/* Bạn có thể hiển thị thumbnail ở đây nếu có */}
-              <img className="movieImg" src={movie.images[0]?.image_url} />
+              {(movie.images && movie.images.length > 0) ? (
+                <img className="movieImg" src={movie.images[0]?.image_url} />
+              ) : (
+                <img className="movieImg" src="/placeholder.jpg" />
+              )}
             </Link>
           ))}
         </div>

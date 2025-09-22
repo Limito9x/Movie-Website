@@ -13,7 +13,7 @@ export default function SearchPage() {
     if (query) {
       movieApi
         .getList({ title: query, description: query })
-        .then((res) => setMovies(res));
+        .then((res) => setMovies(res.data));
     }
   }, [query]);
 
