@@ -185,7 +185,8 @@ export default function LoginPage() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "100vh",
+        height: "100vh",
+        minHeight: "900px",
         width: "100vw",
         backgroundColor: "#5f5f5fff",
       }}
@@ -195,7 +196,7 @@ export default function LoginPage() {
           display: "flex",
           width: "80%",
           maxWidth: 950,
-          height: "65vh",
+          height: "65%",
           boxShadow: 15,
           borderRadius: 4,
           overflow: "hidden",

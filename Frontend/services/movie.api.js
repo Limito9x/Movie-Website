@@ -19,6 +19,11 @@ class MovieApi extends ApiClient {
     }));
   }
 
+  async getList(params = {}) {
+    const data = (await this.api.get("/", { params })).data;
+    return data;
+  }
+
   async getById(id) {
     const data = (await this.api.get(`/${id}`)).data;
     return {

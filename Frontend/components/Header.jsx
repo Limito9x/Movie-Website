@@ -24,6 +24,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useCookies } from "react-cookie";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import SearchBar from "./SearchBar";
 
 export default function Header() {
   const [openDrawer, setDrawer] = useState(false);
@@ -82,7 +83,7 @@ export default function Header() {
             justifyContent: "space-between",
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 5 }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 1, lg: 5 } }}>
             <IconButton
               sx={{ display: { xs: "block", lg: "none" } }}
               edge="start"
@@ -130,7 +131,8 @@ export default function Header() {
               ))}
             </Box>
           </Box>
-          <Box>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <SearchBar onSearch={(query) => console.log("Searching:", query)} />
             {cookies.token ? (
               <div className="flex items-center gap-4">
                 {/* ✅ Kiểm tra user trước khi truy cập .name */}
