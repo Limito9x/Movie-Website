@@ -47,7 +47,6 @@ class BaseController {
         order: [["createdAt", "DESC"]],
         distinct: true,
       });
-      console.log(count, rows);
 
       res.status(200).json({ total: count, data: rows });
     } catch (error) {
