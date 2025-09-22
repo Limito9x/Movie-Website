@@ -18,6 +18,12 @@ class BaseController {
 
   getAll: ExpressHandler = async (req, res) => {
     try {
+      if (Object.keys(req.query).length === 0) {
+        const items = await this.model.findAll({ include: this.includes });
+        res.status(200).json(items);
+        return;
+      }
+
       const { page: pageQuery, limit: limitQuery, ...restQuery } = req.query;
       const where: any = {};
       const searchKeys = Object.keys(restQuery);
