@@ -1,22 +1,37 @@
-import {Model, ModelStatic, FindOptions} from "sequelize"
+import { Model, ModelStatic, FindOptions } from "sequelize";
 import { Request, Response } from "express";
+import {Op} from "sequelize";
 
 export type ExpressHandler = (req: Request, res: Response) => Promise<void>;
 
 class BaseController {
-  private model: ModelStatic<Model<any,any>>;
-  private includes: FindOptions['include'];
+  private model: ModelStatic<Model<any, any>>;
+  private includes: FindOptions["include"];
 
-  constructor(model: ModelStatic<Model<any,any>>, includes: FindOptions['include'] = []) {
+  constructor(
+    model: ModelStatic<Model<any, any>>,
+    includes: FindOptions["include"] = []
+  ) {
     this.model = model;
     this.includes = includes;
   }
 
   getAll: ExpressHandler = async (req, res) => {
     try {
+      const { search } = req.query;
+      let where: any = {};
+      if (search) {
+        where = {
+          [Op.or]: [
+            { title: { [Op.like]: `%${search}%` } },
+          ],
+        };
+      }
       const items = await this.model.findAll({
+        where,
         include: this.includes,
       });
+
       res.status(200).json(items);
     } catch (error) {
       res.status(500).json({
@@ -32,9 +47,7 @@ class BaseController {
         include: this.includes,
       });
       if (!item) {
-        res
-          .status(404)
-          .json({ message: `${this.model.name} not found!` });
+        res.status(404).json({ message: `${this.model.name} not found!` });
         return;
       }
       res.status(200).json(item);
@@ -70,7 +83,7 @@ class BaseController {
         const updatedItem = await this.model.findByPk(req.params.id, {
           include: this.includes,
         });
-          res.status(200).json({
+        res.status(200).json({
           message: `${this.model.name} updated successfully!`,
           data: updatedItem,
         });
@@ -97,7 +110,7 @@ class BaseController {
           .status(200)
           .json({ message: `${this.model.name} deleted successfully!` });
         return;
-        }
+      }
       res.status(404).json({ message: `${this.model.name} not found!` });
     } catch (error) {
       console.error(error);
