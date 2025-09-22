@@ -18,14 +18,13 @@ class BaseController {
 
   getAll: ExpressHandler = async (req, res) => {
     try {
-      const { search } = req.query;
-      let where: any = {};
-      if (search) {
-        where = {
-          [Op.or]: [
-            { title: { [Op.like]: `%${search}%` } },
-          ],
-        };
+      const where: any = {};
+      const searchKeys = Object.keys(req.query);
+
+      if (searchKeys.length > 0) {
+        where[Op.and] = searchKeys.map((key) => ({
+          [key]: { [Op.like]: `%${req.query[key]}%` },
+        }));
       }
       const items = await this.model.findAll({
         where,
