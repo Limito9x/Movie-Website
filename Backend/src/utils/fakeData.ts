@@ -1,8 +1,12 @@
-import { faker } from "@faker-js/faker";
 import { Movie } from "../models";
 import type { MovieCreationAttributes } from "../models/movie";
+import { base, en, Faker } from "@faker-js/faker";
 
-async function seedFakeMovies(count = 50) {
+const faker = new Faker({
+  locale: [ en],
+});
+
+async function seedFakeMovies(count = 20) {
   const movies: MovieCreationAttributes[] = [];
   for (let i = 0; i < count; i++) {
     movies.push({
@@ -27,7 +31,7 @@ async function clearFakeMovies() {
 if (require.main === module) {
   const action = process.argv[2];
   if (action === "seed") {
-    seedFakeMovies(50).then(() => process.exit());
+    seedFakeMovies(20).then(() => process.exit());
   } else if (action === "clear") {
     clearFakeMovies().then(() => process.exit());
   }

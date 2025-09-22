@@ -18,20 +18,28 @@ class BaseController {
 
   getAll: ExpressHandler = async (req, res) => {
     try {
+      const { page: pageQuery, limit: limitQuery, ...restQuery } = req.query;
       const where: any = {};
-      const searchKeys = Object.keys(req.query);
+      const searchKeys = Object.keys(restQuery);
 
       if (searchKeys.length > 0) {
         where[Op.or] = searchKeys.map((key) => ({
-          [key]: { [Op.like]: `%${req.query[key]}%` },
+          [key]: { [Op.like]: `%${restQuery[key]}%` },
         }));
       }
-      const items = await this.model.findAll({
+
+      const page = pageQuery ? parseInt(pageQuery as string, 10) : 1;
+      const limit = limitQuery ? parseInt(limitQuery as string, 10) : 10;
+      const offset = (page - 1) * limit;
+
+      const { count, rows } = await this.model.findAndCountAll({
         where,
         include: this.includes,
+        limit,
+        offset,
       });
 
-      res.status(200).json(items);
+      res.status(200).json({ total: count, data: rows });
     } catch (error) {
       res.status(500).json({
         message: `An error occurred while getting ${this.model.name}`,
