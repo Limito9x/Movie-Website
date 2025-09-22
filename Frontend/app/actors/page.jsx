@@ -44,7 +44,7 @@ export default function Actors() {
 
   return (
       <div className="flex flex-col justify-center items-center">
-        <Typography sx={{fontWeight: 'bold', mb: 2}} variant="h4" component="h1" gutterBottom>
+        <Typography sx={{ mb: 2}} variant="h4" component="h1" gutterBottom>
           Danh sách diễn viên
         </Typography>
         {actors.length === 0 && <div>Không có dữ liệu diễn viên.</div>}

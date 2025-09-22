@@ -6,7 +6,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import darkTheme from "./theme";
 import Header from "@/components/Header";
 import Provider from "@/components/Provider";
-import { Toolbar } from "@mui/material";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

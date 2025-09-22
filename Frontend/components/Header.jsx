@@ -15,9 +15,11 @@ import {
   ListItemButton,
   ListItemIcon,
   Tooltip,
+  Divider,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
+import MovieIcon from "@mui/icons-material/Movie";
 import PersonIcon from "@mui/icons-material/Person";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -25,6 +27,7 @@ import { useCookies } from "react-cookie";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import SearchBar from "./SearchBar";
+import movieApi from "@/services/movie.api";
 
 export default function Header() {
   const [openDrawer, setDrawer] = useState(false);
@@ -66,6 +69,7 @@ export default function Header() {
 
   const navLinks = [
     { title: "Trang chủ", path: "/", icon: <HomeIcon /> },
+    { title: "Phim", path: "/videos", icon: <MovieIcon /> },
     { title: "Diễn viên", path: "/actors", icon: <PersonIcon /> },
     { title: "Uploads", path: "/uploads", icon: <CloudUploadIcon /> },
   ];
@@ -81,9 +85,16 @@ export default function Header() {
           sx={{
             display: "flex",
             justifyContent: "space-between",
+            gap: { xs: 1, lg: "auto" },
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 1, lg: 5 } }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: { xs: 1, lg: 5 },
+            }}
+          >
             <IconButton
               sx={{ display: { xs: "block", lg: "none" } }}
               edge="start"
@@ -109,6 +120,28 @@ export default function Header() {
                     </ListItem>
                   ))}
                 </List>
+                <Divider />
+                <Box sx={{ p: 2, display: { xs: "block", sm: "none" } }}>
+                  {cookies.token ? (
+                    <div>
+                      {/* ✅ Kiểm tra user trước khi truy cập .name */}
+                      <Button
+                        onClick={handleLogout}
+                        variant="contained"
+                        color="primary"
+                      >
+                        Đăng xuất
+                      </Button>
+                    </div>
+                  ) : (
+                    // ✅ Sử dụng component Link hoặc truyền component vào Button
+                    <Link href="/login" passHref legacyBehavior>
+                      <Button variant="contained" component="a">
+                        Đăng nhập
+                      </Button>
+                    </Link>
+                  )}
+                </Box>
               </Box>
             </Drawer>
             <Link href="/">
@@ -132,17 +165,24 @@ export default function Header() {
             </Box>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <SearchBar onSearch={(query) => console.log("Searching:", query)} />
-            {cookies.token ? (
-              <div className="flex items-center gap-4">
-                {/* ✅ Kiểm tra user trước khi truy cập .name */}
-                {user && (
-                  <Tooltip title={`${user.name}`}>
-                    <IconButton>
-                      <AccountCircleIcon sx={{ fontSize: 40 }} />
-                    </IconButton>
-                  </Tooltip>
-                )}
+            <SearchBar
+              onSearch={async (query) => {
+                if (!query || query.trim() === "") {
+                  return;
+                }
+                console.log("Searching:", query);
+                router.push(`/videos/search?query=${encodeURIComponent(query)}`);
+              }}
+            />
+            {user && (
+              <Tooltip title={`${user.name}`}>
+                <IconButton>
+                  <AccountCircleIcon sx={{ fontSize: 40 }} />
+                </IconButton>
+              </Tooltip>
+            )}
+            <Box display={{ xs: "none", sm: "block" }}>
+              {cookies.token ? (
                 <Button
                   onClick={handleLogout}
                   variant="contained"
@@ -150,15 +190,14 @@ export default function Header() {
                 >
                   Đăng xuất
                 </Button>
-              </div>
-            ) : (
-              // ✅ Sử dụng component Link hoặc truyền component vào Button
-              <Link href="/login" passHref legacyBehavior>
-                <Button variant="contained" component="a">
-                  Đăng nhập
-                </Button>
-              </Link>
-            )}
+              ) : (
+                <Link href="/login" passHref legacyBehavior>
+                  <Button variant="contained" component="a">
+                    Đăng nhập
+                  </Button>
+                </Link>
+              )}
+            </Box>
           </Box>
         </Toolbar>
       </AppBar>
