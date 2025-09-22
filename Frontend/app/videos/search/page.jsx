@@ -12,7 +12,7 @@ export default function SearchPage() {
   useEffect(() => {
     if (query) {
       movieApi
-        .getList({ title: query })
+        .getList({ title: query, description: query })
         .then((res) => setMovies(res));
     }
   }, [query]);

@@ -170,7 +170,6 @@ export default function Header() {
                 if (!query || query.trim() === "") {
                   return;
                 }
-                console.log("Searching:", query);
                 router.push(`/videos/search?query=${encodeURIComponent(query)}`);
               }}
             />
