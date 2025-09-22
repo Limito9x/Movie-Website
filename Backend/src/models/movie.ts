@@ -13,10 +13,11 @@ interface MovieAttributes {
   storagePath?: string;
   isPublic: boolean;
   isPremium: boolean;
+  isFake?: boolean;
 }
 
 // Một số thuộc tính có thể không cần thiết khi tạo mới
-interface MovieCreationAttributes
+export interface MovieCreationAttributes
   extends Optional<
     MovieAttributes,
     "id" | "description" | "url" | "storagePath"
@@ -35,6 +36,7 @@ class Movie
   public storagePath?: string;
   public isPublic!: boolean;
   public isPremium!: boolean;
+  public isFake?: boolean;
 
   // Timestamps
   public readonly createdAt!: Date;
@@ -74,6 +76,10 @@ Movie.init(
     isPremium: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: false,
+    },
+    isFake: {
+      type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
   },
