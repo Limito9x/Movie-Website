@@ -27,6 +27,7 @@ class BaseController {
       const { page: pageQuery, limit: limitQuery, ...restQuery } = req.query;
       const where: any = {};
       const searchKeys = Object.keys(restQuery);
+      console.log("Search Keys:", searchKeys);
 
       if (searchKeys.length > 0) {
         where[Op.or] = searchKeys.map((key) => ({
@@ -43,7 +44,10 @@ class BaseController {
         include: this.includes,
         limit,
         offset,
+        order: [["createdAt", "DESC"]],
+        distinct: true,
       });
+      console.log(count, rows);
 
       res.status(200).json({ total: count, data: rows });
     } catch (error) {
