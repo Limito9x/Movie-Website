@@ -21,8 +21,8 @@ export default function Home() {
       <Image
         src="/HomeBackground2.webp"
         alt="Background"
-        width={1920}
-        height={1080}
+        width={1088}
+        height={612}
       />
     </Box>
   );
