@@ -1,26 +1,33 @@
 "use client";
+import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import movieApi from "@/services/movie.api";
 import MovieList from "@/components/MovieList"; // Tùy bạn có component này chưa
+import CustomPagination from "@/components/CustomPagination";
+import { Box } from "@mui/material";
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
   const [movies, setMovies] = useState([]);
 
-  useEffect(() => {
-    if (query) {
-      movieApi
-        .getList({ title: query, description: query })
-        .then((res) => setMovies(res.data));
-    }
-  }, [query]);
-
   return (
-    <div>
+    <Box
+      sx={{
+        p: 2,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        width: "100%",
+      }}
+    >
       <div>Kết quả tìm kiếm: "{query}"</div>
       <MovieList movies={movies} />
-    </div>
+      <CustomPagination
+        api={movieApi}
+        limit={4}
+        onChange={(val) => setMovies(val)}
+      />
+    </Box>
   );
 }

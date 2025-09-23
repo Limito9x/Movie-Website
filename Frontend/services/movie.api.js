@@ -20,7 +20,13 @@ class MovieApi extends ApiClient {
   }
 
   async getList(params = {}) {
-    const data = (await this.api.get("/",{params})).data;
+    const { query, ...rest } = params;
+    const queryParams = { ...rest };
+    if (query) {
+      queryParams.title = query;
+      queryParams.description = query;
+    }
+    const data = (await this.api.get("/", { params: queryParams })).data;
     return data;
   }
 

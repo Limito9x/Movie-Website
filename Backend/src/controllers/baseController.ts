@@ -51,7 +51,7 @@ class BaseController {
       res.status(200).json({ total: count, data: rows });
     } catch (error) {
       res.status(500).json({
-        message: `An error occurred while getting ${this.model.name}`,
+        message: `An error occurred while getting ${this.model.name}, ${error}`,
         error,
       });
     }
