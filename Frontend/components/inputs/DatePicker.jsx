@@ -4,13 +4,6 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
 
-/**
- * name: Tên của trường dữ liệu
- * date: Giá trị mặc định của trường dữ liệu
- * setDate: Hàm để cập nhật giá trị của trường dữ liệu (name)
- * label: Nhãn hiển thị
- */
-
 export default function CustomDatePicker({ value, onChange, ...props }) {
 
   return (

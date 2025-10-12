@@ -3,7 +3,7 @@ services:
     build:
       context: ./Backend
     volumes:
-      - ./Backend:/app:rw
+      - ./Backend:/app
       - /app/node_modules
       - /app/dist
     ports:
@@ -16,12 +16,11 @@ services:
     build:
       context: ./Frontend
     volumes:
-      - ./Frontend:/app:rw
+      - ./Frontend:/app
       - /app/node_modules
       - /app/.next
     ports:
       - "3001:3001"
-    # command: npm run dev
     environment:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true

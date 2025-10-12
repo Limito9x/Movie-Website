@@ -25,6 +25,7 @@ const sequelize = new Sequelize(
     host: dbConfig.host,
     dialect: "mysql",
     port: dbConfig.port,
+    logging: false,
   }
 );
 

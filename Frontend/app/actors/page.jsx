@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import ActorApi from "@/services/actor.api";
 import { createFormData } from "@/utils/formUtils";
 import UpdateItemDialog from "@/components/UpdateItemDialog";
-import { actorConfig } from "@/utils/inputConfig";
+import { actorConfig } from "@/components/form/formConfig";
 import { useApi, deleteOne } from "@/services/useApi";
 import dayjs from "dayjs";
-import actorApi from "@/services/actor.api";
+
 
 export default function Actors() {
   const [actorData, setActorData] = useState({});

@@ -16,7 +16,6 @@ import { useState, useEffect, useMemo } from "react";
 import Dropzone from "./Dropzone";
 
 function FileItem({ url, type, isDeleted }) {
-
   return (
     <Card
       sx={{
@@ -34,7 +33,12 @@ function FileItem({ url, type, isDeleted }) {
         <CardMedia
           component="img"
           image={url}
-          sx={{ height: "100%", width: "auto", objectFit: "cover", display: "block" }}
+          sx={{
+            height: "100%",
+            width: "auto",
+            objectFit: "cover",
+            display: "block",
+          }}
         />
       ) : (
         <CardMedia

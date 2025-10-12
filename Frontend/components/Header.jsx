@@ -27,7 +27,6 @@ import { useCookies } from "react-cookie";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import SearchBar from "./SearchBar";
-import movieApi from "@/services/movie.api";
 
 export default function Header() {
   const [openDrawer, setDrawer] = useState(false);
@@ -124,7 +123,6 @@ export default function Header() {
                 <Box sx={{ p: 2, display: { xs: "block", sm: "none" } }}>
                   {cookies.token ? (
                     <div>
-                      {/* ✅ Kiểm tra user trước khi truy cập .name */}
                       <Button
                         onClick={handleLogout}
                         variant="contained"
@@ -134,9 +132,8 @@ export default function Header() {
                       </Button>
                     </div>
                   ) : (
-                    // ✅ Sử dụng component Link hoặc truyền component vào Button
-                    <Link href="/login" passHref legacyBehavior>
-                      <Button variant="contained" component="a">
+                    <Link href="/login" passHref>
+                      <Button variant="contained">
                         Đăng nhập
                       </Button>
                     </Link>
@@ -175,7 +172,7 @@ export default function Header() {
             />
             {user && (
               <Tooltip title={`${user.name}`}>
-                <IconButton>
+                <IconButton href="/profile" color="inherit">
                   <AccountCircleIcon sx={{ fontSize: 40 }} />
                 </IconButton>
               </Tooltip>
@@ -190,8 +187,8 @@ export default function Header() {
                   Đăng xuất
                 </Button>
               ) : (
-                <Link href="/login" passHref legacyBehavior>
-                  <Button variant="contained" component="a">
+                <Link href="/login" passHref>
+                  <Button variant="contained">
                     Đăng nhập
                   </Button>
                 </Link>

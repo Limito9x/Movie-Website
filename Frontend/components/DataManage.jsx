@@ -16,16 +16,7 @@ import AddItemDialog from "./AddItemDialog";
 import UpdateItemDialog from "./UpdateItemDialog";
 import { useState, useEffect } from "react";
 
-export default function DataManage({
-  open,
-  onClose,
-  api,
-  categoryName,
-  data,
-  atcRefetch,
-  addConfig,
-  updateConfig,
-}) {
+export default function DataManage({ open, onClose, config, data, label }) {
   const [openUpdateState, setOpenUpdateState] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
@@ -39,15 +30,17 @@ export default function DataManage({
     setOpenUpdateState(true);
     setSelectedItem(item);
   };
+  const [deleteItem] = config.api.useDeleteMutation();
+
   const handleDelete = async (item) => {
     try {
       if (confirm("Xác nhận xóa ?")) {
-        await api.delete(item.id);
+        await deleteItem(item.id).unwrap();
         alert("Xóa thành công!");
-        await atcRefetch();
       }
     } catch (error) {
       console.log(error);
+      alert("Xóa thất bại!");
     }
   };
   return (
@@ -67,14 +60,9 @@ export default function DataManage({
       onClose={onClose}
     >
       <DialogTitle className="flex items-center gap-5 justify-between">
-        <div>Quản lý {categoryName}</div>
+        <div>Quản lý {label}</div>
         <Tooltip title="Thêm mới">
-          <AddItemDialog
-            label={categoryName}
-            inputConfig={addConfig}
-            instance={api}
-            refetch={atcRefetch}
-          ></AddItemDialog>
+          <AddItemDialog label={label} config={config} />
         </Tooltip>
       </DialogTitle>
       <DialogContent sx={{ maxHeight: 300 }}>
@@ -112,12 +100,10 @@ export default function DataManage({
         <UpdateItemDialog
           openState={openUpdateState}
           handleClose={() => setOpenUpdateState(false)}
-          inputConfig={updateConfig}
-          instance={api}
-          dataValue={selectedItem}
-          refetch={atcRefetch}
-          label={categoryName}
-        ></UpdateItemDialog>
+          config={config}
+          data={selectedItem}
+          label={label}
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Đóng</Button>

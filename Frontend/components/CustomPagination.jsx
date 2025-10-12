@@ -2,11 +2,14 @@ import { Box, Pagination, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function CustomPagination({ api, limit, onChange }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const page = Number(searchParams.get("page")) || 1;
+  const page = useSelector((state) => state.page);
+  const dispatch = useDispatch();
+  dispatch({ type: "setPage", payload: searchParams.get("page") || 1 });
   const [count, setCount] = useState(1);
   const [num, setNum] = useState(page);
 
@@ -64,19 +67,3 @@ export default function CustomPagination({ api, limit, onChange }) {
     </Box>
   );
 }
-// Movie list cần truyền vào 1 movies để hiển thị danh sách phim
-// Để làm pagination động, sau khi thay đổi page thì cần push url với query page tương ứng
-// Có thể sẽ cần truyền API để lấy dữ liệu theo page
-// Chỉ push thêm query page, giữ nguyên các query khác nếu có
-// Ví dụ: /videos?page=2
-// Ví dụ: /videos?category=action&page=2
-// Ví dụ: /videos?category=action&sort=asc&page=2
-// Khi thay đổi page thì cần gọi API để lấy dữ liệu tương ứng với page đó
-// Truyền dữ liệu ra component cha và truyền vào MovieList để hiển thị
-// Giả sử /videos/search?query=avengers&page=2
-// Pagination này tự động đọc các tham số từ URL
-// Sử dụng API truyền vào để lấy dữ liệu bằng getList tương ứng với các tham số
-// Khi thay đổi page thì push URL với query page tương ứng
-// Ví dụ: /videos/search?query=avengers&page=3
-// Như vậy mỗi khi cần tạo 1 page để hiển thị danh sách (không chỉ mỗi phim, có thể là danh sách người dùng, danh sách đơn hàng, v.v...)
-// Pagination này có thể tái sử dụng được, truyền ngược lại dữ liệu cho component cha để hiển thị

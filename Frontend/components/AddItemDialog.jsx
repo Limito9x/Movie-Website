@@ -8,69 +8,66 @@ import {
   Tooltip,
 } from "@mui/material";
 import { useState, useRef, useEffect } from "react";
-import RenderInput from "./RenderInput";
-import { createFormData } from "@/utils/formUtils";
+import DynamicForm from "./form/DynamicForm";
 import AddIcon from "@mui/icons-material/Add";
+import { useForm, FormProvider } from "react-hook-form";
+import { normalizeFormData } from "@/utils/formUtils";
 
-/**
- * label: Tên của dialog
- * inputConfig: Cấu hình các trường dữ liệu
- * instance: Tham số truyền vào để gọi API
- * refetch: Hàm gọi lại để lấy dữ liệu mới
- *
- */
-
-export default function AddItemDialog({
-  label,
-  inputConfig,
-  instance,
-  refetch,
-}) {
+export default function AddItemDialog({ label, config }) {
   const title = `Thêm ${label.toLowerCase()}`;
   const [open, setOpen] = useState(false);
-
-  const inputRef = useRef();
 
   const handleClick = () => {
     setOpen(!open);
   };
 
-  const handleAdd = async (event) => {
-    event.preventDefault();
+  const methods = useForm();
+  const [createItem] = config.api.useCreateMutation();
+
+  const handleAdd = async (data) => {
     try {
-      const newData = inputRef.current.getData();
-      console.log("data", newData);
-      if (!instance) return console.log("Instance chưa được khởi tạo");
+      // Normalize dữ liệu trước khi gửi
+      const normalizedData = normalizeFormData(data);
+      console.log("data", normalizedData);
+      
       if (confirm("Xác nhận thêm dữ liệu?")) {
-        let result = null;
-        result = await instance.create(newData);
-        if (result) {
-          alert(result.message);
-          handleClick();
-          if (refetch) refetch();
-        }
+        const result = await createItem(normalizedData).unwrap();
+        alert(result.message || "Thêm thành công!");
+        handleClick();
+        methods.reset();
       }
     } catch (error) {
       console.log(error);
+      alert("Thêm thất bại!");
     }
   };
 
   return (
-    <div>
+    <>
       <Tooltip title={title}>
         <IconButton onClick={handleClick}>
           <AddIcon />
         </IconButton>
       </Tooltip>
-      <Dialog open={open} onClose={handleClick}>
-        <DialogTitle>{title}</DialogTitle>
-        <DialogContent>
-          <RenderInput ref={inputRef} formConfig={inputConfig} />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleAdd}>Thêm</Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+      <FormProvider {...methods}>
+        <Dialog open={open} onClose={handleClick}>
+          <form onSubmit={methods.handleSubmit(handleAdd)}>
+            <DialogTitle>{title}</DialogTitle>
+            <DialogContent>
+              <DynamicForm
+                control={methods.control}
+                config={config.create || config.base}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClick}>Hủy</Button>
+              <Button type="submit" variant="contained">
+                Thêm
+              </Button>
+            </DialogActions>
+          </form>
+        </Dialog>
+      </FormProvider>
+    </>
   );
 }

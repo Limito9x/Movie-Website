@@ -1,12 +1,13 @@
 "use client";
 import MovieList from "@/components/MovieList";
 import { Box, Typography } from "@mui/material";
-import MovieApi from "@/services/movie.api";
 import { useState } from "react";
 import CustomPagination from "@/components/CustomPagination";
+import { movieReduxApi } from "@/redux/api/movie.reduxApi";
 
 export default function VideosPage() {
   const [movies, setMovies] = useState([]);
+  const { data } = movieReduxApi.useGetQuery(movies);
 
   return (
     <Box
@@ -19,12 +20,8 @@ export default function VideosPage() {
       }}
     >
       <Typography variant="h4">Videos</Typography>
-      <MovieList movies={movies} />
-      <CustomPagination
-        api={MovieApi}
-        limit={4}
-        onChange={(val) => setMovies(val)}
-      />
+      <MovieList movies={data} />
+      
     </Box>
   );
 }

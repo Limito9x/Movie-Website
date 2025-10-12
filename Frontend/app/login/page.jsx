@@ -5,43 +5,43 @@ import { useRouter } from "next/navigation";
 import { useCookies } from "react-cookie";
 import { decode } from "jsonwebtoken";
 import authApi from "@/services/auth.api";
-import RenderInput from "@/components/RenderInput";
+import RenderInput from "@/components/form/DynamicForm";
 import { registerConfig } from "@/utils/inputConfig";
 import userApi from "@/services/user.api";
 
 function LoginBox() {
-    const router = useRouter();
-    const [loginForm, setLoginForm] = useState({
-      loginName: "",
-      password: "",
-    });
-    const [cookies, setCookie] = useCookies(["token", "user"]);
+  const router = useRouter();
+  const [loginForm, setLoginForm] = useState({
+    loginName: "",
+    password: "",
+  });
+  const [cookies, setCookie] = useCookies(["token", "user"]);
 
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-      setLoginForm((prev) => ({ ...prev, [name]: value }));
-    };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setLoginForm((prev) => ({ ...prev, [name]: value }));
+  };
 
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      try {
-        const response = await authApi.login(loginForm);
-        console.log("Login successful:", response);
-        if (response.token) {
-          const decodedToken = decode(response.token);
-          console.log("Decoded Token:", decodedToken);
-          const expiresAt = new Date(decodedToken.exp * 1000); // JWT exp là UNIX timestamp (giây), Date cần miligiây
-          setCookie("token", response.token, { path: "/", expires: expiresAt });
-          setCookie("user", JSON.stringify(decodedToken), {
-            path: "/",
-            expires: expiresAt,
-          });
-        }
-        router.push("/");
-      } catch (error) {
-        console.error("Login failed:", error);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await authApi.login(loginForm);
+      console.log("Login successful:", response);
+      if (response.token) {
+        const decodedToken = decode(response.token);
+        console.log("Decoded Token:", decodedToken);
+        const expiresAt = new Date(decodedToken.exp * 1000); // JWT exp là UNIX timestamp (giây), Date cần miligiây
+        setCookie("token", response.token, { path: "/", expires: expiresAt });
+        setCookie("user", JSON.stringify(decodedToken), {
+          path: "/",
+          expires: expiresAt,
+        });
       }
-    };
+      router.push("/");
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
   return (
     <form
       onSubmit={handleSubmit}
@@ -131,7 +131,6 @@ function LoginBox() {
 }
 
 function RegisterBox() {
-
   const ref = useRef();
 
   const handleSubmit = async (e) => {
@@ -176,8 +175,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
 
-  const [cookies, setCookie] = useCookies(["token","user"]);
-
+  const [cookies, setCookie] = useCookies(["token", "user"]);
 
   return (
     <Box
@@ -238,7 +236,9 @@ export default function LoginPage() {
           >
             {isLogin ? <LoginBox /> : <RegisterBox />}
           </Box>
-          <Box sx={{ width: "100%", position: "absolute", bottom: 0, height: 50 }}>
+          <Box
+            sx={{ width: "100%", position: "absolute", bottom: 0, height: 50 }}
+          >
             <Button fullWidth onClick={() => setIsLogin(!isLogin)}>
               {isLogin ? "Tạo tài khoản" : "Đến đăng nhập"}
             </Button>

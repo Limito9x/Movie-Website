@@ -1,19 +1,19 @@
 "use client";
 import { Button, Typography } from "@mui/material";
-import { useRef } from "react";
-import MovieApi from "@/services/movie.api";
-import { movieConfig } from "@/utils/inputConfig";
-import RenderInput from "@/components/RenderInput";
+import DynamicForm from "@/components/form/DynamicForm";
+import { movieReduxApi } from "@/redux/api/movie.reduxApi";
+import { useForm, FormProvider } from "react-hook-form";
+import { movieConfig } from "@/components/form/formConfig";
 
 export default function Uploads() {
-  const inputRef = useRef();
+  console.log("movieConfig:", movieConfig);
+  const methods = useForm();
+  const [createMovie, { isLoading, error }] = movieReduxApi.useCreateMutation();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const data = inputRef.current.getData();
+  const submit = async (data) => {
     if (!confirm("Xác nhận tạo phim ?")) return;
     try {
-      const response = await MovieApi.create(data);
+      const response = await createMovie(data).unwrap();
       console.log("Movie created:", response);
       alert(response.message);
     } catch (error) {
@@ -26,16 +26,21 @@ export default function Uploads() {
       <Typography variant="h4" component="h1" gutterBottom>
         Thêm Phim Mới
       </Typography>
-      <form onSubmit={handleSubmit} className="flex flex-col w-full justify-center items-center">
-        <RenderInput
-        className="w-full"
-          formConfig={movieConfig.create}
-          ref={inputRef}
-        ></RenderInput>
-        <Button type="submit" variant="contained" color="primary">
-          Thêm Phim
-        </Button>
-      </form>
+      <FormProvider {...methods}>
+        <form
+          onSubmit={methods.handleSubmit(submit)}
+          className="flex flex-col w-full justify-center items-center"
+        >
+          <DynamicForm
+            className="w-full"
+            config={movieConfig.create || movieConfig.base}
+            control={methods.control}
+          />
+          <Button type="submit" variant="contained" color="primary">
+            Thêm Phim
+          </Button>
+        </form>
+      </FormProvider>
     </div>
   );
 }

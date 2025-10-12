@@ -1,6 +1,8 @@
-import genreApi from "@/services/genre.api";
-import actorApi from "@/services/actor.api";
-import tagApi from "@/services/tag.api";
+import { actorReduxApi } from "@/redux/api/actor.reduxApi";
+import { movieReduxApi } from "@/redux/api/movie.reduxApi";
+import { genreReduxApi } from "@/redux/api/genre.reduxApi";
+import { tagReduxApi } from "@/redux/api/tag.reduxApi";
+
 import {
   text,
   select,
@@ -9,7 +11,7 @@ import {
   atc,
   dropzone,
   updateFile,
-} from "./inputComponent";
+} from "../inputs/inputComponent";
 
 // Hàm định nghĩa thuộc tính đối tượng
 const attr = (key, label, input = text()) => ({
@@ -22,7 +24,7 @@ const attr = (key, label, input = text()) => ({
 // Hàm thêm trường name nhanh vào thuộc tính đối tượng
 
 const addName = (name, config) => {
-  return config.map((attrObj) => ({
+  return config?.map((attrObj) => ({
     ...attrObj,
 
     name: `${name}_${attrObj.key}`,
@@ -31,18 +33,16 @@ const addName = (name, config) => {
 
 // Cấu hình cuối cùng cho đối tượng
 
-const defineConfig = (instanceName, base, create, update) => {
-  if (create || update) {
-    let finalConfig = {};
-    if (create) {
-      finalConfig.create = addName(instanceName, [...base, ...create]);
-    }
-    if (update) {
-      finalConfig.update = addName(instanceName, [...base, ...update]);
-    }
-    return finalConfig;
+const defineConfig = (name, label, api, base, create, update) => {
+  const baseConfig = addName(name, base);
+  const finalConfig = { name, label, api, base: baseConfig };
+  if (create) {
+    finalConfig.create = addName(name, [...base, ...create]);
   }
-  return addName(instanceName, base);
+  if (update) {
+    finalConfig.update = addName(name, [...base, ...update]);
+  }
+  return finalConfig;
 };
 
 // ---
@@ -50,11 +50,11 @@ const defineConfig = (instanceName, base, create, update) => {
 // Định nghĩa các thuộc tính cơ bản cho từng đối tượng
 // ---
 
-const genre = [attr("name", "Tên thể loại"), attr("description", "Mô tả")];
+const genreBase = [attr("name", "Tên thể loại"), attr("description", "Mô tả")];
 
-const tag = [attr("name", "Tên thẻ"), attr("description", "Mô tả")];
+const tagBase = [attr("name", "Tên thẻ"), attr("description", "Mô tả")];
 
-const actor = [
+const actorBase = [
   attr("name", "Tên diễn viên"),
   attr(
     "sex",
@@ -78,9 +78,9 @@ const register = [
     "Giới tính",
     select([option("true", "Nữ"), option("false", "Nam")])
   ),
-  attr("email","Email",text("email")),
-  attr("username","Tên đăng nhập"),
-  attr("password","Mật khẩu",text("password"))
+  attr("email", "Email", text("email")),
+  attr("username", "Tên đăng nhập"),
+  attr("password", "Mật khẩu", text("password")),
 ];
 
 // ---
@@ -88,22 +88,24 @@ const register = [
 // Tạo các cấu hình cuối cùng trước khi sử dụng chúng.
 // ---
 
-export const genreConfig = defineConfig("genre", genre);
-export const tagConfig = defineConfig("tag", tag);
+export const genreConfig = defineConfig("genre", "Thể loại", genreReduxApi, genreBase);
+export const tagConfig = defineConfig("tag", "Tag", tagReduxApi, tagBase);
 export const actorConfig = defineConfig(
   "actor",
-  actor,
+  "Diễn viên",
+  actorReduxApi,
+  actorBase,
   actorCreate,
   actorUpdate
 );
 
-const movie = [
+const movieBase = [
   attr("title", "Tên phim"),
   attr("description", "Mô tả"),
   // Sử dụng các config đã được export ở trên
-  attr("actors", "Diễn viên", atc(actorApi, actorConfig)),
-  attr("genres", "Thể loại", atc(genreApi, genreConfig)),
-  attr("tags", "Tag", atc(tagApi, tagConfig)),
+  attr("actors", "Diễn viên", atc(actorConfig, "name")),
+  attr("genres", "Thể loại", atc(genreConfig, "name")),
+  attr("tags", "Tag", atc(tagConfig, "name")),
   attr("releaseDate", "Ngày phát hành", date),
 ];
 const movieCreate = [
@@ -121,9 +123,11 @@ const movieUpdate = [
 
 export const movieConfig = defineConfig(
   "movie",
-  movie,
+  "Phim",
+  movieReduxApi,
+  movieBase,
   movieCreate,
   movieUpdate
 );
 
-export const registerConfig = defineConfig("register",register);
+export const registerConfig = defineConfig("register", register);

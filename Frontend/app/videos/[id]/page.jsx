@@ -8,7 +8,7 @@ import Carousel from "@/components/Carousel";
 import UpdateItemDialog from "@/components/UpdateItemDialog";
 import movieApi from "@/services/movie.api";;
 import { useEffect, useState } from "react";
-import { movieConfig } from "@/utils/inputConfig";
+import { movieConfig } from "@/components/form/formConfig";
 
 export default function Video() {
   const id = useParams().id;
@@ -79,10 +79,9 @@ export default function Video() {
       <UpdateItemDialog
         openState={openDialog}
         handleClose={() => setOpenDialog(false)}
-        inputConfig={movieConfig.update}
-        dataValue={movie}
+        config={movieConfig}
+        data={movie}
         instance={movieApi}
-        refetch={refetch}
         label={"phim"}
       />
     </div>
