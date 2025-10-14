@@ -17,16 +17,13 @@ import {
   Tooltip,
   Divider,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import HomeIcon from "@mui/icons-material/Home";
-import MovieIcon from "@mui/icons-material/Movie";
-import PersonIcon from "@mui/icons-material/Person";
+import { Menu, Home, Movie, Person, CloudUpload ,Dashboard } from "@mui/icons-material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useCookies } from "react-cookie";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import SearchBar from "./SearchBar";
+import SearchBar from "@/components/SearchBar";
 
 export default function Header() {
   const [openDrawer, setDrawer] = useState(false);
@@ -51,8 +48,19 @@ export default function Header() {
 
   if (!isMounted) return null;
 
+  // Define paths where header should be hidden
+  const noHeaderPaths = ["/login"];
+  
+  // Check if current path is dashboard or any of its subpaths
+  const isDashboardPath = pathname === "/dashboard" || pathname.startsWith("/dashboard/");
+  
+  // Combine both conditions for header visibility check
+  if (noHeaderPaths.includes(pathname) || isDashboardPath) {
+    return null;
+  }
+
   // Đừng render Header nếu đang ở trang /login
-  if (pathname === "/login") {
+  if (noHeaderPaths.includes(pathname)) {
     return null;
   }
 
@@ -67,10 +75,11 @@ export default function Header() {
   const user = cookies.user;
 
   const navLinks = [
-    { title: "Trang chủ", path: "/", icon: <HomeIcon /> },
-    { title: "Phim", path: "/videos", icon: <MovieIcon /> },
-    { title: "Diễn viên", path: "/actors", icon: <PersonIcon /> },
-    { title: "Uploads", path: "/uploads", icon: <CloudUploadIcon /> },
+    { title: "Trang chủ", path: "/", icon: <Home /> },
+    { title: "Phim", path: "/videos", icon: <Movie /> },
+    { title: "Diễn viên", path: "/actors", icon: <Person /> },
+    { title: "Uploads", path: "/uploads", icon: <CloudUpload /> },
+    { title: "Dashboard", path: "/dashboard", icon: <Dashboard /> },
   ];
 
   return (
@@ -101,7 +110,7 @@ export default function Header() {
               aria-label="menu"
               onClick={toggleDrawer(true)}
             >
-              <MenuIcon />
+              <Menu />
             </IconButton>
             <Drawer open={openDrawer} onClose={toggleDrawer(false)}>
               <Box sx={{ width: 250 }} role="presentation">

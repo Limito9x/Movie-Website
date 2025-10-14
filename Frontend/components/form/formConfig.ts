@@ -13,8 +13,14 @@ import {
   updateFile,
 } from "../inputs/inputComponent";
 
+interface AttributeProps {
+  key: string;
+  label: string;
+  input: any;
+}
+
 // Hàm định nghĩa thuộc tính đối tượng
-const attr = (key, label, input = text()) => ({
+const attr = (key: string, label: string, input: any = text()) => ({
   key,
   propname: key,
   label,
@@ -23,7 +29,7 @@ const attr = (key, label, input = text()) => ({
 
 // Hàm thêm trường name nhanh vào thuộc tính đối tượng
 
-const addName = (name, config) => {
+const addName = (name: string, config: AttributeProps[]) => {
   return config?.map((attrObj) => ({
     ...attrObj,
 
@@ -33,9 +39,25 @@ const addName = (name, config) => {
 
 // Cấu hình cuối cùng cho đối tượng
 
-const defineConfig = (name, label, api, base, create, update) => {
+interface ConfigResult {
+  name: string;
+  label: string;
+  api: any;
+  base: ReturnType<typeof addName>;
+  create?: ReturnType<typeof addName>;
+  update?: ReturnType<typeof addName>;
+}
+
+export const defineConfig = (
+  name: string,
+  label: string,
+  api: any,
+  base: AttributeProps[],
+  create?: AttributeProps[],
+  update?: AttributeProps[]
+): ConfigResult => {
   const baseConfig = addName(name, base);
-  const finalConfig = { name, label, api, base: baseConfig };
+  const finalConfig: ConfigResult = { name, label, api, base: baseConfig };
   if (create) {
     finalConfig.create = addName(name, [...base, ...create]);
   }
@@ -88,7 +110,12 @@ const register = [
 // Tạo các cấu hình cuối cùng trước khi sử dụng chúng.
 // ---
 
-export const genreConfig = defineConfig("genre", "Thể loại", genreReduxApi, genreBase);
+export const genreConfig = defineConfig(
+  "genre",
+  "Thể loại",
+  genreReduxApi,
+  genreBase
+);
 export const tagConfig = defineConfig("tag", "Tag", tagReduxApi, tagBase);
 export const actorConfig = defineConfig(
   "actor",
@@ -130,4 +157,3 @@ export const movieConfig = defineConfig(
   movieUpdate
 );
 
-export const registerConfig = defineConfig("register", register);

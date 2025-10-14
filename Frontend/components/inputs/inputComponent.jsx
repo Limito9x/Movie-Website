@@ -90,14 +90,16 @@ export const atc = (detailConfig, labelKey) => {
       const normalizedValue = (() => {
         if (!value) return [];
         if (!Array.isArray(value)) return [];
-        
-        return value.map(item => {
-          // Nếu là object thì lấy id, nếu là ID thì giữ nguyên
-          if (item && typeof item === 'object' && 'id' in item) {
-            return item.id;
-          }
-          return item;
-        }).filter(id => id != null);
+
+        return value
+          .map((item) => {
+            // Nếu là object thì lấy id, nếu là ID thì giữ nguyên
+            if (item && typeof item === "object" && "id" in item) {
+              return item.id;
+            }
+            return item;
+          })
+          .filter((id) => id != null);
       })();
 
       return (

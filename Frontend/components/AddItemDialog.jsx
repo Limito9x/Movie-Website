@@ -1,3 +1,4 @@
+"use client";
 import {
   Button,
   Dialog,
@@ -7,7 +8,7 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import DynamicForm from "./form/DynamicForm";
 import AddIcon from "@mui/icons-material/Add";
 import { useForm, FormProvider } from "react-hook-form";
@@ -29,7 +30,7 @@ export default function AddItemDialog({ label, config }) {
       // Normalize dữ liệu trước khi gửi
       const normalizedData = normalizeFormData(data);
       console.log("data", normalizedData);
-      
+
       if (confirm("Xác nhận thêm dữ liệu?")) {
         const result = await createItem(normalizedData).unwrap();
         alert(result.message || "Thêm thành công!");

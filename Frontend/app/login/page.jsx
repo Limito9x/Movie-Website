@@ -6,7 +6,7 @@ import { useCookies } from "react-cookie";
 import { decode } from "jsonwebtoken";
 import authApi from "@/services/auth.api";
 import RenderInput from "@/components/form/DynamicForm";
-import { registerConfig } from "@/utils/inputConfig";
+import { registerConfig } from "@/components/form/formConfig";
 import userApi from "@/services/user.api";
 
 function LoginBox() {

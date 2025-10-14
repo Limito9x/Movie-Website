@@ -5,7 +5,9 @@ import store from "@/redux/store";
 export default function AppProvider({ children }) {
   return (
     <CookiesProvider>
-      <Provider store={store}>{children}</Provider>
+      <Provider store={store}>
+        {children}
+      </Provider>
     </CookiesProvider>
   );
 }

@@ -10,11 +10,11 @@ export default function DynamicForm({ config, control, defaultValues = {} }) {
   return config?.map((attr) => {
     const { key, input, ...restConfig } = attr;
     const InputComponent = input.render;
-    
+
     // Sử dụng hàm transform nếu có, nếu không thì dùng giá trị mặc định
-    const defaultValue = input.transform 
-      ? input.transform(defaultValues[key]) 
-      : (defaultValues[key] ?? input.initValue);
+    const defaultValue = input.transform
+      ? input.transform(defaultValues[key])
+      : defaultValues[key] ?? input.initValue;
 
     return (
       <Controller

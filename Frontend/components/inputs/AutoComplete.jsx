@@ -1,3 +1,4 @@
+"use client";
 import { TextField, Autocomplete, IconButton, Tooltip } from "@mui/material";
 import DataManage from "@/components/DataManage";
 import SettingsIcon from "@mui/icons-material/Settings";

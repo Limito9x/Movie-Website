@@ -31,7 +31,7 @@ export default function UpdateItemDialog({
       // Normalize dữ liệu trước khi gửi
       const normalizedData = normalizeFormData(newData);
       console.log("Data to update: ", normalizedData);
-      
+
       if (confirm("Xác nhận cập nhật dữ liệu?")) {
         const result = await updateItem({
           id: data.id,

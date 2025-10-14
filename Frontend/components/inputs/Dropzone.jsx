@@ -1,3 +1,4 @@
+"use client";
 import { FilePond, registerPlugin } from "react-filepond";
 import { useEffect, useState } from "react";
 import { Typography } from "@mui/material";
@@ -14,16 +15,25 @@ export default function Dropzone({
   maxFiles,
   fileType,
   label,
-  purpose
+  purpose,
 }) {
-  const [files,setFiles] = useState([]);
+  const [files, setFiles] = useState([]);
+
   useEffect(() => {
+    let isMounted = true;
+
     if (files && files.length > maxFiles) {
       const newFiles = files.slice(0, maxFiles);
-      setFiles(newFiles);
-      onChange(newFiles.map(newFile=>newFile.file));
+      if (isMounted) {
+        setFiles(newFiles);
+        onChange(newFiles.map((newFile) => newFile.file));
+      }
     }
-  }, [maxFiles]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [files, maxFiles, onChange]);
 
   const acceptedFileTypes = {
     image: "image/*",

@@ -1,5 +1,5 @@
 import ApiClient from "./axios";
-import { useState, useEffect,useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 /**
  * - Các thuộc tính:
  * + data (Dữ liệu) để hiển thị
@@ -13,14 +13,16 @@ import { useState, useEffect,useCallback } from "react";
  * + deleteOne(id): gửi yêu cầu xóa 1 dữ liệu
  */
 
-export const useApi = (instance,watchValue) => {
+export const useApi = (instance, watchValue) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const mountedRef = useRef(true);
 
   const fetchData = useCallback(
     async (currentWatchValue) => {
       // Nhận giá trị hiện tại để fetch
+      if (!mountedRef.current) return;
       setLoading(true);
       setError(null);
       setData(null);
@@ -28,11 +30,17 @@ export const useApi = (instance,watchValue) => {
         const fetchedData = currentWatchValue
           ? await instance.getById(currentWatchValue)
           : await instance.getAll();
-        setData(fetchedData||fetchData.data);
+        if (mountedRef.current) {
+          setData(fetchedData || fetchData.data);
+        }
       } catch (err) {
-        setError(err.message);
+        if (mountedRef.current) {
+          setError(err.message);
+        }
       } finally {
-        setLoading(false);
+        if (mountedRef.current) {
+          setLoading(false);
+        }
       }
     },
     [instance]
@@ -43,16 +51,20 @@ export const useApi = (instance,watchValue) => {
   }, [fetchData, watchValue]);
 
   useEffect(() => {
+    mountedRef.current = true;
     fetchData(watchValue); // Fetch dữ liệu ban đầu và khi watchValue thay đổi
+    return () => {
+      mountedRef.current = false;
+    };
   }, [fetchData, watchValue]);
 
-  return { data, loading, error,refetch };
-}
+  return { data, loading, error, refetch };
+};
 
-export const deleteOne = async (instance,id) => {
-  try{
-    await instance.delete(id)
-  }catch(error){
+export const deleteOne = async (instance, id) => {
+  try {
+    await instance.delete(id);
+  } catch (error) {
     console.log(error.message);
   }
-}
+};
