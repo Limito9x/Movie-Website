@@ -1,5 +1,4 @@
-"use client";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller } from "react-hook-form";
 
 const layoutProps = {
   fullWidth: true,
@@ -8,7 +7,6 @@ const layoutProps = {
 };
 
 export default function DynamicForm({ config, control, defaultValues = {} }) {
-  const { setValue } = useFormContext();
   return config?.map((attr) => {
     const { key, input, ...restConfig } = attr;
     const InputComponent = input.render;
@@ -16,7 +14,7 @@ export default function DynamicForm({ config, control, defaultValues = {} }) {
     // Sử dụng hàm transform nếu có, nếu không thì dùng giá trị mặc định
     const defaultValue = input.transform
       ? input.transform(defaultValues[key])
-      : (defaultValues[key] ?? input.initValue);
+      : defaultValues[key] ?? input.initValue;
 
     return (
       <Controller
@@ -29,7 +27,6 @@ export default function DynamicForm({ config, control, defaultValues = {} }) {
             {...layoutProps}
             {...restConfig}
             {...field}
-            setValue={setValue}
             error={!!fieldState.error}
             helperText={fieldState.error?.message}
           />

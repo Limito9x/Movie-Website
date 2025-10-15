@@ -2,6 +2,7 @@ import { EntityConfig } from "./types";
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { Box, Button } from "@mui/material";
 import { movieReduxApi } from "@/redux/api/movie.reduxApi";
+import { movieConfig as movieFormConfig } from "./formConfig";
 import dayjs from "dayjs";
 
 function Action({
@@ -71,4 +72,5 @@ export const movieConfig: EntityConfig = {
     useUpdateMutation: movieReduxApi.useUpdateMutation,
     useDeleteMutation: movieReduxApi.useDeleteMutation,
   },
+  formConfig: movieFormConfig,
 };

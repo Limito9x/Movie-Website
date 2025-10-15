@@ -1,6 +1,6 @@
 "use client";
 import { Button, Typography } from "@mui/material";
-import DynamicForm from "@/components/form/DynamicForm";
+import DynamicForm from "@/components/DynamicForm";
 import { movieReduxApi } from "@/redux/api/movie.reduxApi";
 import { useForm, FormProvider } from "react-hook-form";
 import { movieConfig } from "@/components/form/formConfig";

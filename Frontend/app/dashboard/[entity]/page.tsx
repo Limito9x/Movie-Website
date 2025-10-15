@@ -1,6 +1,13 @@
-"use server";
 import { EntityDataGrid } from "@/components/EntityDataGrid";
-import { requireEntity } from "@/lib/entities/helper";
+import { SafeMountWrapper } from "@/components/SafeMountWrapper";
+import { getEntityConfig } from "@/lib/entities";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
+
+// Fallback loading component khi đang chờ
+function Loading() {
+  return <div>Đang tải dữ liệu...</div>;
+}
 
 export default async function EntityListPage({
   params,
@@ -11,6 +18,23 @@ export default async function EntityListPage({
   // Await it before accessing its properties per Next.js guidance.
   const { entity } = await params;
 
-  const config = requireEntity(entity);
-  return <EntityDataGrid entitySlug={config.slug} />;
+  // Check if entity exists at the server level before rendering
+  const config = getEntityConfig(entity);
+
+  // Instead of passing through to client, handle invalid entity here with notFound()
+  if (!config) {
+    notFound();
+  }
+
+  // We know entity is valid at this point
+  // Sử dụng Suspense + SafeMountWrapper để đảm bảo:
+  // 1. Component chỉ render khi data sẵn sàng (Suspense)
+  // 2. RTK Query hook chỉ chạy khi component đã mount hoàn toàn (SafeMountWrapper)
+  return (
+    <Suspense fallback={<Loading />}>
+      <SafeMountWrapper>
+        <EntityDataGrid entitySlug={entity} />
+      </SafeMountWrapper>
+    </Suspense>
+  );
 }

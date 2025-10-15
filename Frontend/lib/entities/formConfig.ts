@@ -11,7 +11,7 @@ import {
   atc,
   dropzone,
   updateFile,
-} from "../inputs/inputComponent";
+} from "../inputs/";
 
 interface AttributeProps {
   key: string;

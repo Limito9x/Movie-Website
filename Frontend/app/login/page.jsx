@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCookies } from "react-cookie";
 import { decode } from "jsonwebtoken";
 import authApi from "@/services/auth.api";
-import RenderInput from "@/components/form/DynamicForm";
+import RenderInput from "@/components/DynamicForm";
 import { registerConfig } from "@/components/form/formConfig";
 import userApi from "@/services/user.api";
 

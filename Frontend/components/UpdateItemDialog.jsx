@@ -5,7 +5,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import DynamicForm from "./form/DynamicForm";
+import DynamicForm from "./DynamicForm";
 import { useForm, FormProvider } from "react-hook-form";
 import { useEffect } from "react";
 import { normalizeFormData } from "@/utils/formUtils";

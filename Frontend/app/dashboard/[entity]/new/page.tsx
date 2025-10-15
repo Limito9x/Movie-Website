@@ -1,14 +1,27 @@
-"use client";
-import DynamicForm from "@/components/form/DynamicForm";
-import { movieConfig } from "@/components/form/formConfig";
-import { Box } from "@mui/material";
-import { useForm } from "react-hook-form";
+import { Suspense } from "react";
+import { getEntityConfig } from "@/lib/entities";
+import { notFound } from "next/navigation";
+import { SafeMountWrapper } from "@/components/SafeMountWrapper";
+import EntityNewForm from "@/components/EntityNewForm";
 
-export default function UpdateEntityPage() {
-  const { handleSubmit, control } = useForm();
+function Loading() {
+  return <div>Đang tải...</div>;
+}
+
+export default async function NewEntityPage({
+  params,
+}: {
+  params: { entity: string };
+}) {
+  const { entity } = await params;
+  const config = getEntityConfig(entity);
+  if (!config) notFound();
+
   return (
-    <Box sx={{ p: 3 }}>
-      <DynamicForm config={movieConfig.create} control={control} />
-    </Box>
+    <Suspense fallback={<Loading />}>
+      <SafeMountWrapper>
+        <EntityNewForm entitySlug={entity} />
+      </SafeMountWrapper>
+    </Suspense>
   );
 }

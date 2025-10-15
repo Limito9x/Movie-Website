@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { useState } from "react";
-import DynamicForm from "./form/DynamicForm";
+import DynamicForm from "./DynamicForm";
 import AddIcon from "@mui/icons-material/Add";
 import { useForm, FormProvider } from "react-hook-form";
 import { normalizeFormData } from "@/utils/formUtils";
