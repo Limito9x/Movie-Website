@@ -9,6 +9,7 @@ import DynamicForm from "./DynamicForm";
 import { useForm, FormProvider } from "react-hook-form";
 import { useEffect } from "react";
 import { normalizeFormData } from "@/utils/formUtils";
+import { useMutation, QueryClient } from "@tanstack/react-query";
 
 export default function UpdateItemDialog({
   openState,
@@ -18,7 +19,14 @@ export default function UpdateItemDialog({
   label,
 }) {
   const methods = useForm();
-  const [updateItem] = config.api.useUpdateMutation();
+  const queryClient = new QueryClient();
+  const updateItem = useMutation({
+    mutationFn: ({ id, data }) => config.api.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [config.name] });
+      alert(`${config.name} updated successfully`);
+    },
+  });
 
   useEffect(() => {
     if (data) {
@@ -26,19 +34,23 @@ export default function UpdateItemDialog({
     }
   }, [data, methods]);
 
-  const handleUpdate = async (newData) => {
+  const handleUpdate = async (formData) => {
     try {
-      // Normalize dữ liệu trước khi gửi
-      const normalizedData = normalizeFormData(newData);
-      console.log("Data to update: ", normalizedData);
-
+      const normalizedData = normalizeFormData(formData);
+      console.log("data", normalizedData);
       if (confirm("Xác nhận cập nhật dữ liệu?")) {
-        const result = await updateItem({
-          id: data.id,
-          data: normalizedData,
-        }).unwrap();
-        alert(result.message || "Cập nhật thành công!");
-        handleClose();
+        updateItem.mutate(
+          { id: data.id, data: normalizedData },
+          {
+            onSuccess: () => {
+              alert("Cập nhật thành công!");
+              handleClose();
+            },
+            onError: () => {
+              alert("Cập nhật thất bại!");
+            },
+          }
+        );
       }
     } catch (error) {
       console.log(error);

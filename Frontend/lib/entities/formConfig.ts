@@ -1,7 +1,7 @@
-import { actorReduxApi } from "@/redux/api/actor.reduxApi";
-import { movieReduxApi } from "@/redux/api/movie.reduxApi";
-import { genreReduxApi } from "@/redux/api/genre.reduxApi";
-import { tagReduxApi } from "@/redux/api/tag.reduxApi";
+import genreApi from "../../services/genre.api";
+import tagApi from "../../services/tag.api";
+import actorApi from "../../services/actor.api";
+import movieApi from "../../services/movie.api";
 
 import {
   text,
@@ -113,14 +113,14 @@ const register = [
 export const genreConfig = defineConfig(
   "genre",
   "Thể loại",
-  genreReduxApi,
+  genreApi,
   genreBase
 );
-export const tagConfig = defineConfig("tag", "Tag", tagReduxApi, tagBase);
+export const tagConfig = defineConfig("tag", "Tag", tagApi, tagBase);
 export const actorConfig = defineConfig(
   "actor",
   "Diễn viên",
-  actorReduxApi,
+  actorApi,
   actorBase,
   actorCreate,
   actorUpdate
@@ -151,7 +151,7 @@ const movieUpdate = [
 export const movieConfig = defineConfig(
   "movie",
   "Phim",
-  movieReduxApi,
+  movieApi,
   movieBase,
   movieCreate,
   movieUpdate

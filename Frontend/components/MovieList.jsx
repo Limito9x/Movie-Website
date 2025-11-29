@@ -1,10 +1,8 @@
 "use client";
 import Link from "next/link";
-import MovieApi from "@/services/movie.api";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
 dayjs.locale("vi");
-import { useApi } from "@/services/useApi";
 export default function MovieList({movies}) {
       if (!movies || movies.length === 0) {
         return <div>Không có dữ liệu phim.</div>;

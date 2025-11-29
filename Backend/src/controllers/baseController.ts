@@ -1,6 +1,7 @@
 import { Model, ModelStatic, FindOptions } from "sequelize";
 import { Request, Response } from "express";
 import {Op} from "sequelize";
+import { ro } from "@faker-js/faker";
 
 export type ExpressHandler = (req: Request, res: Response) => Promise<void>;
 
@@ -27,13 +28,14 @@ class BaseController {
       const { page: pageQuery, limit: limitQuery, ...restQuery } = req.query;
       const where: any = {};
       const searchKeys = Object.keys(restQuery);
-      console.log("Search Keys:", searchKeys);
 
       if (searchKeys.length > 0) {
         where[Op.or] = searchKeys.map((key) => ({
           [key]: { [Op.like]: `%${restQuery[key]}%` },
         }));
       }
+
+      console.log(pageQuery, limitQuery);
 
       const page = pageQuery ? parseInt(pageQuery as string, 10) : 1;
       const limit = limitQuery ? parseInt(limitQuery as string, 10) : 10;
@@ -47,6 +49,8 @@ class BaseController {
         order: [["createdAt", "DESC"]],
         distinct: true,
       });
+
+      console.log(rows);
 
       res.status(200).json({ total: count, data: rows });
     } catch (error) {

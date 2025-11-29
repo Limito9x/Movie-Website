@@ -20,7 +20,8 @@ export const text = (type = "text"): InputConfig<string> => {
     name: "text",
     initValue: "",
     render: (props: RenderProps<string>) => {
-      const { onChange, setValue, ...restProps } = props as RenderProps<string> & { setValue?: any };
+      const { onChange, setValue, ...restProps } =
+        props as RenderProps<string> & { setValue?: any };
       return (
         <TextField
           {...restProps}
@@ -74,7 +75,8 @@ export const date: InputConfig<string> = {
   name: "date",
   initValue: "",
   render: (props: RenderProps<string>) => {
-    const { onChange, setValue, ...restProps } = props as RenderProps<string> & { setValue?: any };
+    const { onChange, setValue, ...restProps } =
+      props as RenderProps<string> & { setValue?: any };
     // Import client component lazily so this module stays server-safe
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const CustomDatePicker = require("@/components/inputs/DatePicker").default;
@@ -103,7 +105,9 @@ export const atc = (detailConfig: any, labelKey: string) => {
         .filter((id) => id != null);
     },
     render: (props: RenderProps<any[]>) => {
-      const { value, onChange, setValue, ...restProps } = props as RenderProps<any[]> & { setValue?: any };
+      const { value, onChange, setValue, ...restProps } = props as RenderProps<
+        any[]
+      > & { setValue?: any };
 
       // Normalize value: chuyển đổi mọi giá trị thành mảng ID
       const normalizedValue = (() => {
@@ -148,12 +152,21 @@ export const dropzone = (
   purpose?: string
 ) => ({
   name: "dropzone",
-    render: (props: RenderProps<any>) => {
+  render: (props: RenderProps<any>) => {
     // Lazy import Dropzone to avoid server-side evaluation of client code
-    const { setValue, ...restProps } = props as RenderProps<any> & { setValue?: any };
+    const { setValue, ...restProps } = props as RenderProps<any> & {
+      setValue?: any;
+    };
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const Dropzone = require("@/components/inputs/Dropzone").default;
-    return <Dropzone {...(restProps as any)} maxFiles={maxFiles} fileType={fileType} purpose={purpose} />;
+    return (
+      <Dropzone
+        {...(restProps as any)}
+        maxFiles={maxFiles}
+        fileType={fileType}
+        purpose={purpose}
+      />
+    );
   },
 });
 
@@ -172,7 +185,11 @@ export const updateFile = (
     addPropname,
     delPropname,
     render: (props: RenderProps<any[]>) => {
-      const { value, onAdd, onDelete, setValue, ...restProps } = props as RenderProps<any[]> & Record<string, any> & { setValue?: (name: string, value: any) => void };
+      const { value, onAdd, onDelete, setValue, ...restProps } =
+        props as RenderProps<any[]> &
+          Record<string, any> & {
+            setValue?: (name: string, value: any) => void;
+          };
       // Lazy import UpdateFile to keep server bundle clean
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       const UpdateFile = require("@/components/inputs/UpdateFile").default;
@@ -184,8 +201,12 @@ export const updateFile = (
           fileType={fileType}
           urlName={urlName}
           publicIdName={publicIdName}
-          onAdd={(newFiles: any[]) => (setValue ? setValue(addPropname, newFiles) : onAdd?.(newFiles))}
-          onDelete={(ids: any[]) => (setValue ? setValue(delPropname, ids) : onDelete?.(ids))}
+          onAdd={(newFiles: any[]) =>
+            setValue ? setValue(addPropname, newFiles) : onAdd?.(newFiles)
+          }
+          onDelete={(ids: any[]) =>
+            setValue ? setValue(delPropname, ids) : onDelete?.(ids)
+          }
         />
       );
     },

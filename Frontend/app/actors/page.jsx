@@ -1,38 +1,18 @@
 "use client";
-import { Button, Typography} from "@mui/material";
-import { useState, useEffect } from "react";
+import { Typography} from "@mui/material";
 import ActorApi from "@/services/actor.api";
-import { createFormData } from "@/utils/formUtils";
-import UpdateItemDialog from "@/components/UpdateItemDialog";
-import { actorConfig } from "@/components/form/formConfig";
-import { useApi, deleteOne } from "@/services/useApi";
+import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 
 
 export default function Actors() {
-  const [actorData, setActorData] = useState({});
-  const [selectedActor, setSelectedActor] = useState(null);
 
-  const [openUpdate, setOpenUpdate] = useState(false);
-  const toggleUpdate = () => {
-    setOpenUpdate(!openUpdate);
-  };
+  const { data: actors, isLoading: loading, error } = useQuery({
+    queryKey: ["actors"],
+    queryFn: () => ActorApi.getAll(),
+  });
 
-  const { data: actors, loading, error, refetch } = useApi(ActorApi, null);
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const formData = createFormData(actorData, null, imageFile);
-
-    if (confirm("Do you want to create actor"))
-      try {
-        const response = await ActorApi.create(formData);
-        console.log("Actor created:", response);
-        alert(response.message);
-      } catch (error) {
-        console.error("Error creating movie:", error);
-      }
-  };
+  
 
   if (loading) {
     return <div>Đang tải dữ liệu diễn viên...</div>;
@@ -63,38 +43,6 @@ export default function Actors() {
                 src={actor.avatarUrl}
                 alt={actor.name}
               />
-              <div className="flex gap-2">
-                {" "}
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    if (confirm(`Bạn có muốn xóa diễn viên ${actor.name}`))
-                      deleteOne(ActorApi, actor.id);
-                  }}
-                >
-                  Xóa diễn viên
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    setSelectedActor(actor);
-                    toggleUpdate();
-                  }}
-                >
-                  Cập nhật
-                </Button>
-              </div>
-              <UpdateItemDialog
-                openState={openUpdate}
-                handleClose={toggleUpdate}
-                inputConfig={actorConfig.update}
-                dataValue={selectedActor}
-                instance={actorApi}
-                refetch={refetch}
-                label={"Diễn viên"}
-              ></UpdateItemDialog>
             </div>
           ))}
         </div>

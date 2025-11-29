@@ -15,7 +15,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import AddItemDialog from "./AddItemDialog";
 import UpdateItemDialog from "./UpdateItemDialog";
-import { useState, useEffect } from "react";
+import { useMutation, QueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 
 export default function DataManage({ open, onClose, config, data, label }) {
   const [openUpdateState, setOpenUpdateState] = useState(false);
@@ -31,12 +32,19 @@ export default function DataManage({ open, onClose, config, data, label }) {
     setOpenUpdateState(true);
     setSelectedItem(item);
   };
-  const [deleteItem] = config.api.useDeleteMutation();
+  const queryClient = new QueryClient();
+  const deleteMutation = useMutation({
+    mutationFn: (id) => config.api.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [config.name] });
+      alert(`${config.name} deleted successfully`);
+    },
+  });
 
-  const handleDelete = async (item) => {
+  const handleDelete = (item) => {
     try {
       if (confirm("Xác nhận xóa ?")) {
-        await deleteItem(item.id).unwrap();
+        deleteMutation.mutate(item.id);
         alert("Xóa thành công!");
       }
     } catch (error) {

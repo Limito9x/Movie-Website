@@ -1,21 +1,18 @@
 "use client";
-import MovieApi from "@/services/movie.api";
+import movieApi from "@/services/movie.api";
 import dayjs from "dayjs";
 import { useParams } from "next/navigation";
-import { useApi, deleteOne } from "@/services/useApi";
-import { Button } from "@mui/material";
+import { useApi } from "@/services/useApi";
 import Carousel from "@/components/Carousel";
-import UpdateItemDialog from "@/components/UpdateItemDialog";
-import movieApi from "@/services/movie.api";;
-import { useEffect, useState } from "react";
-import { movieConfig } from "@/components/form/formConfig";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Video() {
   const id = useParams().id;
-  const { data: movie, loading, error, refetch } = useApi(MovieApi, id);
-  console.log(movie)
-
-  const [openDialog, setOpenDialog] = useState(false);
+  const { data: movie, isLoading: loading, error } = useQuery({
+    queryKey: ["movie", id],
+    queryFn: () => movieApi.getById(id),
+  });
 
   if (loading) {
     return <div>Đang tải dữ liệu phim...</div>;
@@ -65,25 +62,6 @@ export default function Video() {
           Không có video
         </div>
       )}
-      <Button
-        variant="outlined"
-        onClick={() => {
-          if (confirm("Bạn có muốn xóa video?")) deleteOne(MovieApi, id);
-        }}
-      >
-        Xóa
-      </Button>
-      <Button variant="outlined" onClick={() => setOpenDialog(true)}>
-        Cập nhật
-      </Button>
-      <UpdateItemDialog
-        openState={openDialog}
-        handleClose={() => setOpenDialog(false)}
-        config={movieConfig}
-        data={movie}
-        instance={movieApi}
-        label={"phim"}
-      />
     </div>
   );
 }

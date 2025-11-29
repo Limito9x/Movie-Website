@@ -22,19 +22,19 @@ const ApiCreate = (endpoint) => {
 };
 
 class ApiClient {
-  constructor(endpoint){
+  constructor(endpoint) {
     this.api = ApiCreate(endpoint);
   }
 
-  async getAll() {
-    return (await this.api.get("/")).data;
+  async getAll(params = {}) {
+    return (await this.api.get("/", { params })).data;
   }
 
   async getById(id) {
     return (await this.api.get(`/${id}`)).data;
   }
 
-  async create(data){
+  async create(data) {
     return (await this.api.post("/", data)).data;
   }
 

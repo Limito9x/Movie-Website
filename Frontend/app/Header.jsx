@@ -19,7 +19,6 @@ import {
 } from "@mui/material";
 import { Menu, Home, Movie, Person, CloudUpload ,Dashboard } from "@mui/icons-material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useCookies } from "react-cookie";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -78,7 +77,6 @@ export default function Header() {
     { title: "Trang chủ", path: "/", icon: <Home /> },
     { title: "Phim", path: "/videos", icon: <Movie /> },
     { title: "Diễn viên", path: "/actors", icon: <Person /> },
-    { title: "Uploads", path: "/uploads", icon: <CloudUpload /> },
     { title: "Dashboard", path: "/dashboard", icon: <Dashboard /> },
   ];
 

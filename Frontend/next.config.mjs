@@ -2,12 +2,15 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  // except for webpack, other parts are left as generated
   webpack: (config, context) => {
-    config.watchOptions = {
-      poll: 1000,
-      aggregateTimeout: 100,
-    };
+    // Chỉ áp dụng polling khi ở môi trường dev
+    if (context.dev) {
+      config.watchOptions = {
+        poll: 300, // Giảm từ 1000 xuống 300ms (check nhanh hơn)
+        aggregateTimeout: 50, // Delay build lại sau khi gõ xong (giảm xuống cho mượt)
+        ignored: /node_modules/, // Bỏ qua node_modules để đỡ tốn CPU
+      };
+    }
     return config;
   },
 };

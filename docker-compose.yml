@@ -8,6 +8,8 @@ services:
       - /app/dist
     ports:
       - "3000:3000"
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
     # command: npm run dev # hoặc nodemon src/server.ts
     environment:
       - NODE_ENV=development

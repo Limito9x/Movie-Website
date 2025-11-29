@@ -1,27 +1,35 @@
-import { Suspense } from "react";
+"use client";
+
+import EntityNewForm from "@/components/EntityNewForm";
 import { getEntityConfig } from "@/lib/entities";
 import { notFound } from "next/navigation";
-import { SafeMountWrapper } from "@/components/SafeMountWrapper";
-import EntityNewForm from "@/components/EntityNewForm";
+import { Suspense } from "react";
+import { useParams } from "next/navigation";
 
 function Loading() {
-  return <div>Đang tải...</div>;
+  return <div>Đang tải dữ liệu...</div>;
 }
 
-export default async function NewEntityPage({
-  params,
-}: {
-  params: { entity: string };
-}) {
-  const { entity } = await params;
+export default function EntityListPage() {
+  const params = useParams();
+  const entityParam = params.entity;
+
+  // Ensure entity is a string
+  const entity = Array.isArray(entityParam) ? entityParam[0] : entityParam;
+
+  if (!entity) {
+    notFound();
+  }
+
   const config = getEntityConfig(entity);
-  if (!config) notFound();
+
+  if (!config) {
+    notFound();
+  }
 
   return (
     <Suspense fallback={<Loading />}>
-      <SafeMountWrapper>
-        <EntityNewForm entitySlug={entity} />
-      </SafeMountWrapper>
+        <EntityNewForm config={config} />
     </Suspense>
   );
 }
